@@ -8,7 +8,7 @@ import (
 
 var CommandClass = class.Make[Command]()
 
-func CommandQuery() *table.Table[Command] {
+func Commands() *table.Table[Command] {
 	return table.Class(CommandClass, "commands")
 }
 

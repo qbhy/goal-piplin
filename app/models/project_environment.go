@@ -8,11 +8,11 @@ import (
 
 var ProjectEnvironmentClass = class.Make[ProjectEnvironment]()
 
-func ProjectEnvironmentQuery() *table.Table[ProjectEnvironment] {
+func ProjectEnvironments() *table.Table[ProjectEnvironment] {
 	return table.Class(ProjectEnvironmentClass, "project_environments")
 }
 
-type Settings struct {
+type EnvironmentSettings struct {
 	Servers         []string `json:"servers"`          // 服务器列表
 	ServerGroups    []string `json:"server_groups"`    // 服务器租
 	DefaultSelected bool     `json:"default_selected"` // 默认选中
@@ -20,10 +20,10 @@ type Settings struct {
 }
 
 type ProjectEnvironment struct {
-	Id        string    `json:"id"`
-	ProjectId int       `json:"project_id"`
-	Name      string    `json:"name"`
-	Settings  Settings  `json:"settings"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Id        string              `json:"id"`
+	ProjectId int                 `json:"project_id"`
+	Name      string              `json:"name"`
+	Settings  EnvironmentSettings `json:"settings"`
+	CreatedAt time.Time           `json:"created_at"`
+	UpdatedAt time.Time           `json:"updated_at"`
 }
