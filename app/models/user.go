@@ -14,10 +14,11 @@ func Users() *table.Table[User] {
 
 type User struct {
 	Id        string    `json:"id"`
-	NickName  string    `json:"name"`
+	Username  string    `json:"username"`
+	Nickname  string    `json:"nickname"`
 	Avatar    string    `json:"avatar"`
 	Role      string    `json:"role"`
-	Password  string    `json:"password"`
+	Password  string    `json:"password,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

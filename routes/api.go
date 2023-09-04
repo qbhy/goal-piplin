@@ -7,15 +7,17 @@ import (
 )
 
 func Api(router contracts.HttpRouter) {
+	api := router.Group("/api")
+	api.Post("/login", controllers.Login)
 
-	router.Post("/queue", controllers.DemoJob)
+	api.Get("/", controllers.HelloWorld)
 
-	router.Get("/", controllers.HelloWorld)
-	router.Get("/micro", controllers.RpcService)
+	api.Post("/queue", controllers.DemoJob)
+
+	api.Get("/micro", controllers.RpcService)
 	//router.Get("/", controllers.HelloWorld, ratelimiter.Middleware(100))
-	router.Post("/login", controllers.LoginExample)
 
-	authRouter := router.Group("", auth.Guard("jwt"))
+	authRouter := api.Group("", auth.Guard("jwt"))
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
 	router.Post("/mail", controllers.SendEmail)

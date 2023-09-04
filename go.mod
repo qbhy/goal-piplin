@@ -16,7 +16,7 @@ require (
 	github.com/goal-web/events v0.2.0
 	github.com/goal-web/filesystem v0.2.0
 	github.com/goal-web/hashing v0.2.0
-	github.com/goal-web/http v0.2.3
+	github.com/goal-web/http v0.2.5
 	github.com/goal-web/micro v0.2.0
 	github.com/goal-web/microdemo v0.0.0-20220219171937-6f3fca7dfbcb
 	github.com/goal-web/queue v0.2.1
