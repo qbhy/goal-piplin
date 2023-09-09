@@ -3,7 +3,6 @@ package models
 import (
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/class"
-	"time"
 )
 
 var ProjectEnvironmentClass = class.Make[ProjectEnvironment]()
@@ -24,6 +23,6 @@ type ProjectEnvironment struct {
 	ProjectId int                 `json:"project_id"`
 	Name      string              `json:"name"`
 	Settings  EnvironmentSettings `json:"settings"`
-	CreatedAt time.Time           `json:"created_at"`
-	UpdatedAt time.Time           `json:"updated_at"`
+	CreatedAt string              `json:"created_at"`
+	UpdatedAt string              `json:"updated_at"`
 }

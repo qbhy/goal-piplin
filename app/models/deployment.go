@@ -3,7 +3,6 @@ package models
 import (
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/class"
-	"time"
 )
 
 var DeploymentClass = class.Make[Deployment]()
@@ -13,11 +12,11 @@ func Deployments() *table.Table[Deployment] {
 }
 
 type Deployment struct {
-	Id           string    `json:"id"`
-	ProjectId    int       `json:"project_id"` // 项目ID
-	Version      string    `json:"version"`    // 部署版本
-	Comment      string    `json:"comment"`    // 说明
-	Environments string    `json:"environments"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	Id           string `json:"id"`
+	ProjectId    int    `json:"project_id"` // 项目ID
+	Version      string `json:"version"`    // 部署版本
+	Comment      string `json:"comment"`    // 说明
+	Environments string `json:"environments"`
+	CreatedAt    string `json:"created_at"`
+	UpdatedAt    string `json:"updated_at"`
 }

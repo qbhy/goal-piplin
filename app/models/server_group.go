@@ -3,7 +3,6 @@ package models
 import (
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/class"
-	"time"
 )
 
 var ServerGroupClass = class.Make[ServerGroup]()
@@ -24,6 +23,6 @@ type ServerGroup struct {
 	Id        string              `json:"id"`
 	Name      string              `json:"name"`     // 名称
 	Settings  ServerGroupSettings `json:"settings"` // 配置
-	CreatedAt time.Time           `json:"created_at"`
-	UpdatedAt time.Time           `json:"updated_at"`
+	CreatedAt string              `json:"created_at"`
+	UpdatedAt string              `json:"updated_at"`
 }
