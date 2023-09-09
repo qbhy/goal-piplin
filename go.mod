@@ -69,6 +69,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goal-web/collection v0.2.0 // indirect
 	github.com/goal-web/container v0.2.0 // indirect
+	github.com/goal-web/migration v0.2.3 // indirect
 	github.com/goal-web/pipeline v0.2.0 // indirect
 	github.com/goal-web/querybuilder v0.2.0 // indirect
 	github.com/goal-web/routing v0.2.0 // indirect
@@ -89,7 +90,7 @@ require (
 	github.com/miekg/dns v1.1.43 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
-	github.com/modood/table v0.0.0-20200225102042-88de94bb9876 // indirect
+	github.com/modood/table v0.0.0-20220527013332-8d47e76dad33 // indirect
 	github.com/nsqio/go-nsq v1.1.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
