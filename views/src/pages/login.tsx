@@ -1,5 +1,6 @@
 import {SubmitHandler, useForm} from "react-hook-form"
 import {login} from "../services/auth.ts";
+import {useNavigate} from "react-router-dom";
 
 type Inputs = {
     username: string
@@ -8,12 +9,21 @@ type Inputs = {
 }
 
 function Login() {
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         formState: {errors},
     } = useForm<Inputs>()
-    const onSubmit: SubmitHandler<Inputs> = (data) => login(data)
+
+    const onSubmit: SubmitHandler<Inputs> = (data) => login(data).then(res => {
+        if (res.msg) {
+            // todo
+            alert(res.msg)
+        } else {
+            navigate('/dashboard')
+        }
+    })
 
 
     return (

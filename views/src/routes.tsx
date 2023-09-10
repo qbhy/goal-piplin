@@ -1,5 +1,6 @@
 import Index from './pages/Index.tsx';
 import Login from "./pages/login.tsx";
+import Dashboard from "./pages/dashboard.tsx";
 
 const routes = [
     {
@@ -9,6 +10,10 @@ const routes = [
     {
         path: '/login',
         element: <Login/>
+    },
+    {
+        path: '/dashboard',
+        element: <Dashboard/>
     },
 ]
 
