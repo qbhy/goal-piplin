@@ -20,5 +20,5 @@ func Api(router contracts.HttpRouter) {
 	authRouter := api.Group("", auth.Guard("jwt"))
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
-	router.Post("/mail", controllers.SendEmail)
+	authRouter.Get("/projects", controllers.GetProjects)
 }

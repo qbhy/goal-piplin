@@ -18,7 +18,7 @@ nsq.address = "localhost:49156"
 connection = "mysql"
 host = "localhost"
 port = "3306"
-database = "goal"
+database = "piplin"
 username = "root"
 password = 123456
 

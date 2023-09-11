@@ -15,18 +15,16 @@ func Login(guard contracts.Guard, request requests.LoginRequest, hash contracts.
 	//  这是伪代码
 	var user, e = models.Users().FirstWhereE("username", request.GetString("username"))
 	if e != nil {
-		panic(e)
+		return contracts.Fields{"msg": "账号或者密码不正确"}
 	}
 
-	if hash.Check(user.Password, hash.Make(request.GetString("password"), nil), nil) {
+	if hash.Check(request.GetString("password"), user.Password, nil) {
 		return usecase.Login(user, guard)
 	}
 
-	return contracts.Fields{}
+	return contracts.Fields{"msg": "账号或者密码不正确"}
 }
 
 func GetCurrentUser(guard contracts.Guard) any {
-	return contracts.Fields{
-		"user": guard.User(),
-	}
+	return guard.User()
 }

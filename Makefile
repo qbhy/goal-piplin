@@ -1,4 +1,5 @@
 DOCKER_TAG=goal
+CONSOLE=go run bootstrap/console/main.go
 
 run:
 	go run bootstrap/app/main.go run
@@ -13,19 +14,22 @@ pack:
 	docker build -t $(DOCKER_TAG) .
 
 migrate:
-	go run bootstrap/console/main.go migrate
+	$(CONSOLE) migrate
 
 migrate-rollback:
-	go run bootstrap/console/main.go migrate:rollback
+	$(CONSOLE) migrate:rollback
 
 migrate-refresh:
-	go run bootstrap/console/main.go migrate:refresh
+	$(CONSOLE) migrate:refresh
 
 migrate-reset:
-	go run bootstrap/console/main.go migrate:reset
+	$(CONSOLE) migrate:reset
 
 migrate-status:
-	go run bootstrap/console/main.go migrate:status
+	$(CONSOLE) migrate:status
 
 make-migration:
-	go run bootstrap/console/main.go make:migration $(NAME)
+	$(CONSOLE) make:migration $(NAME)
+
+install: migrate
+	$(CONSOLE) init

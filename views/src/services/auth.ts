@@ -36,6 +36,7 @@ export async function getMyself(): Promise<User> {
     if (localUser && localUser != "") {
         return JSON.parse(localUser)
     }
-    const res = await client.get<any, AxiosResponse<User>>("/myself")
+    const res = await client.get<any, AxiosResponse<User>>("/api/myself")
+    localStorage.setItem('_user', JSON.stringify(res.data))
     return res.data
 }
