@@ -1,8 +1,8 @@
 import {FC, useState} from "react";
 import classNames from "classnames";
 import {useRequest} from "ahooks";
-import {getProjects, Project} from "../../services/projects.ts";
-import {getGroups, Group} from "../../services/manage/groups.ts";
+import {createProject, getProjects, Project} from "../../services/projects.ts";
+import {createGroup, getGroups, Group} from "../../services/manage/groups.ts";
 import Modal from "../modal.tsx";
 import {useForm} from "react-hook-form";
 
@@ -29,9 +29,9 @@ const ProjectEditor: FC<{
             </div>
 
             <div className='border-y px-3'>
-                <div className='flex gap-2 items-center py-3'>
+                <div className='flex items-center py-3 w-[25rem]'>
                     <span>项目名称</span>
-                    <input className={classNames('focus:outline-0 rounded p-1', {
+                    <input className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
                         'border border-red-500': errors.name,
                     })} placeholder='输入项目名称' {...register("name", {
                         required: true,
@@ -40,15 +40,53 @@ const ProjectEditor: FC<{
                     })} />
                 </div>
 
-                <div className='flex gap-2 items-center py-3'>
+                <div className='flex items-center py-3 w-[25rem]'>
                     <span>分组</span>
-                    <select className={classNames('focus:outline-0 rounded p-1', {
+                    <select className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
                         'border border-red-500': errors.name,
                     })} placeholder='输入项目名称' {...register("group_id")} >
                         {(groups && groups.length > 0) ? groups?.map(group => (
                             <option value={group.id}>{group.name}</option>
                         )) : <option value={0}>未选择</option>}
                     </select>
+                </div>
+
+                <div className='flex items-center py-3 w-[25rem]'>
+                    <span>密钥</span>
+                    <select className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
+                        'border border-red-500': errors.name,
+                    })} placeholder='输入项目名称' {...register("key_id")} >
+                        {groups?.map(group => (
+                            <option value={group.id}>{group.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className='flex items-center py-3 w-[25rem]'>
+                    <span>仓库地址</span>
+                    <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
+                        'border border-red-500': errors.name,
+                    })} placeholder='请输入仓库地址' {...register("repo_address", {
+                        required: true,
+                    })} />
+                </div>
+
+                <div className='flex items-center py-3 w-[25rem]'>
+                    <span>项目路径</span>
+                    <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
+                        'border border-red-500': errors.name,
+                    })} placeholder='请输入项目路径' {...register("project_path", {
+                        required: true,
+                    })} />
+                </div>
+
+                <div className='flex items-center py-3 w-[25rem]'>
+                    <span>默认分支</span>
+                    <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
+                        'border border-red-500': errors.name,
+                    })} placeholder='请输入默认分支' {...register("default_branch", {
+                        required: true,
+                    })} />
                 </div>
 
             </div>
@@ -85,9 +123,9 @@ const GroupEditor: FC<{
             </div>
 
             <div className='border-y px-3'>
-                <div className='flex gap-2 items-center py-3'>
+                <div className='flex items-center py-3 w-[25rem]'>
                     <span>分组名称</span>
-                    <input className={classNames('focus:outline-0 rounded p-1', {
+                    <input className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
                         'border border-red-500': errors.name,
                     })} placeholder='输入分组名称' {...register("name", {
                         required: true,
@@ -114,7 +152,7 @@ export default function Projects() {
     const [projectModal, setProjectModal] = useState<{ value?: Project, visible: boolean }>({visible: false})
     const [groupModal, setGroupModal] = useState<{ value?: Group, visible: boolean }>({visible: false})
     const {data: projects} = useRequest(async (page: number = 1) => getProjects(page))
-    const {data: groups} = useRequest(getGroups)
+    const {data: groups, refresh: refreshGroup} = useRequest(getGroups)
 
 
     return (
@@ -199,14 +237,23 @@ export default function Projects() {
 
             <Modal visible={projectModal.visible}>
                 <ProjectEditor onSubmit={project => {
-                    console.log(project);
-                    setProjectModal({visible: false})
+                    createProject(project).then(() => {
+                        setProjectModal({visible: false})
+                    }).catch(e => {
+                        setProjectModal({visible: false})
+                        alert(e.message)
+                    })
                 }} onClose={() => setProjectModal({visible: false})}/>
             </Modal>
             <Modal visible={groupModal.visible}>
                 <GroupEditor onSubmit={group => {
-                    console.log(group);
-                    setGroupModal({visible: false})
+                    createGroup(group).then(() => {
+                        setGroupModal({visible: false})
+                        refreshGroup()
+                    }).catch(e => {
+                        setGroupModal({visible: false})
+                        alert(e.message)
+                    })
                 }} onClose={() => setGroupModal({visible: false})}/>
             </Modal>
         </div>

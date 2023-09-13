@@ -23,6 +23,7 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
 	authRouter.Get("/projects", controllers.GetProjects)
+	authRouter.Post("/project", controllers.CreateProject)
 
 	manageRouter := authRouter.Group("/manage", middlewares.Manage)
 	{
