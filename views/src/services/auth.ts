@@ -1,8 +1,4 @@
-import axios, {AxiosResponse} from 'axios'
-
-const client = axios.create({
-    headers: {Authorization: `Bearer ${localStorage.getItem('_token')}`}
-})
+import {get, post} from "./utils.ts";
 
 export type LoginData = {
     token?: string
@@ -22,13 +18,12 @@ export type User = {
 }
 
 export async function login(data: any): Promise<LoginData> {
-    const res = await client.post<any, AxiosResponse<LoginData>>('/api/login', data)
-    if (res.data.token) {
-        localStorage.setItem("_token", res.data.token)
-        localStorage.setItem("_user", JSON.stringify(res.data.user))
-        client.defaults.headers.Authorization = `Bearer ${localStorage.getItem('_token')}`
+    const res = await post<LoginData>('/api/login', data)
+    if (res.token) {
+        localStorage.setItem("_token", res.token)
+        localStorage.setItem("_user", JSON.stringify(res.user))
     }
-    return res.data
+    return res
 }
 
 export async function getMyself(): Promise<User> {
@@ -36,7 +31,7 @@ export async function getMyself(): Promise<User> {
     if (localUser && localUser != "") {
         return JSON.parse(localUser)
     }
-    const res = await client.get<any, AxiosResponse<User>>("/api/myself")
-    localStorage.setItem('_user', JSON.stringify(res.data))
-    return res.data
+    const res = await get<User>("/api/myself")
+    localStorage.setItem('_user', JSON.stringify(res))
+    return res
 }

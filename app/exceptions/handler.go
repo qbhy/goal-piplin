@@ -1,6 +1,7 @@
 package exceptions
 
 import (
+	"github.com/goal-web/auth"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/http"
 	"github.com/goal-web/supports/logs"
@@ -24,6 +25,11 @@ func (handler *ExceptionHandler) Handle(exception contracts.Exception) any {
 	switch e := exception.(type) {
 	case http.Exception: // http 支持在异常处理器返回响应
 		return handler.handleHttpException(e)
+	case *auth.Exception: // http 支持在异常处理器返回响应
+		return http.NewJsonResponse(contracts.Fields{
+			"msg":  "未登录",
+			"code": 401,
+		}, 401)
 	case *validation.Exception:
 		return handler.renderValidationException(e)
 	default:

@@ -4,6 +4,8 @@ import (
 	"github.com/goal-web/auth"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/example/app/http/controllers"
+	"github.com/goal-web/example/app/http/controllers/manage"
+	"github.com/goal-web/example/app/http/middlewares"
 )
 
 func Api(router contracts.HttpRouter) {
@@ -21,4 +23,11 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
 	authRouter.Get("/projects", controllers.GetProjects)
+
+	manageRouter := authRouter.Group("/manage", middlewares.Manage)
+	{
+		manageRouter.Get("/groups", manage.GetGroups)
+		manageRouter.Post("/group", manage.CreateGroup)
+	}
+
 }

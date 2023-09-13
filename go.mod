@@ -34,6 +34,8 @@ require (
 require (
 	github.com/asim/go-micro/plugins/registry/etcd/v4 v4.7.0
 	github.com/fasthttp/websocket v1.5.4
+	github.com/goal-web/migration v0.2.3
+	github.com/tj/assert v0.0.3
 )
 
 require (
@@ -56,6 +58,7 @@ require (
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -69,7 +72,6 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goal-web/collection v0.2.0 // indirect
 	github.com/goal-web/container v0.2.0 // indirect
-	github.com/goal-web/migration v0.2.3 // indirect
 	github.com/goal-web/pipeline v0.2.0 // indirect
 	github.com/goal-web/querybuilder v0.2.0 // indirect
 	github.com/goal-web/routing v0.2.0 // indirect
@@ -99,6 +101,7 @@ require (
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/pierrec/lz4/v4 v4.1.14 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/qbhy/parallel v1.4.0 // indirect
 	github.com/qiniu/go-sdk/v7 v7.11.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
@@ -107,6 +110,8 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/smarty/assertions v1.15.1 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect

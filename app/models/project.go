@@ -35,6 +35,7 @@ type Project struct {
 	Settings      ProjectSettings `json:"settings"`
 	Name          string          `json:"name"`
 	CreatorId     int             `json:"creator_id"`
+	GroupId       int             `json:"group_id"`
 	KeyId         int             `json:"key_id"`
 	RepoAddress   string          `json:"repo_address"`
 	ProjectPath   string          `json:"project_path"`

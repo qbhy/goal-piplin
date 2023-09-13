@@ -8,7 +8,7 @@ import (
 var GroupClass = class.Make[Group]()
 
 func Groups() *table.Table[Group] {
-	return table.Class(GroupClass, "groups")
+	return table.Class(GroupClass, "`groups`")
 }
 
 type Group struct {
