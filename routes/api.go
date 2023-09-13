@@ -29,6 +29,7 @@ func Api(router contracts.HttpRouter) {
 	{
 		manageRouter.Get("/groups", manage.GetGroups)
 		manageRouter.Post("/group", manage.CreateGroup)
+		manageRouter.Get("/keys", manage.GetKeys)
 	}
 
 }

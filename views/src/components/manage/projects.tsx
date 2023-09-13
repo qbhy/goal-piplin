@@ -5,6 +5,7 @@ import {createProject, getProjects, Project} from "../../services/projects.ts";
 import {createGroup, getGroups, Group} from "../../services/manage/groups.ts";
 import Modal from "../modal.tsx";
 import {useForm} from "react-hook-form";
+import {getKeys} from "../../services/manage/keys.ts";
 
 type Tab = 'project' | 'group'
 
@@ -14,6 +15,7 @@ const ProjectEditor: FC<{
     onClose: () => void
 }> = ({defaultValue, onSubmit, onClose}) => {
     const {data: groups} = useRequest(getGroups)
+    const {data: keys} = useRequest(getKeys)
     const {
         register,
         handleSubmit,
@@ -43,7 +45,7 @@ const ProjectEditor: FC<{
                 <div className='flex items-center py-3 w-[25rem]'>
                     <span>分组</span>
                     <select className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
+                        'border border-red-500': errors.group_id,
                     })} placeholder='输入项目名称' {...register("group_id")} >
                         {(groups && groups.length > 0) ? groups?.map(group => (
                             <option value={group.id}>{group.name}</option>
@@ -54,10 +56,10 @@ const ProjectEditor: FC<{
                 <div className='flex items-center py-3 w-[25rem]'>
                     <span>密钥</span>
                     <select className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
+                        'border border-red-500': errors.key_id,
                     })} placeholder='输入项目名称' {...register("key_id")} >
-                        {groups?.map(group => (
-                            <option value={group.id}>{group.name}</option>
+                        {keys?.map(key => (
+                            <option value={key.id}>{key.name}</option>
                         ))}
                     </select>
                 </div>
@@ -65,7 +67,7 @@ const ProjectEditor: FC<{
                 <div className='flex items-center py-3 w-[25rem]'>
                     <span>仓库地址</span>
                     <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
+                        'border border-red-500': errors.repo_address,
                     })} placeholder='请输入仓库地址' {...register("repo_address", {
                         required: true,
                     })} />
@@ -74,7 +76,7 @@ const ProjectEditor: FC<{
                 <div className='flex items-center py-3 w-[25rem]'>
                     <span>项目路径</span>
                     <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
+                        'border border-red-500': errors.project_path,
                     })} placeholder='请输入项目路径' {...register("project_path", {
                         required: true,
                     })} />
@@ -83,7 +85,7 @@ const ProjectEditor: FC<{
                 <div className='flex items-center py-3 w-[25rem]'>
                     <span>默认分支</span>
                     <input type='url' className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
+                        'border border-red-500': errors.default_branch,
                     })} placeholder='请输入默认分支' {...register("default_branch", {
                         required: true,
                     })} />
