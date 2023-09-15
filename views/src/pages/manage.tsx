@@ -2,6 +2,7 @@ import Page from "../components/page.tsx";
 import {useState} from "react";
 import classNames from "classnames";
 import Projects from "../components/manage/projects.tsx";
+import Materials from "../components/manage/materials.tsx";
 
 type Tab = 'projects' | 'materials' | 'users';
 
@@ -30,7 +31,7 @@ export default function Manage() {
                 {
                     {
                         projects: <Projects/>,
-                        materials: '',
+                        materials: <Materials/>,
                         users: '',
                     }[tab]
                 }

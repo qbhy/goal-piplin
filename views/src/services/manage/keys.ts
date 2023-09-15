@@ -1,4 +1,4 @@
-import {get} from "../utils.ts";
+import {get, post} from "../utils.ts";
 
 export type Key = {
     id: number
@@ -11,4 +11,8 @@ export type Key = {
 
 export function getKeys() {
     return get<Key[]>('/api/manage/keys')
+}
+
+export function createKey(key: Key) {
+    return post<Key>('/api/manage/key', key)
 }
