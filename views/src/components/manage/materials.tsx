@@ -60,7 +60,7 @@ export default function Materials() {
     const [groupModal, setGroupModal] = useState<{ value?: Group, visible: boolean }>({visible: false})
     const {data: keys} = useRequest(getKeys)
     const {data: groups} = useRequest(getGroups)
-
+    const [showKey, setShowKey] = useState('')
 
     return (
         <div className='px-3'>
@@ -111,7 +111,9 @@ export default function Materials() {
                                     <div className='flex gap-x-5 py-3' key={index}>
                                         <div>{key.id}</div>
                                         <div className='flex-1'>{key.name}</div>
-                                        <div>操作</div>
+                                        <div>
+                                            <button onClick={() => setShowKey(key.public_key)}>查看</button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -135,6 +137,16 @@ export default function Materials() {
                     }[tab]
                 }
             </div>
+
+            <Modal visible={showKey != ''}>
+                <div className='w-[60%] bg-white p-3 rounded'>
+                    <div className='border-b'>{showKey}</div>
+                    <div className='flex mt-3 justify-evenly gap-3'>
+                        <div className='py-2 text-center px-5 rounded text-white bg-blue-500 hover:cursor-pointer'>复制</div>
+                        <div className='py-2 text-center px-5 rounded border border-blue-500 text-blue-500 hover:cursor-pointer'>关闭</div>
+                    </div>
+                </div>
+            </Modal>
 
             <Modal visible={keyModal.visible}>
                 <KeyEditor onSubmit={key => {
