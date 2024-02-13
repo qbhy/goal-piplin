@@ -1,58 +1,14 @@
-import {FC, useState} from "react";
+import {useState} from "react";
 import classNames from "classnames";
 import {useRequest} from "ahooks";
 import {getGroups, Group} from "../../services/manage/groups.ts";
 import Modal from "../modal.tsx";
-import {useForm} from "react-hook-form";
 import {createKey, getKeys, Key} from "../../services/manage/keys.ts";
+import KeyEditor from "../editors/key.tsx";
+import {copy} from 'clipboard'
+import GroupEditor from "../editors/group.tsx";
 
 type Tab = 'key' | 'server_group'
-
-type KeyEditorProps = {
-    defaultValue?: Key,
-    onSubmit: (project: Key) => void,
-    onClose: () => void
-}
-
-const KeyEditor: FC<KeyEditorProps> = ({defaultValue, onSubmit, onClose}) => {
-    const {
-        register,
-        handleSubmit,
-        formState: {errors/**/},
-    } = useForm<Key>()
-
-
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className='block bg-white rounded-lg shadow'>
-            <div className='py-3 text-base flex justify-between px-3 items-center'>
-                <span>{defaultValue ? `编辑密钥 (${defaultValue.id})` : '新建密钥'}</span>
-                <button className='p-2 hover:text-black hover:cursor-pointer' onClick={onClose}>x</button>
-            </div>
-
-            <div className='border-y px-3'>
-                <div className='flex items-center py-3 w-[25rem]'>
-                    <span>密钥名称</span>
-                    <input className={classNames('ml-2 flex-1 focus:outline-0 rounded p-1', {
-                        'border border-red-500': errors.name,
-                    })} placeholder='输入密钥名称' {...register("name", {
-                        required: true,
-                        minLength: 2,
-                        maxLength: 20
-                    })} />
-                </div>
-            </div>
-
-            <div className='p-3 flex justify-evenly gap-3'>
-                <button className='inline-block text-center py-2 bg-blue-500 text-white px-5 rounded'
-                        type='submit'>提交
-                </button>
-                <button onClick={onClose}
-                        className='inline-block text-center py-2 border border-blue-500 text-blue-500 px-5 rounded'>取消
-                </button>
-            </div>
-        </form>
-    )
-}
 
 export default function Materials() {
     const [tab, setTab] = useState<Tab>('key')
@@ -77,7 +33,7 @@ export default function Materials() {
                     ) : (
                         <div onClick={() => setGroupModal({visible: true})}
                              className='py-2 px-3 bg-blue-500 rounded text-white hover:bg-blue-600 hover:cursor-pointer'>
-                            创建分组
+                            创建机柜
                         </div>
                     )}
                 </div>
@@ -108,7 +64,7 @@ export default function Materials() {
                                     <div>操作</div>
                                 </div>
                                 {keys?.map((key, index) => (
-                                    <div className='flex gap-x-5 py-3' key={index}>
+                                    <div className='flex gap-x-5 p-3 hover:bg-blue-200 rounded' key={index}>
                                         <div>{key.id}</div>
                                         <div className='flex-1'>{key.name}</div>
                                         <div>
@@ -140,10 +96,14 @@ export default function Materials() {
 
             <Modal visible={showKey != ''}>
                 <div className='w-[60%] bg-white p-3 rounded'>
-                    <div className='border-b'>{showKey}</div>
+                    <div className='border-b p-5'>{showKey}</div>
                     <div className='flex mt-3 justify-evenly gap-3'>
-                        <div className='py-2 text-center px-5 rounded text-white bg-blue-500 hover:cursor-pointer'>复制</div>
-                        <div className='py-2 text-center px-5 rounded border border-blue-500 text-blue-500 hover:cursor-pointer'>关闭</div>
+                        <div onClick={() => copy(showKey)}
+                             className='py-2 text-center px-5 rounded text-white bg-blue-500 hover:cursor-pointer'>复制
+                        </div>
+                        <div onClick={() => setShowKey('')}
+                             className='py-2 text-center px-5 rounded border border-blue-500 text-blue-500 hover:cursor-pointer'>关闭
+                        </div>
                     </div>
                 </div>
             </Modal>
@@ -159,7 +119,7 @@ export default function Materials() {
                 }} onClose={() => setKeyModal({visible: false})}/>
             </Modal>
             <Modal visible={groupModal.visible}>
-                <KeyEditor onSubmit={group => {
+                <GroupEditor onSubmit={group => {
                     console.log(group)
                 }} onClose={() => setGroupModal({visible: false})}/>
             </Modal>

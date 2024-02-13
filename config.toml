@@ -12,7 +12,7 @@ port = "8008"
 [queue]
 connection = "nsq"
 kafka.brokers = "localhost:9092"
-nsq.address = "localhost:49156"
+nsq.address = "localhost:31001"
 
 [db]
 connection = "mysql"
@@ -33,7 +33,7 @@ username = "postgres"
 password = "123456"
 
 [redis]
-host = "hsy"
+host = "localhost"
 port = "6379"
 password = "123456"
 

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS projects
 (
     `id`           INT UNSIGNED AUTO_INCREMENT,
-    uuid           varchar(16)  not null,
+    uuid           varchar(36)  not null,
     name           varchar(20)  not null,
     creator_id     int          not null,
     group_id       int          not null,

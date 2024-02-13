@@ -8,7 +8,7 @@ import (
 var KeyClass = class.Make[Key]()
 
 func Keys() *table.Table[Key] {
-	return table.Class(KeyClass, "`keys`")
+	return table.Class(KeyClass, "keys")
 }
 
 type Key struct {

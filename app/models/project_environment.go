@@ -11,9 +11,15 @@ func ProjectEnvironments() *table.Table[ProjectEnvironment] {
 	return table.Class(ProjectEnvironmentClass, "project_environments")
 }
 
+type Server struct {
+	Host string `json:"host"`
+	Port string `json:"port"`
+	User string `json:"user"`
+}
+
 type EnvironmentSettings struct {
-	Servers         []string `json:"servers"`          // 服务器列表
-	ServerGroups    []string `json:"server_groups"`    // 服务器租
+	Servers         []Server `json:"servers"`          // 服务器列表
+	Cabinets        []string `json:"cabinets"`         // 服务器租
 	DefaultSelected bool     `json:"default_selected"` // 默认选中
 	LinkageDeploy   string   `json:"linkage_deploy"`   // 联动部署环境
 }

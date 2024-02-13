@@ -20,6 +20,7 @@ import (
 	"github.com/goal-web/session"
 	"github.com/goal-web/supports/exceptions"
 	"github.com/goal-web/supports/logs"
+	"sync"
 )
 
 func initApp(path ...string) contracts.Application {
@@ -30,8 +31,13 @@ func initApp(path ...string) contracts.Application {
 		return exceptions.DefaultExceptionHandler{}
 	})
 
+	wg := sync.WaitGroup{}
+
 	app.RegisterServices(
-		config.NewService(config.NewToml(config.File("config.toml")), config2.GetConfigProviders()),
+		config.NewService(
+			config.NewToml(config.File("config.toml")),
+			config2.GetConfigProviders(),
+		),
 		console.NewService(console2.NewKernel),
 		hashing.NewService(),
 		encryption.NewService(),
@@ -50,10 +56,13 @@ func initApp(path ...string) contracts.Application {
 		//}},
 	)
 
+	wg.Add(1)
 	go func() {
+		wg.Done()
 		if errors := app.Start(); len(errors) > 0 {
 			logs.WithField("errors", errors).Fatal("goal 启动异常!")
 		}
 	}()
+	wg.Wait()
 	return app
 }

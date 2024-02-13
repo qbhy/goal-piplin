@@ -7,7 +7,7 @@ import (
 	"github.com/goal-web/example/app/usecase"
 	"github.com/goal-web/supports/commands"
 	"github.com/goal-web/supports/logs"
-	"time"
+	"github.com/golang-module/carbon/v2"
 )
 
 func NewInitial(app contracts.Application) contracts.Command {
@@ -29,7 +29,7 @@ func (cmd Initial) Handle() any {
 		logs.Default().Info("piplin 用户已存在")
 		models.Users().Where("id", user.Id).Update(contracts.Fields{
 			"password":   cmd.hash.Make(password, nil),
-			"updated_at": time.Now(),
+			"updated_at": carbon.Now().ToDateTimeString(),
 		})
 		logs.Default().Info(fmt.Sprintf("已将密码重置为 %s", password))
 	}
@@ -44,7 +44,7 @@ func (cmd Initial) Handle() any {
 			"name":        "default",
 			"public_key":  string(publicKey),
 			"private_key": string(privateKey),
-			"created_at":  time.Now(),
+			"created_at":  carbon.Now().ToDateTimeString(),
 		})
 		logs.Default().Info(fmt.Sprintf("已创建默认密钥"))
 	} else {
@@ -57,7 +57,7 @@ func (cmd Initial) Handle() any {
 		"avatar":     "",
 		"role":       "system",
 		"password":   cmd.hash.Make(password, nil),
-		"created_at": time.Now(),
+		"created_at": carbon.Now().ToDateTimeString(),
 	})
 	logs.Default().Info(fmt.Sprintf("已创建用户 %s 密码为 %s", username, password))
 

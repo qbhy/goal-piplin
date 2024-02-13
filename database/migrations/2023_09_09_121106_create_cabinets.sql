@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS server_groups
+CREATE TABLE IF NOT EXISTS cabinets
 (
     `id`       INT UNSIGNED AUTO_INCREMENT,
     name       varchar(20) not null,

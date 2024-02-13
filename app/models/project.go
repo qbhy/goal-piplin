@@ -43,3 +43,9 @@ type Project struct {
 	CreatedAt     string          `json:"created_at"`
 	UpdatedAt     string          `json:"updated_at"`
 }
+
+type ProjectDetail struct {
+	*Project
+	Key   *Key   `json:"key"`
+	Group *Group `json:"group"`
+}

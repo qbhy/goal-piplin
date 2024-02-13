@@ -10,13 +10,13 @@ require (
 	github.com/goal-web/config v0.2.0
 	github.com/goal-web/console v0.2.2
 	github.com/goal-web/contracts v0.2.1
-	github.com/goal-web/database v0.2.1
+	github.com/goal-web/database v0.2.4
 	github.com/goal-web/email v0.2.0
 	github.com/goal-web/encryption v0.2.1
 	github.com/goal-web/events v0.2.0
 	github.com/goal-web/filesystem v0.2.0
 	github.com/goal-web/hashing v0.2.0
-	github.com/goal-web/http v0.2.5
+	github.com/goal-web/http v0.2.10
 	github.com/goal-web/micro v0.2.0
 	github.com/goal-web/microdemo v0.0.0-20220219171937-6f3fca7dfbcb
 	github.com/goal-web/queue v0.2.1
@@ -24,7 +24,7 @@ require (
 	github.com/goal-web/redis v0.2.0
 	github.com/goal-web/serialization v0.2.0
 	github.com/goal-web/session v0.2.1
-	github.com/goal-web/supports v0.2.2
+	github.com/goal-web/supports v0.2.3
 	github.com/goal-web/validation v0.2.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-module/carbon/v2 v2.0.1
@@ -34,7 +34,8 @@ require (
 require (
 	github.com/asim/go-micro/plugins/registry/etcd/v4 v4.7.0
 	github.com/fasthttp/websocket v1.5.4
-	github.com/goal-web/migration v0.2.3
+	github.com/goal-web/migration v0.2.6
+	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee
 	github.com/tj/assert v0.0.3
 )
 
@@ -73,7 +74,7 @@ require (
 	github.com/goal-web/collection v0.2.0 // indirect
 	github.com/goal-web/container v0.2.0 // indirect
 	github.com/goal-web/pipeline v0.2.0 // indirect
-	github.com/goal-web/querybuilder v0.2.0 // indirect
+	github.com/goal-web/querybuilder v0.2.3 // indirect
 	github.com/goal-web/routing v0.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -105,7 +106,6 @@ require (
 	github.com/qbhy/parallel v1.4.0 // indirect
 	github.com/qiniu/go-sdk/v7 v7.11.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
-	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/segmentio/kafka-go v0.4.27 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect

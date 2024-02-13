@@ -5,13 +5,13 @@ import (
 	"github.com/goal-web/supports/class"
 )
 
-var ServerGroupClass = class.Make[ServerGroup]()
+var CabinetClass = class.Make[Cabinet]()
 
-func ServerGroups() *table.Table[ServerGroup] {
-	return table.Class(ServerGroupClass, "server_groups")
+func Cabinets() *table.Table[Cabinet] {
+	return table.Class(CabinetClass, "cabinets")
 }
 
-type ServerGroupSettings struct {
+type CabinetSettings struct {
 	Name    string `json:"name"`
 	Host    string `json:"host"`
 	Port    int    `json:"port"`
@@ -19,10 +19,10 @@ type ServerGroupSettings struct {
 	Enabled bool   `json:"enabled"`
 }
 
-type ServerGroup struct {
-	Id        string              `json:"id"`
-	Name      string              `json:"name"`     // 名称
-	Settings  ServerGroupSettings `json:"settings"` // 配置
-	CreatedAt string              `json:"created_at"`
-	UpdatedAt string              `json:"updated_at"`
+type Cabinet struct {
+	Id        string            `json:"id"`
+	Name      string            `json:"name"`     // 名称
+	Settings  []CabinetSettings `json:"settings"` // 配置
+	CreatedAt string            `json:"created_at"`
+	UpdatedAt string            `json:"updated_at"`
 }

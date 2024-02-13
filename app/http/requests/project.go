@@ -10,9 +10,9 @@ type ProjectRequest struct {
 
 func (req ProjectRequest) Rules() contracts.Fields {
 	return contracts.Fields{
+		//"group_id":       "required",
+		//"key_id":         "required",
 		"name":           "required",
-		"group_id":       "required",
-		"key_id":         "required",
 		"repo_address":   "required",
 		"project_path":   "required",
 		"default_branch": "required",

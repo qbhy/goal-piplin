@@ -26,5 +26,7 @@ func Login(guard contracts.Guard, request requests.LoginRequest, hash contracts.
 }
 
 func GetCurrentUser(guard contracts.Guard) any {
-	return guard.User()
+	return contracts.Fields{
+		"user": guard.User(),
+	}
 }
