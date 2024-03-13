@@ -22,6 +22,7 @@ func NewHandler() contracts.ExceptionHandler {
 
 func (handler *ExceptionHandler) Handle(exception contracts.Exception) any {
 	logs.WithException(exception).Warn("报错了")
+	debug.PrintStack()
 	switch e := exception.(type) {
 	case http.Exception: // http 支持在异常处理器返回响应
 		return handler.handleHttpException(e)
@@ -48,11 +49,12 @@ func (handler *ExceptionHandler) Handle(exception contracts.Exception) any {
 		handler.Report(exception)
 	}
 
-	return nil
+	return contracts.Fields{
+		"msg": exception.Error(),
+	}
 }
 
 func (handler *ExceptionHandler) handleHttpException(exception http.Exception) any {
-
 	switch e := exception.Exception.(type) {
 	case *validation.Exception:
 		return handler.renderValidationException(e)
@@ -61,8 +63,8 @@ func (handler *ExceptionHandler) handleHttpException(exception http.Exception) a
 			debug.PrintStack()
 		}
 		return contracts.Fields{
-			"path":  exception.Request.Path(),
-			"error": e.Error(),
+			"path": exception.Request.Path(),
+			"msg":  e.Error(),
 		}
 	}
 }

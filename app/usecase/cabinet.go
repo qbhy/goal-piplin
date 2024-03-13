@@ -2,9 +2,13 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/models"
+	"github.com/goal-web/supports/exceptions"
 	"github.com/golang-module/carbon/v2"
+	"github.com/qbhy/goal-piplin/app/models"
+	"net"
+	"time"
 )
 
 func CreateCabinet(name string, settings any) (*models.Cabinet, error) {
@@ -31,7 +35,17 @@ func CreateCabinet(name string, settings any) (*models.Cabinet, error) {
 }
 
 func verifyCabinet(cabinet *models.Cabinet) contracts.Exception {
-
+	for _, setting := range cabinet.Settings {
+		target := fmt.Sprintf("%s:%d", setting.Host, setting.Port)
+		// 尝试建立连接
+		conn, err := net.DialTimeout("tcp", target, 5*time.Second)
+		if err != nil {
+			// 如果出现错误，表示连接失败
+			return exceptions.New(fmt.Sprintf("连接失败: %v\n", err))
+		}
+		// 关闭连接
+		_ = conn.Close()
+	}
 	return nil
 }
 

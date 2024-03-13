@@ -12,11 +12,6 @@ import (
 	"github.com/goal-web/email"
 	"github.com/goal-web/encryption"
 	"github.com/goal-web/events"
-	"github.com/goal-web/example/app/console"
-	"github.com/goal-web/example/app/exceptions"
-	"github.com/goal-web/example/app/providers"
-	config2 "github.com/goal-web/example/config"
-	"github.com/goal-web/example/routes"
 	"github.com/goal-web/filesystem"
 	"github.com/goal-web/hashing"
 	"github.com/goal-web/http"
@@ -29,6 +24,11 @@ import (
 	"github.com/goal-web/session"
 	"github.com/goal-web/supports/signal"
 	"github.com/golang-module/carbon/v2"
+	"github.com/qbhy/goal-piplin/app/console"
+	"github.com/qbhy/goal-piplin/app/exceptions"
+	"github.com/qbhy/goal-piplin/app/providers"
+	config2 "github.com/qbhy/goal-piplin/config"
+	"github.com/qbhy/goal-piplin/routes"
 	"syscall"
 )
 

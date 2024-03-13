@@ -3,11 +3,11 @@ package commands
 import (
 	"fmt"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/models"
-	"github.com/goal-web/example/app/usecase"
 	"github.com/goal-web/supports/commands"
 	"github.com/goal-web/supports/logs"
 	"github.com/golang-module/carbon/v2"
+	"github.com/qbhy/goal-piplin/app/models"
+	"github.com/qbhy/goal-piplin/app/utils"
 )
 
 func NewInitial(app contracts.Application) contracts.Command {
@@ -35,15 +35,15 @@ func (cmd Initial) Handle() any {
 	}
 
 	if models.Keys().Count() == 0 {
-		privateKey, publicKey, err := usecase.GenerateRSAKey()
+		privateKey, publicKey, err := utils.GenerateRSAKeys()
 		if err != nil {
 			panic(err)
 		}
 
 		models.Keys().Create(contracts.Fields{
 			"name":        "default",
-			"public_key":  string(publicKey),
-			"private_key": string(privateKey),
+			"public_key":  publicKey,
+			"private_key": privateKey,
 			"created_at":  carbon.Now().ToDateTimeString(),
 		})
 		logs.Default().Info(fmt.Sprintf("已创建默认密钥"))

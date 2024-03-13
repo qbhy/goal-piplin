@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/jobs"
 	"github.com/golang-module/carbon/v2"
+	"github.com/qbhy/goal-piplin/app/jobs"
 	"time"
 )
 

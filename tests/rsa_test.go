@@ -2,13 +2,13 @@ package tests
 
 import (
 	"fmt"
-	"github.com/goal-web/example/app/usecase"
+	"github.com/qbhy/goal-piplin/app/utils"
 	"github.com/tj/assert"
 	"testing"
 )
 
 func TestGenerateRsaKey(t *testing.T) {
-	priKey, pubKey, err := usecase.GenerateRSAKey()
+	priKey, pubKey, err := utils.GenerateRSAKeys()
 	assert.NoError(t, err)
 	fmt.Println(string(priKey), string(pubKey))
 }

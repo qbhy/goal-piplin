@@ -1,9 +1,9 @@
-package controllers
+package manage
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/models"
-	"github.com/goal-web/example/app/usecase"
+	"github.com/qbhy/goal-piplin/app/models"
+	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
 func GetCabinets(request contracts.HttpRequest) any {

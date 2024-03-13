@@ -2,7 +2,7 @@ package tests
 
 import (
 	"fmt"
-	"github.com/goal-web/example/app/models"
+	"github.com/qbhy/goal-piplin/app/models"
 	"testing"
 )
 

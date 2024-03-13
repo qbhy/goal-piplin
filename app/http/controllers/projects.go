@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/http/requests"
-	"github.com/goal-web/example/app/models"
-	"github.com/goal-web/example/app/usecase"
 	"github.com/goal-web/validation"
+	"github.com/qbhy/goal-piplin/app/http/requests"
+	"github.com/qbhy/goal-piplin/app/models"
+	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
 func GetProjects(request contracts.HttpRequest) any {
@@ -18,7 +18,7 @@ func GetProjects(request contracts.HttpRequest) any {
 
 func GetProject(request contracts.HttpRequest) any {
 	return contracts.Fields{
-		"data": usecase.GetProjectDetail(request.Param("id")),
+		"data": usecase.GetProjectDetail(request.GetString("id")),
 	}
 }
 
@@ -36,4 +36,15 @@ func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	return contracts.Fields{
 		"data": project,
 	}
+}
+
+func UpdateProject(request requests.ProjectRequest) any {
+	validation.VerifyForm(request)
+	fields := request.Fields()
+
+	if err := usecase.UpdateProject(request.GetInt("id"), fields); err != nil {
+		return contracts.Fields{"msg": "更新项目"}
+	}
+
+	return contracts.Fields{"data": nil}
 }

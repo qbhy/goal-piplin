@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/goal-web/auth"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/models"
+	"github.com/qbhy/goal-piplin/app/models"
 )
 
 func Manage(request contracts.HttpRequest, next contracts.Pipe, guard contracts.Guard) any {

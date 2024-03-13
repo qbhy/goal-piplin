@@ -3,7 +3,7 @@ package console
 import (
 	"github.com/goal-web/console"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/console/commands"
+	"github.com/qbhy/goal-piplin/app/console/commands"
 )
 
 func NewService() contracts.ServiceProvider {

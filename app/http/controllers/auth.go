@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/http/requests"
-	"github.com/goal-web/example/app/models"
-	"github.com/goal-web/example/app/usecase"
 	"github.com/goal-web/validation"
+	"github.com/qbhy/goal-piplin/app/http/requests"
+	"github.com/qbhy/goal-piplin/app/models"
+	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
 func Login(guard contracts.Guard, request requests.LoginRequest, hash contracts.Hasher) any {

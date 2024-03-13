@@ -6,8 +6,8 @@ import (
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetEnvironments(request contracts.HttpRequest) any {
-	list, total := models.ProjectEnvironments().
+func GetShares(request contracts.HttpRequest) any {
+	list, total := models.ShareFiles().
 		Where("project_id", request.QueryParam("project_id")).
 		OrderByDesc("id").
 		Paginate(20, request.Int64Optional("page", 1))
@@ -17,21 +17,21 @@ func GetEnvironments(request contracts.HttpRequest) any {
 	}
 }
 
-func CreateEnvironment(request contracts.HttpRequest) any {
+func CreateShare(request contracts.HttpRequest) any {
 
-	environment, err := usecase.CreateEnvironment(request.GetString("name"), request.GetInt("project_id"))
+	Share, err := usecase.CreateShare(request.GetInt("project_id"), request.Fields())
 
 	if err != nil {
-		return contracts.Fields{"msg": "创建环境失败"}
+		return contracts.Fields{"msg": err.Error()}
 	}
 
 	return contracts.Fields{
-		"data": environment,
+		"data": Share,
 	}
 }
 
-func UpdateEnvironment(request contracts.HttpRequest) any {
-	err := usecase.UpdateEnvironment(request.Get("id"), request.GetString("name"), request.Get("settings"))
+func UpdateShare(request contracts.HttpRequest) any {
+	err := usecase.UpdateShare(request.Get("id"), request.Fields())
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -40,8 +40,8 @@ func UpdateEnvironment(request contracts.HttpRequest) any {
 	return contracts.Fields{"data": nil}
 }
 
-func DeleteEnvironment(request contracts.HttpRequest) any {
-	err := usecase.DeleteEnvironment(request.Get("id"))
+func DeleteShare(request contracts.HttpRequest) any {
+	err := usecase.DeleteShare(request.Get("id"))
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}

@@ -3,8 +3,8 @@ package routes
 import (
 	"fmt"
 	"github.com/goal-web/contracts"
-	websocket2 "github.com/goal-web/example/app/websocket"
 	"github.com/goal-web/http/websocket"
+	websocket2 "github.com/qbhy/goal-piplin/app/websocket"
 )
 
 func WebSocket(router contracts.HttpRouter, engine contracts.HttpEngine) {

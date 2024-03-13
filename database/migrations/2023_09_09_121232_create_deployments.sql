@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS deployments
     version      varchar(64)  not null,
     comment      varchar(200) not null,
     environments text         not null,
+    results      json         not null,
+    params       json         not null,
     created_at   timestamp,
     updated_at   timestamp,
     PRIMARY KEY (`id`),

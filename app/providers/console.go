@@ -11,10 +11,6 @@ import (
 	"github.com/goal-web/email"
 	"github.com/goal-web/encryption"
 	"github.com/goal-web/events"
-	"github.com/goal-web/example/app/console"
-	"github.com/goal-web/example/app/exceptions"
-	"github.com/goal-web/example/app/listeners"
-	config2 "github.com/goal-web/example/config"
 	"github.com/goal-web/filesystem"
 	"github.com/goal-web/hashing"
 	"github.com/goal-web/http/sse"
@@ -25,6 +21,10 @@ import (
 	"github.com/goal-web/serialization"
 	"github.com/goal-web/session"
 	"github.com/golang-module/carbon/v2"
+	"github.com/qbhy/goal-piplin/app/console"
+	"github.com/qbhy/goal-piplin/app/exceptions"
+	"github.com/qbhy/goal-piplin/app/listeners"
+	config2 "github.com/qbhy/goal-piplin/config"
 )
 
 type Console struct {

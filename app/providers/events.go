@@ -3,7 +3,7 @@ package providers
 import (
 	"github.com/goal-web/contracts"
 	events2 "github.com/goal-web/database/events"
-	"github.com/goal-web/example/app/listeners"
+	"github.com/qbhy/goal-piplin/app/listeners"
 )
 
 type EventsServiceProvider struct {

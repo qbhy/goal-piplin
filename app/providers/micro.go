@@ -2,9 +2,9 @@ package providers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/services"
 	"github.com/goal-web/micro"
 	"github.com/goal-web/microdemo"
+	"github.com/qbhy/goal-piplin/app/services"
 	micro2 "go-micro.dev/v4"
 )
 

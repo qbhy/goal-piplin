@@ -12,16 +12,16 @@ import (
 	"github.com/goal-web/email"
 	"github.com/goal-web/encryption"
 	"github.com/goal-web/events"
-	"github.com/goal-web/example/app/console"
-	"github.com/goal-web/example/app/exceptions"
-	"github.com/goal-web/example/app/providers"
-	config2 "github.com/goal-web/example/config"
 	"github.com/goal-web/filesystem"
 	"github.com/goal-web/hashing"
 	"github.com/goal-web/queue"
 	"github.com/goal-web/ratelimiter"
 	"github.com/goal-web/redis"
 	"github.com/goal-web/serialization"
+	"github.com/qbhy/goal-piplin/app/console"
+	"github.com/qbhy/goal-piplin/app/exceptions"
+	"github.com/qbhy/goal-piplin/app/providers"
+	config2 "github.com/qbhy/goal-piplin/config"
 )
 
 func main() {

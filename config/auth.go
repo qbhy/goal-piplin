@@ -3,9 +3,9 @@ package config
 import (
 	"github.com/goal-web/auth"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/example/app/models"
 	"github.com/goal-web/supports/class"
 	"github.com/golang-jwt/jwt"
+	"github.com/qbhy/goal-piplin/app/models"
 	"time"
 )
 

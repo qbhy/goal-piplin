@@ -12,9 +12,12 @@ func ProjectEnvironments() *table.Table[ProjectEnvironment] {
 }
 
 type Server struct {
-	Host string `json:"host"`
-	Port string `json:"port"`
-	User string `json:"user"`
+	Host        string `json:"host"`
+	Port        int    `json:"port"`
+	User        string `json:"user"`
+	Disabled    bool   `json:"disabled,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Environment int    `json:"-"`
 }
 
 type EnvironmentSettings struct {
@@ -25,7 +28,7 @@ type EnvironmentSettings struct {
 }
 
 type ProjectEnvironment struct {
-	Id        string              `json:"id"`
+	Id        int                 `json:"id"`
 	ProjectId int                 `json:"project_id"`
 	Name      string              `json:"name"`
 	Settings  EnvironmentSettings `json:"settings"`

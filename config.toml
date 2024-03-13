@@ -16,7 +16,7 @@ nsq.address = "localhost:31001"
 
 [db]
 connection = "mysql"
-host = "localhost"
+host = "192.168.106.4"
 port = "3306"
 database = "piplin"
 username = "root"
@@ -26,19 +26,19 @@ password = 123456
 database = "database/database.sqlite"
 
 [db.pgsql]
-host = "localhost"
+host = "127.0.0.1"
 port = "55433"
 database = "postgres"
 username = "postgres"
 password = "123456"
 
 [redis]
-host = "localhost"
+host = "127.0.0.1"
 port = "6379"
 password = "123456"
 
 [redis.cache]
-host = "localhost"
+host = "127.0.0.1"
 port = "6379"
 db = 1
 
