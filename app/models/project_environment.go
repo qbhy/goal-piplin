@@ -17,7 +17,7 @@ type Server struct {
 	User        string `json:"user"`
 	Disabled    bool   `json:"disabled,omitempty"`
 	Name        string `json:"name,omitempty"`
-	Environment int    `json:"-"`
+	Environment int    `json:"environment"`
 }
 
 type EnvironmentSettings struct {

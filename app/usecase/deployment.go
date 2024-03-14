@@ -90,6 +90,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	project := models.Projects().FindOrFail(deployment.ProjectId)
 
 	detail := DeploymentDetail{
+		ProjectId:   deployment.ProjectId,
 		Key:         models.Keys().FindOrFail(project.KeyId),
 		Version:     deployment.Version,
 		RepoAddress: project.RepoAddress,
@@ -249,7 +250,9 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	for _, share := range shares {
 		inputs = append(inputs,
 			fmt.Sprintf("mkdir -p %s/shared/%s", deployment.ProjectPath, share.Path),
-			fmt.Sprintf("cp -ruv %s/releases/%s/%s %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
+			fmt.Sprintf("cp -ruv %s/releases/%s/%s/* %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
+			fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path),
+			fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, share.Path, deployment.ProjectPath, deployment.TimeVersion, share.Path),
 		)
 	}
 	// 准备所有共享目录 end
