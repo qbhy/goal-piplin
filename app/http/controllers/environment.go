@@ -10,6 +10,9 @@ func GetEnvironments(request contracts.HttpRequest) any {
 	list, total := models.ProjectEnvironments().
 		Where("project_id", request.QueryParam("project_id")).
 		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.ProjectEnvironment]) contracts.Query[models.ProjectEnvironment] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,
