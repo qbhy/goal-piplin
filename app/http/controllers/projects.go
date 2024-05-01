@@ -43,7 +43,7 @@ func UpdateProject(request requests.ProjectRequest) any {
 	fields := request.Fields()
 
 	if err := usecase.UpdateProject(request.GetInt("id"), fields); err != nil {
-		return contracts.Fields{"msg": "更新项目"}
+		return contracts.Fields{"msg": err.Error()}
 	}
 
 	return contracts.Fields{"data": nil}

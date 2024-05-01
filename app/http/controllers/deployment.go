@@ -10,6 +10,15 @@ import (
 func GetDeployments(request contracts.HttpRequest) any {
 	list, total := models.Deployments().
 		Where("project_id", request.Get("project_id")).
+		When(request.GetString("comment") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+			return q.Where("comment", "like", "%"+request.GetString("comment")+"%")
+		}).
+		When(request.GetString("version") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+			return q.Where("version", "like", "%"+request.GetString("version")+"%")
+		}).
+		When(request.GetString("status") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+			return q.Where("status", request.GetString("status"))
+		}).
 		OrderByDesc("id").
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
@@ -38,6 +47,7 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 
 	project := models.Projects().FindOrFail(form.ProjectId)
+	_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
 	if deployment, err := usecase.CreateDeployment(project, form.Version, form.Comment, form.Params, form.Environments); err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	} else {

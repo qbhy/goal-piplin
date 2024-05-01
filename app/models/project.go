@@ -26,6 +26,7 @@ type Callback struct {
 type ProjectSettings struct {
 	EnvVars   []ProjectEnvVar `json:"vars"`
 	Branches  []string        `json:"branches"`
+	Tags      []string        `json:"tags"`
 	Callbacks []Callback      `json:"callbacks"`
 }
 

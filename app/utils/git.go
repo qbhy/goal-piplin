@@ -5,6 +5,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+	"github.com/go-git/go-git/v5/storage/memory"
 )
 
 // CloneRepoBranchOrCommit 克隆指定分支或提交
@@ -44,4 +45,53 @@ func CloneRepoBranchOrCommit(repoURL, privateKey, branchOrCommit, destDir string
 	}
 
 	return nil
+}
+
+// GetRepositoryBranchesAndTags 获取 Git 仓库的分支和 Tags
+func GetRepositoryBranchesAndTags(repoURL string, privateKey string) ([]string, []string, error) {
+	auth, err := ssh.NewPublicKeys("git", []byte(privateKey), "")
+	if err != nil {
+		return nil, nil, fmt.Errorf("error creating ssh auth: %v", err)
+	}
+
+	// 克隆仓库到内存中
+	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
+		URL:  repoURL,
+		Auth: auth,
+	})
+	if err != nil {
+		return nil, nil, fmt.Errorf("unable to clone repository: %w", err)
+	}
+
+	// 获取所有分支
+	branches, err := repo.Branches()
+	if err != nil {
+		return nil, nil, fmt.Errorf("unable to list branches: %w", err)
+	}
+
+	var branchList []string
+	err = branches.ForEach(func(ref *plumbing.Reference) error {
+		branchList = append(branchList, ref.Name().Short())
+		return nil
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// 获取所有 Tags
+	tags, err := repo.Tags()
+	if err != nil {
+		return nil, nil, fmt.Errorf("unable to list tags: %w", err)
+	}
+
+	var tagList []string
+	err = tags.ForEach(func(ref *plumbing.Reference) error {
+		tagList = append(tagList, ref.Name().Short())
+		return nil
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return branchList, tagList, nil
 }
