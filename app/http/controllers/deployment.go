@@ -20,10 +20,13 @@ func GetDeployments(request contracts.HttpRequest) any {
 
 func GetDeploymentDetail(request contracts.HttpRequest) any {
 	deployment := models.Deployments().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(deployment.ProjectId)
+
 	return contracts.Fields{
 		"data": contracts.Fields{
 			"deployment": deployment,
-			"project":    models.Projects().FindOrFail(deployment.ProjectId),
+			"project":    project,
+			"commands":   models.Commands().Where("project_id", project.Id).Get().ToArray(),
 		},
 	}
 }
@@ -35,8 +38,19 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 
 	project := models.Projects().FindOrFail(form.ProjectId)
-	if err := usecase.CreateDeployment(project, form.Version, form.Comment, form.Params, form.Environments); err != nil {
+	if deployment, err := usecase.CreateDeployment(project, form.Version, form.Comment, form.Params, form.Environments); err != nil {
 		return contracts.Fields{"msg": err.Error()}
+	} else {
+		return contracts.Fields{"data": deployment}
 	}
-	return contracts.Fields{}
+}
+
+func Notify(sse contracts.SseFactory, request contracts.HttpRequest) any {
+	var msg string
+	if err := sse.Sse("/api/notify").Broadcast(models.Deployments().FindOrFail(request.Get("id"))); err != nil {
+		msg = err.Error()
+	}
+	return contracts.Fields{
+		"err": msg,
+	}
 }

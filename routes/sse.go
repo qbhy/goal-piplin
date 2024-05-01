@@ -7,6 +7,11 @@ import (
 )
 
 func Sse(router contracts.HttpRouter) {
+
+	router.Options("*", func() string {
+		return "ok"
+	})
+
 	// 自定义 sse 控制器
 	router.Get(sse.New("/api/notify", sse2.Notify{}))
 

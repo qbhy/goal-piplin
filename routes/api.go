@@ -29,6 +29,7 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Get("/deployment/list", controllers.GetDeployments)
 	authRouter.Get("/deployment/detail", controllers.GetDeploymentDetail)
 	authRouter.Post("/deployment/create", controllers.CreateDeployment)
+	authRouter.Post("/deployment/notice", controllers.Notify)
 
 	authRouter.Get("/environment/list", controllers.GetEnvironments)
 	authRouter.Post("/environment/create", controllers.CreateEnvironment)

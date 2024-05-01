@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type deploymentCommand func(deployment DeploymentDetail, server models.Server, script string) (string, error)
@@ -30,7 +31,7 @@ type DeploymentDetail struct {
 	TimeVersion string     `json:"time_version"`
 }
 
-func CreateDeployment(project models.Project, version, comment string, params map[string]bool, environmentsParam []int) error {
+func CreateDeployment(project models.Project, version, comment string, params map[string]bool, environmentsParam []int) (models.Deployment, error) {
 	results := make([]models.CommandResult, 0)
 	commands := models.Commands().Where("project_id", project.Id).OrderByDesc("sort").Get()
 	servers := make([]models.Server, 0)
@@ -83,7 +84,7 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 
 	go StartDeployment(deployment, commands)
 
-	return nil
+	return deployment, nil
 }
 
 func StartDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
@@ -111,6 +112,8 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
 		"status": models.StatusRunning,
 	})
+	deployment.Status = models.StatusRunning
+	DeploymentNotify(deployment)
 	// todo 锁
 	for i, result := range deployment.Results {
 		command := commandsList[result.Step]
@@ -121,10 +124,12 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 		for s, server := range result.Servers {
 			server.Status = models.StatusRunning
 			result.Servers[s] = server
+			now := time.Now()
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
 				"results": deployment.Results,
 			})
+			DeploymentNotify(deployment)
 
 			output, err := command(detail, server.Server, "")
 			server.Status = models.StatusFinished
@@ -135,14 +140,17 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 
 			server.Outputs = output
 			result.Servers[s] = server
+			result.TimeConsuming = int(time.Now().Sub(now).Seconds())
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
 				"results": deployment.Results,
 			})
+			DeploymentNotify(deployment)
+
 			if err != nil {
-				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-					"status": models.StatusFailed,
-				})
+				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{"status": models.StatusFailed})
+				deployment.Status = models.StatusFailed
+				DeploymentNotify(deployment)
 				return
 			}
 		}
@@ -151,6 +159,8 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
 		"status": models.StatusFinished,
 	})
+	deployment.Status = models.StatusFinished
+	DeploymentNotify(deployment)
 }
 
 func makeCommandOutputsWithParams(commands []models.Command, params map[string]bool, servers []models.Server) []models.CommandResult {
