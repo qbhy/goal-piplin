@@ -10,6 +10,9 @@ func GetShares(request contracts.HttpRequest) any {
 	list, total := models.ShareFiles().
 		Where("project_id", request.QueryParam("project_id")).
 		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.ShareFile]) contracts.Query[models.ShareFile] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,

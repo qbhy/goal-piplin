@@ -10,6 +10,12 @@ func GetConfigs(request contracts.HttpRequest) any {
 	list, total := models.ConfigFiles().
 		Where("project_id", request.QueryParam("project_id")).
 		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.ConfigFile]) contracts.Query[models.ConfigFile] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
+		When(request.GetString("content") != "", func(q contracts.QueryBuilder[models.ConfigFile]) contracts.Query[models.ConfigFile] {
+			return q.Where("content", "like", "%"+request.GetString("content")+"%")
+		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,
