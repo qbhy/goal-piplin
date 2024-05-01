@@ -45,6 +45,16 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 }
 
+func RunDeployment(request contracts.HttpRequest) any {
+	deployment := models.Deployments().FindOrFail(request.Get("id"))
+
+	go usecase.StartDeployment(deployment, models.Commands().Where("project_id", deployment.ProjectId).Get())
+
+	return contracts.Fields{
+		"data": "ok",
+	}
+}
+
 func Notify(sse contracts.SseFactory, request contracts.HttpRequest) any {
 	var msg string
 	if err := sse.Sse("/api/notify").Broadcast(models.Deployments().FindOrFail(request.Get("id"))); err != nil {

@@ -140,7 +140,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 
 			server.Outputs = output
 			result.Servers[s] = server
-			result.TimeConsuming = int(time.Now().Sub(now).Seconds())
+			result.TimeConsuming = int(time.Now().Sub(now).Milliseconds())
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
 				"results": deployment.Results,
