@@ -110,7 +110,8 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	})
 
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-		"status": models.StatusRunning,
+		"status":     models.StatusRunning,
+		"updated_at": carbon.Now().ToDateTimeString(),
 	})
 	deployment.Status = models.StatusRunning
 	DeploymentNotify(deployment)
@@ -127,7 +128,8 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			now := time.Now()
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-				"results": deployment.Results,
+				"results":    deployment.Results,
+				"updated_at": carbon.Now().ToDateTimeString(),
 			})
 			DeploymentNotify(deployment)
 
@@ -143,12 +145,16 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			result.TimeConsuming = int(time.Now().Sub(now).Milliseconds())
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-				"results": deployment.Results,
+				"results":    deployment.Results,
+				"updated_at": carbon.Now().ToDateTimeString(),
 			})
 			DeploymentNotify(deployment)
 
 			if err != nil {
-				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{"status": models.StatusFailed})
+				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+					"status":     models.StatusFailed,
+					"updated_at": carbon.Now().ToDateTimeString(),
+				})
 				deployment.Status = models.StatusFailed
 				DeploymentNotify(deployment)
 				return
@@ -157,7 +163,8 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	}
 
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-		"status": models.StatusFinished,
+		"status":     models.StatusFinished,
+		"updated_at": carbon.Now().ToDateTimeString(),
 	})
 	deployment.Status = models.StatusFinished
 	DeploymentNotify(deployment)
