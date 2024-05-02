@@ -5,7 +5,7 @@ run:
 	go run bootstrap/app/main.go run
 
 build:
-	go build -o ./bin_goal -v ./
+	go build -o ./piplin -v ./
 
 test:
 	go test -json ./tests

@@ -48,6 +48,11 @@ func CreateDeployment(request contracts.HttpRequest) any {
 
 	project := models.Projects().FindOrFail(form.ProjectId)
 	_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+
+	if form.Params == nil {
+		form.Params = make(map[string]bool)
+	}
+
 	if deployment, err := usecase.CreateDeployment(project, form.Version, form.Comment, form.Params, form.Environments); err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	} else {

@@ -213,7 +213,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	// 克隆代码到本地
 	if err = utils.CloneRepoBranchOrCommit(
 		deployment.RepoAddress,
-		deployment.Key.PrivateKey,
+		deployment.Key.PublicKey,
 		deployment.Version,
 		repoPath,
 	); err != nil {

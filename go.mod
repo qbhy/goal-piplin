@@ -2,9 +2,9 @@ module github.com/qbhy/goal-piplin
 
 go 1.20
 
-replace (
-	github.com/goal-web/http => ../goal-web/http
-)
+//replace (
+//	github.com/goal-web/http => ../goal-web/http
+//)
 
 require (
 	github.com/goal-web/application v0.2.0
@@ -20,7 +20,7 @@ require (
 	github.com/goal-web/events v0.2.0
 	github.com/goal-web/filesystem v0.2.0
 	github.com/goal-web/hashing v0.2.0
-	github.com/goal-web/http v0.2.16-0.20240314201933-7e83b887700d
+	github.com/goal-web/http v0.2.16
 	github.com/goal-web/micro v0.2.0
 	github.com/goal-web/microdemo v0.0.0-20220219171937-6f3fca7dfbcb
 	github.com/goal-web/queue v0.2.1
@@ -45,6 +45,7 @@ require (
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee
 	github.com/stretchr/testify v1.8.4
 	github.com/tj/assert v0.0.3
+	github.com/valyala/fasthttp v1.51.0
 	golang.org/x/crypto v0.19.0
 )
 
@@ -125,7 +126,6 @@ require (
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.0 // indirect

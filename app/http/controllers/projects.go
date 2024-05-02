@@ -22,6 +22,15 @@ func GetProject(request contracts.HttpRequest) any {
 	}
 }
 
+func DeleteProject(request contracts.HttpRequest) any {
+	project := models.Projects().FindOrFail(request.Get("id"))
+	err := usecase.DeleteProject(project)
+	if err != nil {
+		return contracts.Fields{"msg": "删除失败：" + err.Error()}
+	}
+	return contracts.Fields{"successful": true}
+}
+
 func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	validation.VerifyForm(request)
 	fields := request.Fields()
@@ -30,7 +39,7 @@ func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	project, err := usecase.CreateProject(fields)
 
 	if err != nil {
-		return contracts.Fields{"msg": "创建项目失败"}
+		return contracts.Fields{"msg": "创建项目失败：" + err.Error()}
 	}
 
 	return contracts.Fields{

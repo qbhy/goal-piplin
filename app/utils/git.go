@@ -9,8 +9,8 @@ import (
 )
 
 // CloneRepoBranchOrCommit 克隆指定分支或提交
-func CloneRepoBranchOrCommit(repoURL, privateKey, branchOrCommit, destDir string) error {
-	auth, err := ssh.NewPublicKeys("git", []byte(privateKey), "")
+func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string) error {
+	auth, err := ssh.NewPublicKeys("git", []byte(publicKey), "")
 	if err != nil {
 		return fmt.Errorf("error creating ssh auth: %v", err)
 	}
@@ -48,8 +48,8 @@ func CloneRepoBranchOrCommit(repoURL, privateKey, branchOrCommit, destDir string
 }
 
 // GetRepositoryBranchesAndTags 获取 Git 仓库的分支和 Tags
-func GetRepositoryBranchesAndTags(repoURL string, privateKey string) ([]string, []string, error) {
-	auth, err := ssh.NewPublicKeys("git", []byte(privateKey), "")
+func GetRepositoryBranchesAndTags(repoURL string, publicKey string) ([]string, []string, error) {
+	auth, err := ssh.NewPublicKeys("git", []byte(publicKey), "")
 	if err != nil {
 		return nil, nil, fmt.Errorf("error creating ssh auth: %v", err)
 	}

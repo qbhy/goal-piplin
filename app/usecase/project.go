@@ -20,7 +20,8 @@ func CreateProject(fields contracts.Fields) (models.Project, error) {
 		return project, errors.New("项目已存在")
 	}
 
-	if utils.ToInt(fields["key_id"], 0) == 0 {
+	var existsKey = utils.ToInt(fields["key_id"], 0) > 0
+	if !existsKey {
 		key, err = CreateKey(utils.ToString(fields["name"], ""))
 		fields["key_id"] = key.Id
 		if err != nil {
@@ -32,7 +33,11 @@ func CreateProject(fields contracts.Fields) (models.Project, error) {
 	fields["settings"] = models.ProjectSettings{}
 	project = models.Projects().Create(fields)
 
-	return project, UpdateProjectBranches(project, key)
+	if existsKey {
+		err = UpdateProjectBranches(project, key)
+	}
+
+	return project, err
 }
 
 func UpdateProjectBranches(project models.Project, key models.Key) error {
@@ -77,5 +82,49 @@ func GetProjectDetail(id any) models.ProjectDetail {
 }
 
 func GetBranchDetail(project models.Project, key models.Key) ([]string, []string, error) {
-	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PrivateKey)
+	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PublicKey)
+}
+
+func DeleteProject(project models.Project) error {
+
+	if models.Projects().Where("key_id", project.KeyId).Count() == 1 {
+		models.Keys().Where("id", project.KeyId).Delete()
+	}
+
+	_, err := models.Projects().WhereIn("id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.ConfigFiles().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.ShareFiles().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.ProjectEnvironments().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.ProjectEnvironments().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.Deployments().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.Commands().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	return err
 }

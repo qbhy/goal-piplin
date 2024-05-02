@@ -17,6 +17,7 @@ import (
 	"github.com/goal-web/http"
 	"github.com/goal-web/http/sse"
 	"github.com/goal-web/http/websocket"
+	"github.com/goal-web/migration"
 	"github.com/goal-web/queue"
 	"github.com/goal-web/ratelimiter"
 	"github.com/goal-web/redis"
@@ -57,6 +58,7 @@ func main() {
 		console.NewService(),
 		scheduling.NewService(),
 		database.NewService(),
+		migration.NewService(),
 		queue.NewService(true),
 		email.NewService(),
 		http.NewService(routes.Api, routes.WebSocket, routes.Sse),

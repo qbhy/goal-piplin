@@ -19,8 +19,8 @@ connection = "mysql"
 host = "192.168.106.4"
 port = "3306"
 database = "piplin"
-username = "root"
-password = 123456
+username = "piplin"
+password = "password"
 
 [db.sqlite]
 database = "database/database.sqlite"

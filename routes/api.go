@@ -23,6 +23,7 @@ func Api(router contracts.HttpRouter) {
 
 	authRouter.Get("/project/list", controllers.GetProjects)
 	authRouter.Get("/project/detail", controllers.GetProject)
+	authRouter.Post("/project/delete", controllers.DeleteProject)
 	authRouter.Post("/project/create", controllers.CreateProject)
 	authRouter.Post("/project/update", controllers.UpdateProject)
 
