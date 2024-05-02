@@ -7,9 +7,9 @@ import (
 )
 
 // ConnectToSSHServer 使用SSH私钥连接到SSH服务器
-func ConnectToSSHServer(serverAddress, privateKey, username string) (*ssh.Client, error) {
+func ConnectToSSHServer(serverAddress, publicKey, username string) (*ssh.Client, error) {
 	// 创建SSH签名
-	signer, err := ssh.ParsePrivateKey([]byte(privateKey))
+	signer, err := ssh.ParsePrivateKey([]byte(publicKey))
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse private key: %v", err)
 	}
