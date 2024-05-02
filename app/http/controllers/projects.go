@@ -50,10 +50,9 @@ func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 func UpdateProject(request requests.ProjectRequest) any {
 	validation.VerifyForm(request)
 	fields := request.Fields()
-
-	if err := usecase.UpdateProject(request.GetInt("id"), fields); err != nil {
+	project, err := usecase.UpdateProject(request.GetInt("id"), fields)
+	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	}
-
-	return contracts.Fields{"data": nil}
+	return contracts.Fields{"data": project}
 }

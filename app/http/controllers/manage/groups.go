@@ -6,9 +6,13 @@ import (
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetGroups() any {
+func GetGroups(request contracts.HttpRequest) any {
 	return contracts.Fields{
-		"data": models.Groups().Get().ToArray(),
+		"data": models.Groups().
+			When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Group]) contracts.Query[models.Group] {
+				return q.Where("name", "like", "%"+request.GetString("name")+"%")
+			}).
+			Get().ToArray(),
 	}
 }
 

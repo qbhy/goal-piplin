@@ -56,20 +56,20 @@ func UpdateProjectBranches(project models.Project, key models.Key) error {
 	return err
 }
 
-func UpdateProject(id int, fields contracts.Fields) error {
+func UpdateProject(id int, fields contracts.Fields) (models.Project, error) {
+	project := models.Projects().FindOrFail(id)
 	if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
-		return errors.New("项目已存在")
+		return project, errors.New("项目已存在")
 	}
 	_, err := models.Projects().Where("id", id).UpdateE(utils.OnlyFields(fields,
 		"name", "default_branch", "project_path", "repo_address", "group_id", "key_id",
 	))
-	project := models.Projects().FindOrFail(id)
 
 	if err == nil {
-		return UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+		return project, UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
 	}
 
-	return err
+	return models.Projects().FindOrFail(id), err
 }
 
 func GetProjectDetail(id any) models.ProjectDetail {
@@ -82,7 +82,7 @@ func GetProjectDetail(id any) models.ProjectDetail {
 }
 
 func GetBranchDetail(project models.Project, key models.Key) ([]string, []string, error) {
-	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PublicKey)
+	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PrivateKey)
 }
 
 func DeleteProject(project models.Project) error {

@@ -9,6 +9,9 @@ import (
 func GetCabinets(request contracts.HttpRequest) any {
 	list, total := models.Cabinets().
 		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Cabinet]) contracts.Query[models.Cabinet] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,

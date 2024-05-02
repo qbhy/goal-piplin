@@ -11,6 +11,9 @@ import (
 func GetKeys(request contracts.HttpRequest) any {
 	list, total := models.Keys().
 		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,
