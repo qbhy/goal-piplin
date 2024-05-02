@@ -11,7 +11,7 @@ import (
 
 func CreateKey(name string) (models.Key, error) {
 	var key models.Key
-	publicKey, privateKey, err := utils2.GenerateRSAKeys()
+	privateKey, publicKey, err := utils2.GenerateRSAKeys()
 	if err != nil {
 		return key, err
 	}

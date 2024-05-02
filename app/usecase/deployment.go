@@ -201,7 +201,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 
 	client, err := utils.ConnectToSSHServer(
 		fmt.Sprintf("%s:%d", server.Host, server.Port),
-		deployment.Key.PublicKey,
+		deployment.Key.PrivateKey,
 		server.User,
 	)
 	if err != nil {
@@ -213,7 +213,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	// 克隆代码到本地
 	if err = utils.CloneRepoBranchOrCommit(
 		deployment.RepoAddress,
-		deployment.Key.PublicKey,
+		deployment.Key.PrivateKey,
 		deployment.Version,
 		repoPath,
 	); err != nil {
@@ -225,7 +225,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	}
 
 	sftpClient, err := utils.ConnectSFTP(
-		fmt.Sprintf("%s:%d", server.Host, server.Port), server.User, deployment.Key.PublicKey,
+		fmt.Sprintf("%s:%d", server.Host, server.Port), server.User, deployment.Key.PrivateKey,
 	)
 	if err != nil {
 		return strings.Join(outputs, "\n"), err
@@ -278,7 +278,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 
 	client, err := utils.ConnectToSSHServer(
 		fmt.Sprintf("%s:%d", server.Host, server.Port),
-		deployment.Key.PublicKey,
+		deployment.Key.PrivateKey,
 		server.User,
 	)
 	if err != nil {
@@ -303,7 +303,7 @@ func release(deployment DeploymentDetail, server models.Server, script string) (
 
 	client, err := utils.ConnectToSSHServer(
 		fmt.Sprintf("%s:%d", server.Host, server.Port),
-		deployment.Key.PublicKey,
+		deployment.Key.PrivateKey,
 		server.User,
 	)
 	if err != nil {
@@ -323,7 +323,7 @@ func scriptFunc(script string) deploymentCommand {
 
 		client, err := utils.ConnectToSSHServer(
 			fmt.Sprintf("%s:%d", server.Host, server.Port),
-			deployment.Key.PublicKey,
+			deployment.Key.PrivateKey,
 			server.User,
 		)
 		if err != nil {
