@@ -9,7 +9,21 @@ import (
 )
 
 func GetProjects(request contracts.HttpRequest) any {
-	list, total := models.Projects().OrderByDesc("id").Paginate(20, request.Int64Optional("page", 1))
+	list, total := models.Projects().
+		OrderByDesc("id").
+		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
+		When(request.GetString("repo_address") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("repo_address", "like", "%"+request.GetString("repo_address")+"%")
+		}).
+		When(request.GetString("project_path") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("project_path", "like", "%"+request.GetString("project_path")+"%")
+		}).
+		When(request.GetString("default_branch") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("default_branch", "like", "%"+request.GetString("default_branch")+"%")
+		}).
+		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
 		"total": total,
 		"data":  list.ToArray(),
