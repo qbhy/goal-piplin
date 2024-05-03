@@ -1,33 +1,32 @@
-# Goal Framework
-[![codecov](https://codecov.io/gh/goal-web/goal/branch/master/graph/badge.svg)](https://codecov.io/gh/goal-web/goal)
+# Goal Piplin
+[![codecov](https://codecov.io/gh/qbhy/piplin/branch/master/graph/badge.svg)](https://codecov.io/gh/qbhy/piplin)
 [![Go Report Card](https://goreportcard.com/badge/github.com/goal-web/example)](https://goreportcard.com/report/github.com/goal-web/example)
 [![GoDoc](https://pkg.go.dev/badge/github.com/goal-web/example?status.svg)](https://pkg.go.dev/github.com/goal-web/example?tab=doc)
-[![Join the chat at https://gitter.im/goal-web/goal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/goal-web/goal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/qbhy/piplin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qbhy/piplin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Sourcegraph](https://sourcegraph.com/github.com/goal-web/example/-/badge.svg)](https://sourcegraph.com/github.com/goal-web/contracts?badge)
-[![Open Source Helpers](https://www.codetriage.com/goal-web/goal/badges/users.svg)](https://www.codetriage.com/goal-web/goal)
-[![Release](https://img.shields.io/github/release/goal-web/goal.svg?style=flat-square)](https://github.com/goal-web/example/releases)
+[![Open Source Helpers](https://www.codetriage.com/qbhy/piplin/badges/users.svg)](https://www.codetriage.com/qbhy/piplin)
+[![Release](https://img.shields.io/github/release/qbhy/piplin.svg?style=flat-square)](https://github.com/goal-web/example/releases)
 [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/goal-web/example)](https://www.tickgit.com/browse?repo=github.com/goal-web/example)
 
-## About Goal Framework
+## About Goal Piplin
 
-Goal Framework is a common application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Goal Framework takes the pain out of development by easing common tasks used in many web projects, such as:
+Goal piplin is a very easy-to-use deployment tool.
 
-- [Simple and powerful middleware](https://github.com/goal-web/pipeline).
-- [Powerful dependency injection container](https://github.com/goal-web/container).
-- Multiple back-ends for [session](https://github.com/goal-web/session) and [cache](https://github.com/goal-web/cache) storage.
-- Expressive, intuitive [database](https://github.com/goal-web/database).
-- [Robust background job processing](https://github.com/goal-web/queue).
+- Easy to use
+- Multi user
+- Support grouping
 
-Goal framework is accessible, powerful, and provides tools required for large, robust applications.
+## Views
+goal piplin is a project that separates the front and back ends. The front end is developed based on antd pro, which uses umijs as a scaffolding.
 
-## Learning Goal Framework
-* [Installation](https://github.com/goal-web/doc/blob/wiki/%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85.md)
-* [Documents](https://github.com/goal-web/doc/blob/wiki/README.md)
+ - [goal-piplin-views](https://github.com/qbhy/goal-piplin-views)
+ - [ant-design-pro](https://github.com/ant-design/ant-design-pro)
+ - [umijs](https://github.com/umijs/umi)
 
 ## Contributing
 
-Thank you for considering contributing to the Goal framework! The contribution guide can be found in the [Goal documentation](https://github.com/goal-web/doc/blob/wiki/%E5%89%8D%E8%A8%80/%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%BC%95.md).
+Thank you for considering contributing to the Goal Piplin! 
 
 ## License
 
-The Goal framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Goal Piplin is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
