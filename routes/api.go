@@ -76,6 +76,7 @@ func Api(router contracts.HttpRouter) {
 	adminRoute.Post("/user/delete", manage.DeleteUsers)
 	adminRoute.Post("/user/update", manage.UpdateUser)
 
+	authRouter.Get("/user_project/list", controllers.GetUserProjects)
 	authRouter.Post("/user_project/create", controllers.CreateUserProject)
 	authRouter.Post("/user_project/update", controllers.UpdateUserProject)
 	authRouter.Post("/user_project/delete", controllers.DeleteUserProjects)
