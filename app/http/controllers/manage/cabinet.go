@@ -6,11 +6,15 @@ import (
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetCabinets(request contracts.HttpRequest) any {
+func GetCabinets(request contracts.HttpRequest, guard contracts.Guard) any {
+	user := guard.User().(models.User)
 	list, total := models.Cabinets().
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Cabinet]) contracts.Query[models.Cabinet] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
+		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Cabinet]) contracts.Query[models.Cabinet] {
+			return q.Where("creator_id", user.Id)
 		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
@@ -19,8 +23,8 @@ func GetCabinets(request contracts.HttpRequest) any {
 	}
 }
 
-func CreateCabinet(request contracts.HttpRequest) any {
-	cabinet, err := usecase.CreateCabinet(request.GetString("name"), request.Get("settings"))
+func CreateCabinet(request contracts.HttpRequest, guard contracts.Guard) any {
+	cabinet, err := usecase.CreateCabinet(guard.GetId(), request.GetString("name"), request.Get("settings"))
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}

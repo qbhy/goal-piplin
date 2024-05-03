@@ -5,22 +5,20 @@ import (
 	"fmt"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/exceptions"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 	"net"
 	"time"
 )
 
-func CreateCabinet(name string, settings any) (*models.Cabinet, error) {
+func CreateCabinet(creatorId, name string, settings any) (*models.Cabinet, error) {
 	if models.Cabinets().Where("name", name).Count() > 0 {
 		return nil, errors.New("机柜已存在")
 	}
 
 	cabinet, err := models.Cabinets().CreateE(contracts.Fields{
+		"creator_id": creatorId,
 		"name":       name,
 		"settings":   settings,
-		"created_at": carbon.Now().ToDateTimeString(),
-		"updated_at": carbon.Now().ToDateTimeString(),
 	})
 	if err != nil {
 		return nil, err
@@ -63,9 +61,8 @@ func UpdateCabinet(id any, name string, settings any) error {
 	}
 
 	_, err := models.Cabinets().Where("id", id).UpdateE(contracts.Fields{
-		"name":       name,
-		"settings":   settings,
-		"updated_at": carbon.Now().ToDateTimeString(),
+		"name":     name,
+		"settings": settings,
 	})
 
 	return err

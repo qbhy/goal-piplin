@@ -79,7 +79,6 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 		"version":      version,
 		"comment":      comment,
 		"status":       models.StatusWaiting,
-		"created_at":   carbon.Now().ToDateTimeString(),
 	})
 
 	go StartDeployment(deployment, commands)
@@ -110,8 +109,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	})
 
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-		"status":     models.StatusRunning,
-		"updated_at": carbon.Now().ToDateTimeString(),
+		"status": models.StatusRunning,
 	})
 	deployment.Status = models.StatusRunning
 	DeploymentNotify(deployment)
@@ -128,8 +126,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			now := time.Now()
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-				"results":    deployment.Results,
-				"updated_at": carbon.Now().ToDateTimeString(),
+				"results": deployment.Results,
 			})
 			DeploymentNotify(deployment)
 
@@ -145,15 +142,13 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			result.TimeConsuming = int(time.Now().Sub(now).Milliseconds())
 			deployment.Results[i] = result
 			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-				"results":    deployment.Results,
-				"updated_at": carbon.Now().ToDateTimeString(),
+				"results": deployment.Results,
 			})
 			DeploymentNotify(deployment)
 
 			if err != nil {
 				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-					"status":     models.StatusFailed,
-					"updated_at": carbon.Now().ToDateTimeString(),
+					"status": models.StatusFailed,
 				})
 				deployment.Status = models.StatusFailed
 				DeploymentNotify(deployment)
@@ -163,8 +158,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	}
 
 	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
-		"status":     models.StatusFinished,
-		"updated_at": carbon.Now().ToDateTimeString(),
+		"status": models.StatusFinished,
 	})
 	deployment.Status = models.StatusFinished
 	DeploymentNotify(deployment)

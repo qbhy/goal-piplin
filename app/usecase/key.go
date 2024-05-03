@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/utils"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 	utils2 "github.com/qbhy/goal-piplin/app/utils"
 )
@@ -19,7 +18,6 @@ func CreateKey(name string) (models.Key, error) {
 		"name":        name,
 		"public_key":  publicKey,
 		"private_key": privateKey,
-		"created_at":  carbon.Now().ToDateTimeString(),
 	})
 	return key, nil
 }

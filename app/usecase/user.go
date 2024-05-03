@@ -5,7 +5,6 @@ import (
 	"github.com/goal-web/application"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/utils"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 )
 
@@ -15,12 +14,11 @@ func CreateUser(name, password, role string) (*models.User, error) {
 	}
 
 	user, err := models.Users().CreateE(contracts.Fields{
-		"username":   name,
-		"nickname":   name,
-		"avatar":     "",
-		"role":       role,
-		"password":   application.Get("hashing").(contracts.Hasher).Make(password, nil),
-		"created_at": carbon.Now().ToDateTimeString(),
+		"username": name,
+		"nickname": name,
+		"avatar":   "",
+		"role":     role,
+		"password": application.Get("hashing").(contracts.Hasher).Make(password, nil),
 	})
 	return user, err
 }

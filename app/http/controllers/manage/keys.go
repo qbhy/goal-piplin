@@ -2,17 +2,20 @@ package manage
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 	"github.com/qbhy/goal-piplin/app/utils"
 )
 
-func GetKeys(request contracts.HttpRequest) any {
+func GetKeys(request contracts.HttpRequest, guard contracts.Guard) any {
+	user := guard.User().(models.User)
 	list, total := models.Keys().
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
+		}).
+		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {
+			return q.Where("creator_id", user.Id)
 		}).
 		Paginate(20, request.Int64Optional("page", 1))
 	return contracts.Fields{
@@ -28,10 +31,10 @@ func CreateKey(request contracts.HttpRequest, guard contracts.Guard) any {
 	}
 	return contracts.Fields{
 		"data": models.Keys().Create(contracts.Fields{
+			"creator_id":  guard.GetId(),
 			"name":        request.GetString("name"),
 			"public_key":  publicKey,
 			"private_key": privateKey,
-			"created_at":  carbon.Now().ToDateTimeString(),
 		}),
 	}
 }

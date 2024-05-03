@@ -2,15 +2,24 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/querybuilder"
 	"github.com/goal-web/validation"
 	"github.com/qbhy/goal-piplin/app/http/requests"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetProjects(request contracts.HttpRequest) any {
+func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
+	user := guard.User().(models.User)
+
 	list, total := models.Projects().
 		OrderByDesc("id").
+		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("creator_id", user.Id).WhereExists(func() contracts.Query[models.Project] {
+				return querybuilder.New[models.Project]("user_projects").
+					Where("user_id", user.Id)
+			})
+		}).
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
 		}).

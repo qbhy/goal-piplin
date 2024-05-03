@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/exceptions"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 	"net"
 	"time"
@@ -48,9 +47,8 @@ func UpdateEnvironment(id any, name string, settings any) error {
 	}
 
 	_, err := models.ProjectEnvironments().Where("id", id).UpdateE(contracts.Fields{
-		"name":       name,
-		"settings":   settings,
-		"updated_at": carbon.Now().ToDateTimeString(),
+		"name":     name,
+		"settings": settings,
 	})
 
 	return err

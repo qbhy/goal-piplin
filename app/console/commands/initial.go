@@ -5,7 +5,6 @@ import (
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/commands"
 	"github.com/goal-web/supports/logs"
-	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/utils"
 )
@@ -28,8 +27,7 @@ func (cmd Initial) Handle() any {
 	if user := models.Users().Where("username", username).First(); user != nil {
 		logs.Default().Info("piplin 用户已存在")
 		models.Users().Where("id", user.Id).Update(contracts.Fields{
-			"password":   cmd.hash.Make(password, nil),
-			"updated_at": carbon.Now().ToDateTimeString(),
+			"password": cmd.hash.Make(password, nil),
 		})
 		logs.Default().Info(fmt.Sprintf("已将密码重置为 %s", password))
 	}
@@ -44,7 +42,6 @@ func (cmd Initial) Handle() any {
 			"name":        "default",
 			"public_key":  publicKey,
 			"private_key": privateKey,
-			"created_at":  carbon.Now().ToDateTimeString(),
 		})
 		logs.Default().Info(fmt.Sprintf("已创建默认密钥"))
 	} else {
@@ -52,12 +49,11 @@ func (cmd Initial) Handle() any {
 	}
 
 	models.Users().Create(contracts.Fields{
-		"username":   username,
-		"nickname":   username,
-		"avatar":     "",
-		"role":       models.UserRoleAdmin,
-		"password":   cmd.hash.Make(password, nil),
-		"created_at": carbon.Now().ToDateTimeString(),
+		"username": username,
+		"nickname": username,
+		"avatar":   "",
+		"role":     models.UserRoleAdmin,
+		"password": cmd.hash.Make(password, nil),
 	})
 	logs.Default().Info(fmt.Sprintf("已创建用户 %s 密码为 %s", username, password))
 

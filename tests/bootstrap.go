@@ -6,7 +6,7 @@ import (
 	"github.com/goal-web/bloomfilter"
 	"github.com/goal-web/cache"
 	"github.com/goal-web/config"
-	"github.com/goal-web/console"
+	"github.com/goal-web/console/scheduling"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/database"
 	"github.com/goal-web/email"
@@ -14,11 +14,15 @@ import (
 	"github.com/goal-web/events"
 	"github.com/goal-web/filesystem"
 	"github.com/goal-web/hashing"
+	"github.com/goal-web/migration"
+	"github.com/goal-web/queue"
+	"github.com/goal-web/ratelimiter"
 	"github.com/goal-web/redis"
-	"github.com/goal-web/session"
+	"github.com/goal-web/serialization"
 	"github.com/goal-web/supports/exceptions"
 	"github.com/goal-web/supports/logs"
-	console2 "github.com/qbhy/goal-piplin/app/console"
+	"github.com/qbhy/goal-piplin/app/console"
+	"github.com/qbhy/goal-piplin/app/providers"
 	config2 "github.com/qbhy/goal-piplin/config"
 	"sync"
 )
@@ -38,18 +42,23 @@ func initApp(path ...string) contracts.Application {
 			config.NewToml(config.File("config.toml")),
 			config2.GetConfigProviders(),
 		),
-		console.NewService(console2.NewKernel),
 		hashing.NewService(),
 		encryption.NewService(),
 		filesystem.NewService(),
+		serialization.NewService(),
 		events.NewService(),
+		providers.NewEvents(),
 		redis.NewService(),
-		bloomfilter.NewService(),
 		cache.NewService(),
-		session.NewService(),
+		bloomfilter.NewService(),
 		auth.NewService(),
-		email.NewService(),
+		ratelimiter.NewService(),
+		console.NewService(),
+		scheduling.NewService(),
 		database.NewService(),
+		migration.NewService(),
+		queue.NewService(true),
+		email.NewService(),
 		//&http.serviceProvider{RouteCollectors: []any{
 		//	// 路由收集器
 		//	routes.V1Routes,
