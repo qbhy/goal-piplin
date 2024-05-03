@@ -5,6 +5,7 @@ import (
 	"github.com/goal-web/contracts"
 	"github.com/qbhy/goal-piplin/app/http/controllers"
 	"github.com/qbhy/goal-piplin/app/http/controllers/manage"
+	"github.com/qbhy/goal-piplin/app/http/middlewares"
 )
 
 func Api(router contracts.HttpRouter) {
@@ -54,8 +55,8 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Post("/command/delete", controllers.DeleteCommand)
 
 	authRouter.Get("/cabinet/list", manage.GetCabinets)
-	authRouter.Post("/cabinet/create", manage.CreateCabinet)
 	authRouter.Post("/cabinet/update", manage.UpdateCabinet)
+	authRouter.Post("/cabinet/create", manage.CreateCabinet)
 	authRouter.Post("/cabinet/delete", manage.DeleteCabinet)
 
 	authRouter.Get("/key/list", manage.GetKeys)
@@ -67,5 +68,12 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Post("/group/create", manage.CreateGroup)
 	authRouter.Post("/group/update", manage.UpdateGroup)
 	authRouter.Post("/group/delete", manage.DeleteGroups)
+
+	adminRoute := authRouter.Group("", middlewares.Admin)
+
+	adminRoute.Get("/user/list", manage.GetUsers)
+	adminRoute.Post("/user/create", manage.CreateUser)
+	adminRoute.Post("/user/delete", manage.DeleteUsers)
+	adminRoute.Post("/user/update", manage.UpdateUser)
 
 }

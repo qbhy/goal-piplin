@@ -55,7 +55,7 @@ func (cmd Initial) Handle() any {
 		"username":   username,
 		"nickname":   username,
 		"avatar":     "",
-		"role":       "system",
+		"role":       models.UserRoleAdmin,
 		"password":   cmd.hash.Make(password, nil),
 		"created_at": carbon.Now().ToDateTimeString(),
 	})

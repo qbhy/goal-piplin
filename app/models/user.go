@@ -22,6 +22,11 @@ type User struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
+const (
+	UserRoleAdmin = "admin"
+	UserRoleUser  = "user"
+)
+
 // GetId 实现 auth 需要的方法
 func (u User) GetId() string {
 	return u.Id
