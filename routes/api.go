@@ -71,9 +71,13 @@ func Api(router contracts.HttpRouter) {
 
 	adminRoute := authRouter.Group("", middlewares.Admin)
 
-	adminRoute.Get("/user/list", manage.GetUsers)
+	authRouter.Get("/user/list", manage.GetUsers)
 	adminRoute.Post("/user/create", manage.CreateUser)
 	adminRoute.Post("/user/delete", manage.DeleteUsers)
 	adminRoute.Post("/user/update", manage.UpdateUser)
+
+	authRouter.Post("/user_project/create", controllers.CreateUserProject)
+	authRouter.Post("/user_project/update", controllers.UpdateUserProject)
+	authRouter.Post("/user_project/delete", controllers.DeleteUserProjects)
 
 }

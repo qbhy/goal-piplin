@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/goal-web/contracts"
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/class"
 )
@@ -31,7 +32,7 @@ type ProjectSettings struct {
 }
 
 type Project struct {
-	Id            string          `json:"id"`
+	Id            int             `json:"id"`
 	Uuid          string          `json:"uuid"`
 	Settings      ProjectSettings `json:"settings"`
 	Name          string          `json:"name"`
@@ -47,6 +48,7 @@ type Project struct {
 
 type ProjectDetail struct {
 	*Project
-	Key   *Key   `json:"key"`
-	Group *Group `json:"group"`
+	Key     *Key               `json:"key"`
+	Group   *Group             `json:"group"`
+	Members []contracts.Fields `json:"members"`
 }

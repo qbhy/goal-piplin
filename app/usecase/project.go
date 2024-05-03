@@ -3,6 +3,7 @@ package usecase
 import (
 	"errors"
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	utils2 "github.com/qbhy/goal-piplin/app/utils"
@@ -78,6 +79,11 @@ func GetProjectDetail(id any) models.ProjectDetail {
 		Project: project,
 		Key:     models.Keys().Find(project.KeyId),
 		Group:   models.Groups().Find(project.GroupId),
+		Members: table.ArrayQuery("user_projects").
+			Select("user_id", "username", "nickname", "avatar", "status", "user_projects.id").
+			Where("project_id", project.Id).
+			LeftJoin("users", "users.id", "=", "user_projects.user_id").
+			Get().ToArrayFields(),
 	}
 }
 
