@@ -15,9 +15,13 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 	list, total := models.Projects().
 		OrderByDesc("id").
 		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
-			return q.Where("creator_id", user.Id).WhereExists(func() contracts.Query[models.Project] {
-				return querybuilder.New[models.Project]("user_projects").
-					Where("user_id", user.Id)
+			return q.WhereFunc(func(q contracts.QueryBuilder[models.Project]) {
+				q.Where("creator_id", user.Id).OrWhereExists(func() contracts.Query[models.Project] {
+					return querybuilder.New[models.Project]("user_projects").
+						Where("user_id", user.Id).
+						Where("status", models.InviteStatusJoined).
+						Where("projects.id", querybuilder.Expression("user_projects.project_id"))
+				})
 			})
 		}).
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
