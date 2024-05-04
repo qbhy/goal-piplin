@@ -50,6 +50,8 @@ services:
       - "3306:3306"
   server:
     image: qbhy/piplin:latest
+    ports:
+      - "8008:8008"
     depends_on:
       - mysql
       - redis
