@@ -16,7 +16,7 @@ nsq.address = "127.0.0.1:31001"
 
 [db]
 connection = "mysql"
-host = "127.0.0.1"
+host = "mysql"
 port = "3306"
 database = "piplin"
 username = "piplin"
@@ -33,7 +33,7 @@ username = "postgres"
 password = "123456"
 
 [redis]
-host = "127.0.0.1"
+host = "redis"
 port = "6379"
 password = "123456"
 

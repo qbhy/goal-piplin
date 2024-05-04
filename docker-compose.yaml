@@ -3,33 +3,33 @@ networks:
   piplin:
     driver: bridge
 services:
-#  nsqlookupd:
-#    image: nsqio/nsq
-#    command: /nsqlookupd
-#    networks:
-#      - piplin
-#    ports:
-#      - "4160:4160"
-#      - "4161:4161"
-#  nsqd:
-#    image: nsqio/nsq
-#    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
-#    networks:
-#      - piplin
-#    depends_on:
-#      - nsqlookupd
-#    ports:
-#      - "4150:4150"
-#      - "4151:4151"
-#  nsqadmin:
-#    image: nsqio/nsq
-#    networks:
-#      - piplin
-#    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
-#    depends_on:
-#      - nsqlookupd
-#    ports:
-#      - "4171:4171"
+  #  nsqlookupd:
+  #    image: nsqio/nsq
+  #    command: /nsqlookupd
+  #    networks:
+  #      - piplin
+  #    ports:
+  #      - "4160:4160"
+  #      - "4161:4161"
+  #  nsqd:
+  #    image: nsqio/nsq
+  #    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+  #    networks:
+  #      - piplin
+  #    depends_on:
+  #      - nsqlookupd
+  #    ports:
+  #      - "4150:4150"
+  #      - "4151:4151"
+  #  nsqadmin:
+  #    image: nsqio/nsq
+  #    networks:
+  #      - piplin
+  #    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+  #    depends_on:
+  #      - nsqlookupd
+  #    ports:
+  #      - "4171:4171"
   redis:
     image: redis
     networks:
@@ -48,7 +48,7 @@ services:
       MYSQL_ROOT_HOST: '%'
     ports:
       - "3306:3306"
-  piplin:
+  server:
     image: qbhy/piplin:latest
     networks:
       - piplin
