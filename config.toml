@@ -11,12 +11,12 @@ port = "8008"
 
 [queue]
 connection = "nsq"
-kafka.brokers = "localhost:9092"
-nsq.address = "localhost:31001"
+kafka.brokers = "127.0.0.1:9092"
+nsq.address = "127.0.0.1:31001"
 
 [db]
 connection = "mysql"
-host = "192.168.106.4"
+host = "127.0.0.1"
 port = "3306"
 database = "piplin"
 username = "piplin"
