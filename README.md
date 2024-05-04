@@ -16,6 +16,35 @@ Goal piplin is a very easy-to-use deployment tool.
 - Multi user
 - Support grouping
 
+## Install
+Clone code
+
+```bash
+git clone https://github.com/qbhy/goal-piplin.git
+```
+
+Use docker compose to start the service (including mysql, redis, views and server)
+```bash
+docker compose up -d
+```
+
+Execute migration
+```bash
+docker compose exec server /var/www/piplin migrate
+```
+
+Initialize users and keys
+```bash
+docker compose exec server /var/www/piplin init
+```
+> The default account is piplin and the password is password
+
+nginx configuration
+```bash
+cp nginx.conf /etc/nginx/site-enabled/piplin.conf
+```
+> In this step, you can modify the path and piplin.conf according to your needs
+
 ## Views
 goal piplin is a project that separates the front and back ends. The front end is developed based on antd pro, which uses umijs as a scaffolding.
 
