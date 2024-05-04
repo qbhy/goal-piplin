@@ -15,6 +15,7 @@ FROM alpine
 WORKDIR /var/www
 COPY --from=builder /app/piplin /var/www/piplin
 COPY config.toml .
+COPY database/migrations .
 
 # run
 ENTRYPOINT ["/var/www/piplin", "run"]
