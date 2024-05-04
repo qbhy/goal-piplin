@@ -107,6 +107,11 @@ func DeleteProject(project models.Project) error {
 		return err
 	}
 
+	_, err = models.UserProjects().WhereIn("project_id", project.Id).DeleteE()
+	if err != nil {
+		return err
+	}
+
 	_, err = models.ShareFiles().WhereIn("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err

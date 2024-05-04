@@ -8,7 +8,13 @@ import (
 )
 
 func DeleteGroups(id any) error {
-	_, err := models.Groups().WhereIn("id", id).DeleteE()
+	_, err := models.UserGroups().WhereIn("group_id", id).DeleteE()
+	if err != nil {
+		return err
+	}
+
+	_, err = models.Groups().WhereIn("id", id).DeleteE()
+
 	return err
 }
 
