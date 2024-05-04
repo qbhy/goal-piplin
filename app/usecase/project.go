@@ -23,7 +23,7 @@ func CreateProject(fields contracts.Fields) (models.Project, error) {
 
 	var existsKey = utils.ToInt(fields["key_id"], 0) > 0
 	if !existsKey {
-		key, err = CreateKey(utils.ToString(fields["name"], ""))
+		key, err = CreateKey(project.CreatorId, utils.ToString(fields["name"], ""))
 		fields["key_id"] = key.Id
 		if err != nil {
 			return project, err
