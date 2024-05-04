@@ -65,6 +65,7 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Post("/key/update", manage.UpdateKey)
 
 	authRouter.Get("/group/list", manage.GetGroups)
+	authRouter.Get("/group/members", manage.GetGroupMembers)
 	authRouter.Post("/group/create", manage.CreateGroup)
 	authRouter.Post("/group/update", manage.UpdateGroup)
 	authRouter.Post("/group/delete", manage.DeleteGroups)
@@ -80,5 +81,10 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Post("/user_project/create", controllers.CreateUserProject)
 	authRouter.Post("/user_project/update", controllers.UpdateUserProject)
 	authRouter.Post("/user_project/delete", controllers.DeleteUserProjects)
+
+	authRouter.Get("/user_group/list", controllers.GetUserGroups)
+	authRouter.Post("/user_group/create", controllers.CreateUserGroup)
+	authRouter.Post("/user_group/update", controllers.UpdateUserGroup)
+	authRouter.Post("/user_group/delete", controllers.DeleteUserGroups)
 
 }
