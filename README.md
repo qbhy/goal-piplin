@@ -52,6 +52,8 @@ goal piplin is a project that separates the front and back ends. The front end i
  - [ant-design-pro](https://github.com/ant-design/ant-design-pro)
  - [umijs](https://github.com/umijs/umi)
 
+<img width="1466" alt="image" src="https://github.com/qbhy/goal-piplin/assets/24204533/d0e0c034-02d7-4eca-ad91-2f7090dd5c1c">
+
 ## Contributing
 
 Thank you for considering contributing to the Goal Piplin! 
