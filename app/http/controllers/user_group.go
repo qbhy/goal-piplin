@@ -28,8 +28,17 @@ func GetUserGroups(request contracts.HttpRequest, guard contracts.Guard) any {
 }
 
 func CreateUserGroup(request contracts.HttpRequest, guard contracts.Guard) any {
+	userId := request.GetInt("user_id")
 	group := models.Groups().FindOrFail(request.GetInt("group_id"))
-	data, err := usecase.CreateUserGroup(group.Id, request.GetInt("user_id"))
+	data, err := usecase.CreateUserGroup(group.Id, userId)
+
+	if request.GetString("user_id") == guard.GetId() {
+		return contracts.Fields{"msg": "不可以邀请自己"}
+	}
+	if group.CreatorId == userId {
+		return contracts.Fields{"msg": "不可以邀请创建者"}
+	}
+
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	}

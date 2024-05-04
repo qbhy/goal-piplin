@@ -28,8 +28,16 @@ func GetUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 }
 
 func CreateUserProject(request contracts.HttpRequest, guard contracts.Guard) any {
+	userId := request.GetInt("user_id")
 	project := models.Projects().FindOrFail(request.GetInt("project_id"))
-	data, err := usecase.CreateUserProject(project.Id, request.GetInt("user_id"))
+	data, err := usecase.CreateUserProject(project.Id, userId)
+	if request.GetString("user_id") == guard.GetId() {
+		return contracts.Fields{"msg": "不可以邀请自己"}
+	}
+	if project.CreatorId == userId {
+		return contracts.Fields{"msg": "不可以邀请创建者"}
+	}
+
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	}
