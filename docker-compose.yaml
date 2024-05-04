@@ -50,8 +50,14 @@ services:
       - "3306:3306"
   server:
     image: qbhy/piplin:latest
+    depends_on:
+      - mysql
+      - redis
     networks:
       - piplin
+    command:
+      - /var/www/piplin migrate
+      - /var/www/piplin init
   views:
     image: qbhy/piplin-views:latest
     networks:

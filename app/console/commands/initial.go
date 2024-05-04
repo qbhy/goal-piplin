@@ -24,12 +24,25 @@ type Initial struct {
 func (cmd Initial) Handle() any {
 	username := "piplin"
 	password := "password"
-	if user := models.Users().Where("username", username).First(); user != nil {
+	user := models.Users().Where("username", username).First()
+	var err error
+	if user != nil {
 		logs.Default().Info("piplin 用户已存在")
 		models.Users().Where("id", user.Id).Update(contracts.Fields{
 			"password": cmd.hash.Make(password, nil),
 		})
 		logs.Default().Info(fmt.Sprintf("已将密码重置为 %s", password))
+	} else {
+		user, err = models.Users().CreateE(contracts.Fields{
+			"username": username,
+			"nickname": username,
+			"avatar":   "",
+			"role":     models.UserRoleAdmin,
+			"password": cmd.hash.Make(password, nil),
+		})
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	if models.Keys().Count() == 0 {
@@ -39,6 +52,7 @@ func (cmd Initial) Handle() any {
 		}
 
 		models.Keys().Create(contracts.Fields{
+			"creator_id":  user.Id,
 			"name":        "default",
 			"public_key":  publicKey,
 			"private_key": privateKey,
@@ -48,13 +62,6 @@ func (cmd Initial) Handle() any {
 		logs.Default().Info(fmt.Sprintf("已存在默认密钥"))
 	}
 
-	models.Users().Create(contracts.Fields{
-		"username": username,
-		"nickname": username,
-		"avatar":   "",
-		"role":     models.UserRoleAdmin,
-		"password": cmd.hash.Make(password, nil),
-	})
 	logs.Default().Info(fmt.Sprintf("已创建用户 %s 密码为 %s", username, password))
 
 	return nil
