@@ -2,7 +2,7 @@ module github.com/qbhy/goal-piplin
 
 go 1.20
 
-//replace github.com/goal-web/database => ../goal-web/database
+//replace github.com/goal-web/console => ../goal-web/console
 
 require (
 	github.com/goal-web/application v0.2.0
@@ -10,7 +10,7 @@ require (
 	github.com/goal-web/bloomfilter v0.2.0
 	github.com/goal-web/cache v0.2.0
 	github.com/goal-web/config v0.2.0
-	github.com/goal-web/console v0.2.3
+	github.com/goal-web/console v0.2.4
 	github.com/goal-web/contracts v0.2.4
 	github.com/goal-web/database v0.2.6
 	github.com/goal-web/email v0.2.0

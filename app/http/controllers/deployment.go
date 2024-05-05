@@ -7,6 +7,26 @@ import (
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
+func PostDeployment(request contracts.HttpRequest) any {
+	var form requests.PostDeploymentRequest
+	if err := request.Parse(&form); err != nil {
+		return contracts.Fields{"msg": err.Error()}
+	}
+
+	project := models.Projects().Where("uuid", form.UUID).FirstOrFail()
+	_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+
+	if form.Params == nil {
+		form.Params = make(map[string]bool)
+	}
+
+	if deployment, err := usecase.CreateDeployment(project, form.Version, form.Comment, form.Params, form.Environments); err != nil {
+		return contracts.Fields{"msg": err.Error()}
+	} else {
+		return contracts.Fields{"data": deployment}
+	}
+}
+
 func GetDeployments(request contracts.HttpRequest) any {
 	list, total := models.Deployments().
 		Where("project_id", request.Get("project_id")).
@@ -63,7 +83,7 @@ func CreateDeployment(request contracts.HttpRequest) any {
 func RunDeployment(request contracts.HttpRequest) any {
 	deployment := models.Deployments().FindOrFail(request.Get("id"))
 
-	go usecase.StartDeployment(deployment, models.Commands().Where("project_id", deployment.ProjectId).Get())
+	go usecase.GoDeployment(deployment, models.Commands().Where("project_id", deployment.ProjectId).Get())
 
 	return contracts.Fields{
 		"data": "ok",

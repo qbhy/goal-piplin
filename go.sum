@@ -139,8 +139,8 @@ github.com/goal-web/collection v0.2.0 h1:ERuNDxATTwqAp8Xuxm5CxoU+LEmLIxIZHQVQ7Qr
 github.com/goal-web/collection v0.2.0/go.mod h1:o2/CYlKwQzUVluRbMsGh/v8nJy44bOdwpEhQDJvJM1I=
 github.com/goal-web/config v0.2.0 h1:gp3pqJHoprLfu2nmgPkf/ul2M8iHpvlYkhWVL1NIyl4=
 github.com/goal-web/config v0.2.0/go.mod h1:C9r93RzqRLAXoYxnxjjO9NeAgU3xN6zqDwkLO+n7y3E=
-github.com/goal-web/console v0.2.3 h1:FEv7oM98k4a8+EjGXdMIPcX3mvgi1f0cRbZlNmOsyGc=
-github.com/goal-web/console v0.2.3/go.mod h1:T8TivXDmfsHRHy0LuMR4BadMJEUMvHjf8SRHnhxZxXc=
+github.com/goal-web/console v0.2.4 h1:Y5DPdiq80cVwZZ/vClhl61oyP058gL5zu/qdjI0KYkg=
+github.com/goal-web/console v0.2.4/go.mod h1:T8TivXDmfsHRHy0LuMR4BadMJEUMvHjf8SRHnhxZxXc=
 github.com/goal-web/container v0.2.0 h1:kiDhpOzXbvTvUbXCMqukXzNlHxMSW2VTMMcDisj33XA=
 github.com/goal-web/container v0.2.0/go.mod h1:2ziPdY9aQjdeHYGoxK19V24du/DDUc/QxRb9bszGaFc=
 github.com/goal-web/contracts v0.2.4 h1:XQDQ/eBLS0EnF2dXsCHzKU0oHn6/AAIrXE0yJ0sf45s=

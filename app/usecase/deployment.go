@@ -17,9 +17,21 @@ import (
 type deploymentCommand func(deployment DeploymentDetail, server models.Server, script string) (string, error)
 
 var tempRepoPath string
+var deploymentChan = make(chan DeploymentParam)
 
 func init() {
 	tempRepoPath = os.TempDir()
+
+	go func() {
+		for param := range deploymentChan {
+			StartDeployment(param.Deployment, param.Commands)
+		}
+	}()
+}
+
+type DeploymentParam struct {
+	Deployment models.Deployment
+	Commands   contracts.Collection[models.Command]
 }
 
 type DeploymentDetail struct {
@@ -81,9 +93,13 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 		"status":       models.StatusWaiting,
 	})
 
-	go StartDeployment(deployment, commands)
+	go GoDeployment(deployment, commands)
 
 	return deployment, nil
+}
+
+func GoDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
+	deploymentChan <- DeploymentParam{Deployment: deployment, Commands: commands}
 }
 
 func StartDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
@@ -113,7 +129,6 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 	})
 	deployment.Status = models.StatusRunning
 	DeploymentNotify(deployment)
-	// todo 锁
 	for i, result := range deployment.Results {
 		command := commandsList[result.Step]
 		if result.Command > 0 {

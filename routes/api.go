@@ -28,6 +28,8 @@ func Api(router contracts.HttpRouter) {
 	authRouter.Post("/project/create", controllers.CreateProject)
 	authRouter.Post("/project/update", controllers.UpdateProject)
 
+	api.Post("/deployment/go", controllers.PostDeployment)
+
 	authRouter.Get("/deployment/list", controllers.GetDeployments)
 	authRouter.Get("/deployment/detail", controllers.GetDeploymentDetail)
 	authRouter.Post("/deployment/create", controllers.CreateDeployment)

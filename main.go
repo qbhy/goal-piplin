@@ -1,12 +1,12 @@
 package main
 
 import (
+	"flag"
 	"github.com/goal-web/application"
 	"github.com/goal-web/auth"
 	"github.com/goal-web/bloomfilter"
 	"github.com/goal-web/cache"
 	"github.com/goal-web/config"
-	"github.com/goal-web/console/inputs"
 	"github.com/goal-web/console/scheduling"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/database"
@@ -19,7 +19,6 @@ import (
 	"github.com/goal-web/http/sse"
 	"github.com/goal-web/http/websocket"
 	"github.com/goal-web/migration"
-	"github.com/goal-web/queue"
 	"github.com/goal-web/ratelimiter"
 	"github.com/goal-web/redis"
 	"github.com/goal-web/serialization"
@@ -34,8 +33,12 @@ import (
 	"syscall"
 )
 
+var envPath = flag.String("env", "config.toml", "指定 env")
+
 func main() {
-	env := config.NewToml(config.File("config.toml"))
+	flag.Parse()
+
+	env := config.NewToml(config.File(*envPath))
 	app := application.Singleton(env.GetBool("app.debug"))
 
 	// 设置异常处理器
@@ -60,7 +63,7 @@ func main() {
 		scheduling.NewService(),
 		database.NewService(),
 		migration.NewService(),
-		queue.NewService(true),
+		//queue.NewService(true),
 		email.NewService(),
 		http.NewService(routes.Api, routes.WebSocket, routes.Sse),
 		session.NewService(),
@@ -70,11 +73,11 @@ func main() {
 		signal.NewService(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 	)
 
-	app.Call(func(config contracts.Config, dispatcher contracts.EventDispatcher, console3 contracts.Console) {
+	app.Call(func(config contracts.Config, dispatcher contracts.EventDispatcher, console3 contracts.Console, input contracts.ConsoleInput) {
 		appConfig := config.Get("app").(application.Config)
 		carbon.SetLocale(appConfig.Locale)
 		carbon.SetTimezone(appConfig.Timezone)
 
-		console3.Run(inputs.String("run"))
+		console3.Run(input)
 	})
 }

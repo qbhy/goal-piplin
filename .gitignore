@@ -3,6 +3,8 @@ database/*.sqlite
 *.pid
 storage/*
 
+dev.config.toml
+
 /real.env
 
 /bin*
