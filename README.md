@@ -45,6 +45,12 @@ cp nginx.conf /etc/nginx/site-enabled/piplin.conf
 ```
 > In this step, you can modify the path and piplin.conf according to your needs
 
+## update
+If Goal-Piplin is updated, the latest image will be automatically packaged and pushed to the docker warehouse. At this time, you only need to execute the following command in your Goal-Piplin directory.
+```bash
+make update
+```
+
 ## Views
 goal piplin is a project that separates the front and back ends. The front end is developed based on antd pro, which uses umijs as a scaffolding.
 
