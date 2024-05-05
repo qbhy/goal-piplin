@@ -33,3 +33,8 @@ make-migration:
 
 install: migrate
 	$(CONSOLE) init
+
+update:
+	git pull
+	docker compose pull views server
+	docker compose up -d views server
