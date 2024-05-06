@@ -158,47 +158,51 @@ func GetBranchDetail(project models.Project, key models.Key) ([]string, []string
 }
 
 func DeleteProject(project models.Project) error {
+	if ch := deploymentsChan[project.Id]; ch != nil {
+		close(ch)
+		delete(deploymentsChan, project.Id)
+	}
 
 	if models.Projects().Where("key_id", project.KeyId).Count() == 1 {
 		models.Keys().Where("id", project.KeyId).Delete()
 	}
 
-	_, err := models.Projects().WhereIn("id", project.Id).DeleteE()
+	_, err := models.Projects().Where("id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.ConfigFiles().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.ConfigFiles().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.UserProjects().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.UserProjects().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.ShareFiles().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.ShareFiles().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.ProjectEnvironments().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.ProjectEnvironments().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.ProjectEnvironments().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.ProjectEnvironments().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.Deployments().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.Deployments().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}
 
-	_, err = models.Commands().WhereIn("project_id", project.Id).DeleteE()
+	_, err = models.Commands().Where("project_id", project.Id).DeleteE()
 	if err != nil {
 		return err
 	}

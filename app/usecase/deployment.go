@@ -17,16 +17,24 @@ import (
 type deploymentCommand func(deployment DeploymentDetail, server models.Server, script string) (string, error)
 
 var tempRepoPath string
-var deploymentChan = make(chan DeploymentParam)
+var deploymentsChan = make(map[int]chan DeploymentParam)
 
 func init() {
 	tempRepoPath = os.TempDir()
+}
 
+func deploymentChan(projectId int) chan DeploymentParam {
+	if ch := deploymentsChan[projectId]; ch != nil {
+		return ch
+	}
+	ch := make(chan DeploymentParam)
+	deploymentsChan[projectId] = ch
 	go func() {
-		for param := range deploymentChan {
+		for param := range ch {
 			StartDeployment(param.Deployment, param.Commands)
 		}
 	}()
+	return ch
 }
 
 type DeploymentParam struct {
@@ -99,7 +107,7 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 }
 
 func GoDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
-	deploymentChan <- DeploymentParam{Deployment: deployment, Commands: commands}
+	deploymentChan(deployment.ProjectId) <- DeploymentParam{Deployment: deployment, Commands: commands}
 }
 
 func StartDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
