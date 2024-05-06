@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"github.com/goal-web/collection"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/utils"
@@ -39,6 +40,71 @@ func CreateProject(fields contracts.Fields) (models.Project, error) {
 	}
 
 	return project, err
+}
+
+func CopyProject(targetProject models.Project, fields contracts.Fields) (models.Project, error) {
+	targetKey := models.Keys().FindOrFail(targetProject.KeyId)
+	key := models.Keys().Create(contracts.Fields{
+		"creator_id":  fields["creator_id"],
+		"name":        fields["name"],
+		"public_key":  targetKey.PublicKey,
+		"private_key": targetKey.PrivateKey,
+	})
+	utils.MergeFields(fields, contracts.Fields{
+		"uuid":         uuid.V4(),
+		"project_path": targetProject.ProjectPath,
+		"key_id":       key.Id,
+		"settings":     targetProject.Settings,
+	})
+
+	project := models.Projects().Create(fields)
+	environmentsMap := make(map[int]int)
+
+	models.ProjectEnvironments().Where("project_id", targetProject.Id).Get().Foreach(func(i int, env models.ProjectEnvironment) {
+		environmentsMap[env.Id] = models.ProjectEnvironments().Create(contracts.Fields{
+			"project_id": project.Id,
+			"name":       env.Name,
+			"settings":   env.Settings,
+		}).Id
+	})
+
+	models.Commands().Where("project_id", targetProject.Id).Get().Foreach(func(i int, command models.Command) {
+		models.Commands().Create(contracts.Fields{
+			"name":       command.Name,
+			"project_id": project.Id,
+			"step":       command.Step,
+			"sort":       command.Sort,
+			"user":       command.User,
+			"script":     command.Script,
+			"environments": collection.New(command.Environments).Each(func(_ int, envId int) int {
+				return environmentsMap[envId]
+			}).ToArray(),
+			"optional":         command.Optional,
+			"default_selected": command.DefaultSelected,
+		})
+	})
+
+	models.ConfigFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, config models.ConfigFile) {
+		models.ConfigFiles().Create(contracts.Fields{
+			"project_id": project.Id,
+			"name":       config.Name,
+			"path":       config.Path,
+			"content":    config.Content,
+			"environments": collection.New(config.Environments).Each(func(_ int, envId int) int {
+				return environmentsMap[envId]
+			}).ToArray(),
+		})
+	})
+
+	models.ShareFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, share models.ShareFile) {
+		models.ShareFiles().Create(contracts.Fields{
+			"project_id": project.Id,
+			"name":       share.Name,
+			"path":       share.Path,
+		})
+	})
+
+	return project, nil
 }
 
 func UpdateProjectBranches(project models.Project, key models.Key) error {
@@ -138,4 +204,21 @@ func DeleteProject(project models.Project) error {
 	}
 
 	return err
+}
+
+// HasProjectPermission 判断用户是否存在指定项目的权限
+func HasProjectPermission(project models.Project, userId int) bool {
+	if project.CreatorId == userId {
+		return true
+	}
+
+	if project.GroupId > 0 && HasGroupPermission(models.Groups().FindOrFail(project.GroupId), userId) {
+		return true
+	}
+
+	return models.UserProjects().
+		Where("project_id", project.Id).
+		Where("user_id", userId).
+		Where("status", models.InviteStatusJoined).
+		Count() > 0
 }

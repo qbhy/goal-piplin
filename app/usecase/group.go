@@ -27,3 +27,16 @@ func UpdateGroup(id any, fields contracts.Fields) error {
 
 	return err
 }
+
+// HasGroupPermission 判断用户是否存在指定分组的权限
+func HasGroupPermission(group models.Group, userId int) bool {
+	if group.CreatorId == userId {
+		return true
+	}
+
+	return models.UserGroups().
+		Where("group_id", group.Id).
+		Where("user_id", userId).
+		Where("status", models.InviteStatusJoined).
+		Count() > 0
+}

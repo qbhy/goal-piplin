@@ -3,7 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/qbhy/goal-piplin)](https://goreportcard.com/report/github.com/qbhy/goal-piplin)
 [![GoDoc](https://pkg.go.dev/badge/github.com/qbhy/goal-piplin?status.svg)](https://pkg.go.dev/github.com/qbhy/goal-piplin?tab=doc)
 [![Join the chat at https://gitter.im/qbhy/goal-piplin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qbhy/goal-piplin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Sourcegraph](https://sourcegraph.com/github.com/qbhy/goal-piplin/-/badge.svg)](https://sourcegraph.com/github.com/goal-web/contracts?badge)
+[![Sourcegraph](https://sourcegraph.com/github.com/qbhy/goal-piplin/-/badge.svg)](https://sourcegraph.com/github.com/qbhy/goal-piplin?badge)
 [![Open Source Helpers](https://www.codetriage.com/qbhy/goal-piplin/badges/users.svg)](https://www.codetriage.com/qbhy/goal-piplin)
 [![Release](https://img.shields.io/github/release/qbhy/goal-piplin.svg?style=flat-square)](https://github.com/qbhy/goal-piplin/releases)
 [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/qbhy/goal-piplin)](https://www.tickgit.com/browse?repo=github.com/qbhy/goal-piplin)
