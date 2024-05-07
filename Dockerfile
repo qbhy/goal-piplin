@@ -12,6 +12,8 @@ RUN go build -ldflags="-s -w" -o piplin bootstrap/app/main.go
 
 FROM alpine
 
+RUN apk add git
+
 WORKDIR /var/www
 COPY --from=builder /app/piplin /var/www/piplin
 COPY env.toml .

@@ -1,16 +1,13 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"os"
-	"strings"
+	"os/exec"
 )
 
 // CloneRepoBranchOrCommit 克隆指定分支或提交
@@ -54,42 +51,18 @@ func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string)
 	}
 
 	if !isBranch {
-		var hash plumbing.Hash
-		iter, logErr := registry.Log(&git.LogOptions{})
-		if logErr != nil {
-			return fmt.Errorf("failed to get logs: %v", logErr)
+		// Change to the specified directory
+		if err = os.Chdir(destDir); err != nil {
+			return fmt.Errorf("failed to change directory: %v", err)
 		}
 
-		_ = iter.ForEach(func(commit *object.Commit) error {
-			if strings.HasPrefix(commit.Hash.String(), branchOrCommit) {
-				hash = plumbing.NewHash(commit.Hash.String())
-			}
-			return nil
-		})
+		// Run 'git checkout' command
+		cmd := exec.Command("git", "checkout", branchOrCommit)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 
-		// Fetch all branches and tags
-		err = registry.Fetch(&git.FetchOptions{
-			RemoteName: "origin",
-			RefSpecs:   []config.RefSpec{"refs/*:refs/*"},
-			Auth:       auth,
-		})
-		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
-			return fmt.Errorf("failed to fetch all branches and tags: %v", err)
-		}
-
-		//获取仓库的工作树
-		tree, err := registry.Worktree()
-		if err != nil {
-			return fmt.Errorf("error getting worktree: %v", err)
-		}
-
-		// 如果直接使用哈希失败，尝试作为分支名处理
-		err = tree.Checkout(&git.CheckoutOptions{
-			Force: true,
-			Hash:  hash, // 尝试将 branchOrCommit 视为哈希
-		})
-		if err != nil {
-			return fmt.Errorf("error checking out branch/commit: %v", err)
+		if err = cmd.Run(); err != nil {
+			return fmt.Errorf("failed to execute 'git checkout': %v", err)
 		}
 	}
 
