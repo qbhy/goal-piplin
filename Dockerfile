@@ -14,7 +14,7 @@ FROM alpine
 
 WORKDIR /var/www
 COPY --from=builder /app/piplin /var/www/piplin
-COPY config.toml .
+COPY env.toml .
 COPY database/migrations ./migrations
 
 # run

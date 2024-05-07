@@ -33,7 +33,7 @@ import (
 	"syscall"
 )
 
-var envPath = flag.String("env", "config.toml", "指定 env")
+var envPath = flag.String("env", "env.toml", "指定 env")
 
 func main() {
 	flag.Parse()

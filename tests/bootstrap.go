@@ -39,7 +39,7 @@ func initApp(path ...string) contracts.Application {
 
 	app.RegisterServices(
 		config.NewService(
-			config.NewToml(config.File("config.toml")),
+			config.NewToml(config.File("env.toml")),
 			config2.GetConfigProviders(),
 		),
 		hashing.NewService(),
