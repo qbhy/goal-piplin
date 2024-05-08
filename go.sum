@@ -157,8 +157,8 @@ github.com/goal-web/filesystem v0.2.0 h1:qbebEuCb+esBrVLHPUwksitcjF7/VDMU7t0Zjno
 github.com/goal-web/filesystem v0.2.0/go.mod h1:zaxwqxfEMKIALK34jkXLh+kMsT/5cXQav4LXE0RGBkM=
 github.com/goal-web/hashing v0.2.0 h1:c5S/2I6lq/ONsTudHKlVSk4GJpoS/a48jRhXl3vMK4s=
 github.com/goal-web/hashing v0.2.0/go.mod h1:g2cjvM1/qO/i+duOC0uBFxoi/WnKp102/JBnh/rcCiM=
-github.com/goal-web/http v0.2.18 h1:nX1ybfx2qKxFAJQjsf/5MsMAQyTjWXHtaPIYD/XLwls=
-github.com/goal-web/http v0.2.18/go.mod h1:CrMj7ugFcNxWaENK0fkCsEH8Ns5+5TAY9zBhRm3mC9U=
+github.com/goal-web/http v0.2.19 h1:aMpYJZaWi4j53tq6w7BkP65WN3KoTHigkjqrIG1aiyE=
+github.com/goal-web/http v0.2.19/go.mod h1:CrMj7ugFcNxWaENK0fkCsEH8Ns5+5TAY9zBhRm3mC9U=
 github.com/goal-web/micro v0.2.0 h1:zkcQ6OS6iLnDixPy1BSOwGw7uVBvwwEgpE55I7HrZgo=
 github.com/goal-web/micro v0.2.0/go.mod h1:xrzYyRUwS4/Wt52shQPJ2H81pn12WCa2yznKI2d65sU=
 github.com/goal-web/microdemo v0.0.0-20220219171937-6f3fca7dfbcb h1:mDAVWOxZ/tqGL28cHL7YNbFLqQAsLemW84fu1ARrg3s=
