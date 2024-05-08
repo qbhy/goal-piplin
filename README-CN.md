@@ -1,4 +1,4 @@
-English | [中文](README-CN.md)
+[English](README.md) | 中文
 # Goal Piplin
 [![codecov](https://codecov.io/gh/qbhy/goal-piplin/branch/master/graph/badge.svg)](https://codecov.io/gh/qbhy/goal-piplin)
 [![Go Report Card](https://goreportcard.com/badge/github.com/qbhy/goal-piplin)](https://goreportcard.com/report/github.com/qbhy/goal-piplin)
@@ -9,54 +9,54 @@ English | [中文](README-CN.md)
 [![Release](https://img.shields.io/github/release/qbhy/goal-piplin.svg?style=flat-square)](https://github.com/qbhy/goal-piplin/releases)
 [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/qbhy/goal-piplin)](https://www.tickgit.com/browse?repo=github.com/qbhy/goal-piplin)
 
-## About Goal Piplin
+## 关于 Goal-Piplin
 
-Goal piplin is a very easy-to-use deployment tool.
+Goal piplin 是一个非常好用的部署工具.
 
-- Easy to use
-- Multi user
-- Support grouping
-- Support collaboration
-- Copy project
-- Deploy via curl
+- 容易使用
+- 支持多用户
+- 支持分组
+- 支持协作
+- 一键复制项目
+- 通过 CURL 部署
 
-## Install
-Clone code
+## 安装
+克隆代码
 
 ```bash
 git clone https://github.com/qbhy/goal-piplin.git
 ```
 
-Use docker compose to start the service (including mysql, redis, views and server)
+使用 docker compose 启动（包括 MySQL、Redis、server、views）
 ```bash
 docker compose up -d
 ```
 
-Execute migration
+ 执行迁移
 ```bash
 docker compose exec server /var/www/piplin migrate
 ```
 
-Initialize users and keys
+初始化用户和密钥
 ```bash
 docker compose exec server /var/www/piplin init
 ```
 > The default account is piplin and the password is password
 
-nginx configuration
+nginx 配置
 ```bash
 cp nginx.conf /etc/nginx/site-enabled/piplin.conf
 ```
-> In this step, you can modify the path and piplin.conf according to your needs
+> 这一步可以根据自己的需要修改 path 和 piplin.conf
 
-## update
-If Goal-Piplin is updated, the latest image will be automatically packaged and pushed to the docker warehouse. At this time, you only need to execute the following command in your Goal-Piplin directory.
+## 更新
+如果Goal-Piplin有更新，会自动打包最新的镜像推送到docker仓库。这时，你只需要在你的Goal-Piplin目录下执行以下命令即可。
 ```bash
 make update
 ```
 
-## Views
-goal piplin is a project that separates the front and back ends. The front end is developed based on antd pro, which uses umijs as a scaffolding.
+## 前端
+goal piplin是一个前后端分离的项目。前端基于antd pro开发，使用umijs作为脚手架。
 
  - [goal-piplin-views](https://github.com/qbhy/goal-piplin-views)
  - [ant-design-pro](https://github.com/ant-design/ant-design-pro)
@@ -64,11 +64,12 @@ goal piplin is a project that separates the front and back ends. The front end i
 
 <img width="1466" alt="image" src="https://github.com/qbhy/goal-piplin/assets/24204533/d0e0c034-02d7-4eca-ad91-2f7090dd5c1c">
 
-## Contributing
+## 贡献
 
-Thank you for considering contributing to the Goal Piplin!  
-You can submit PR or issue to this repository to participate in the project.
+感谢您考虑为 Goal Piplin 做出贡献！
+您可以向此存储库提交 PR 或问题来参与该项目。
+> 您也可以直接添加我的微信 qbhy0715 给我建议或者意见。
 
-## License
+## 开源协议
 
-The Goal Piplin is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Goal Poplin 是根据以下协议授权的开源软件 [MIT license](https://opensource.org/licenses/MIT).
