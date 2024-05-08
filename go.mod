@@ -2,7 +2,7 @@ module github.com/qbhy/goal-piplin
 
 go 1.20
 
-//replace github.com/goal-web/console => ../goal-web/console
+//replace github.com/goal-web/database => ../goal-web/database
 
 require (
 	github.com/goal-web/application v0.2.0
@@ -12,7 +12,7 @@ require (
 	github.com/goal-web/config v0.2.0
 	github.com/goal-web/console v0.2.4
 	github.com/goal-web/contracts v0.2.4
-	github.com/goal-web/database v0.2.6
+	github.com/goal-web/database v0.2.7
 	github.com/goal-web/email v0.2.0
 	github.com/goal-web/encryption v0.2.1
 	github.com/goal-web/events v0.2.0
@@ -29,7 +29,7 @@ require (
 	github.com/goal-web/supports v0.2.4
 	github.com/goal-web/validation v0.2.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-module/carbon/v2 v2.3.8
+	github.com/golang-module/carbon/v2 v2.3.12
 	go-micro.dev/v4 v4.6.0
 )
 
@@ -39,10 +39,10 @@ require (
 	github.com/go-git/go-git/v5 v5.11.0
 	github.com/goal-web/collection v0.2.0
 	github.com/goal-web/migration v0.2.6
-	github.com/goal-web/querybuilder v0.2.4
+	github.com/goal-web/querybuilder v0.2.5
 	github.com/pkg/sftp v1.13.6
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/tj/assert v0.0.3
 	github.com/valyala/fasthttp v1.51.0
 	golang.org/x/crypto v0.19.0

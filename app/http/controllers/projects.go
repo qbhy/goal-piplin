@@ -45,7 +45,7 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 		When(request.GetString("default_branch") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
 			return q.Where("default_branch", "like", "%"+request.GetString("default_branch")+"%")
 		}).
-		Paginate(20, request.Int64Optional("page", 1))
+		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))
 	return contracts.Fields{
 		"total": total,
 		"data":  list.ToArray(),

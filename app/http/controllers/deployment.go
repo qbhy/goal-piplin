@@ -40,7 +40,7 @@ func GetDeployments(request contracts.HttpRequest) any {
 			return q.Where("status", request.GetString("status"))
 		}).
 		OrderByDesc("id").
-		Paginate(20, request.Int64Optional("page", 1))
+		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))
 	return contracts.Fields{
 		"total": total,
 		"data":  list.ToArray(),

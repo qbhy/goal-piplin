@@ -16,7 +16,7 @@ func GetCabinets(request contracts.HttpRequest, guard contracts.Guard) any {
 		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Cabinet]) contracts.Query[models.Cabinet] {
 			return q.Where("creator_id", user.Id)
 		}).
-		Paginate(20, request.Int64Optional("page", 1))
+		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))
 	return contracts.Fields{
 		"total": total,
 		"data":  list.ToArray(),
