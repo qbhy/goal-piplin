@@ -2,7 +2,7 @@ module github.com/qbhy/goal-piplin
 
 go 1.20
 
-//replace github.com/goal-web/database => ../goal-web/database
+//replace github.com/goal-web/http => ../goal-web/http
 
 require (
 	github.com/goal-web/application v0.2.0
@@ -18,7 +18,7 @@ require (
 	github.com/goal-web/events v0.2.0
 	github.com/goal-web/filesystem v0.2.0
 	github.com/goal-web/hashing v0.2.0
-	github.com/goal-web/http v0.2.17
+	github.com/goal-web/http v0.2.18
 	github.com/goal-web/micro v0.2.0
 	github.com/goal-web/microdemo v0.0.0-20220219171937-6f3fca7dfbcb
 	github.com/goal-web/queue v0.2.1
