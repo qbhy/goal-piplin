@@ -12,6 +12,8 @@ func ShareFiles() *table.Table[ShareFile] {
 }
 
 type ShareFile struct {
+	table.Model[ShareFile] `json:"-"`
+
 	Id        string `json:"id"`
 	ProjectId int    `json:"project_id"` // 项目ID
 	Name      string `json:"name"`       // 名称

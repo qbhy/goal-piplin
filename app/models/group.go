@@ -12,6 +12,8 @@ func Groups() *table.Table[Group] {
 }
 
 type Group struct {
+	table.Model[Group] `json:"-"`
+
 	Id        int    `json:"id"`
 	Name      string `json:"name"`    // 名称
 	CreatorId int    `json:"creator"` // 创建者

@@ -9,7 +9,7 @@ import (
 )
 
 func GetGroups(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 	return contracts.Fields{
 		"data": models.Groups().
 			When(user.Role != "admin", func(q contracts.QueryBuilder[models.Group]) contracts.Query[models.Group] {

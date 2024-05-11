@@ -11,29 +11,29 @@ import (
 	"github.com/savsgio/gotils/uuid"
 )
 
-func CreateProject(fields contracts.Fields) (models.Project, error) {
+func CreateProject(creatorId string, fields contracts.Fields) (*models.Project, error) {
 	fields = utils.OnlyFields(fields,
 		"name", "default_branch", "project_path", "repo_address", "group_id", "key_id", "creator_id")
-	var project models.Project
-	var key models.Key
+	var key *models.Key
 	var err error
 
 	if models.Projects().Where("name", fields["name"]).Count() > 0 {
-		return project, errors.New("项目已存在")
+		return nil, errors.New("项目已存在")
 	}
 
 	var existsKey = utils.ToInt(fields["key_id"], 0) > 0
 	if !existsKey {
-		key, err = CreateKey(project.CreatorId, utils.ToString(fields["name"], ""))
-		fields["key_id"] = key.Id
+		key, err = CreateKey(creatorId, utils.ToString(fields["name"], ""))
 		if err != nil {
-			return project, err
+			return nil, err
 		}
+		fields["key_id"] = key.Id
 	}
 
+	fields["creator_id"] = creatorId
 	fields["uuid"] = uuid.V4()
 	fields["settings"] = models.ProjectSettings{}
-	project = models.Projects().Create(fields)
+	project := models.Projects().Create(fields)
 
 	if existsKey {
 		err = UpdateProjectBranches(project, key)
@@ -42,7 +42,7 @@ func CreateProject(fields contracts.Fields) (models.Project, error) {
 	return project, err
 }
 
-func CopyProject(targetProject models.Project, fields contracts.Fields) (models.Project, error) {
+func CopyProject(targetProject *models.Project, fields contracts.Fields) (*models.Project, error) {
 	targetKey := models.Keys().FindOrFail(targetProject.KeyId)
 	key := models.Keys().Create(contracts.Fields{
 		"creator_id":  fields["creator_id"],
@@ -60,7 +60,7 @@ func CopyProject(targetProject models.Project, fields contracts.Fields) (models.
 	project := models.Projects().Create(fields)
 	environmentsMap := make(map[int]int)
 
-	models.ProjectEnvironments().Where("project_id", targetProject.Id).Get().Foreach(func(i int, env models.ProjectEnvironment) {
+	models.ProjectEnvironments().Where("project_id", targetProject.Id).Get().Foreach(func(i int, env *models.ProjectEnvironment) {
 		environmentsMap[env.Id] = models.ProjectEnvironments().Create(contracts.Fields{
 			"project_id": project.Id,
 			"name":       env.Name,
@@ -68,7 +68,7 @@ func CopyProject(targetProject models.Project, fields contracts.Fields) (models.
 		}).Id
 	})
 
-	models.Commands().Where("project_id", targetProject.Id).Get().Foreach(func(i int, command models.Command) {
+	models.Commands().Where("project_id", targetProject.Id).Get().Foreach(func(i int, command *models.Command) {
 		models.Commands().Create(contracts.Fields{
 			"name":       command.Name,
 			"project_id": project.Id,
@@ -84,7 +84,7 @@ func CopyProject(targetProject models.Project, fields contracts.Fields) (models.
 		})
 	})
 
-	models.ConfigFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, config models.ConfigFile) {
+	models.ConfigFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, config *models.ConfigFile) {
 		models.ConfigFiles().Create(contracts.Fields{
 			"project_id": project.Id,
 			"name":       config.Name,
@@ -96,7 +96,7 @@ func CopyProject(targetProject models.Project, fields contracts.Fields) (models.
 		})
 	})
 
-	models.ShareFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, share models.ShareFile) {
+	models.ShareFiles().Where("project_id", targetProject.Id).Get().Foreach(func(i int, share *models.ShareFile) {
 		models.ShareFiles().Create(contracts.Fields{
 			"project_id": project.Id,
 			"name":       share.Name,
@@ -107,7 +107,7 @@ func CopyProject(targetProject models.Project, fields contracts.Fields) (models.
 	return project, nil
 }
 
-func UpdateProjectBranches(project models.Project, key models.Key) error {
+func UpdateProjectBranches(project *models.Project, key *models.Key) error {
 	branches, tags, err := GetBranchDetail(project, key)
 	if err == nil {
 		project.Settings = models.ProjectSettings{
@@ -123,7 +123,7 @@ func UpdateProjectBranches(project models.Project, key models.Key) error {
 	return err
 }
 
-func UpdateProject(id int, fields contracts.Fields) (models.Project, error) {
+func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 	project := models.Projects().FindOrFail(id)
 	if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
 		return project, errors.New("项目已存在")
@@ -153,11 +153,11 @@ func GetProjectDetail(id any) models.ProjectDetail {
 	}
 }
 
-func GetBranchDetail(project models.Project, key models.Key) ([]string, []string, error) {
+func GetBranchDetail(project *models.Project, key *models.Key) ([]string, []string, error) {
 	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PrivateKey)
 }
 
-func DeleteProject(project models.Project) error {
+func DeleteProject(project *models.Project) error {
 	if ch := deploymentsChan[project.Id]; ch != nil {
 		close(ch)
 		delete(deploymentsChan, project.Id)
@@ -211,7 +211,7 @@ func DeleteProject(project models.Project) error {
 }
 
 // HasProjectPermission 判断用户是否存在指定项目的权限
-func HasProjectPermission(project models.Project, userId int) bool {
+func HasProjectPermission(project *models.Project, userId int) bool {
 	if project.CreatorId == userId {
 		return true
 	}

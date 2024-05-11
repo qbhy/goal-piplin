@@ -12,6 +12,8 @@ func Users() *table.Table[User] {
 }
 
 type User struct {
+	table.Model[User] `json:"-"`
+
 	Id        string `json:"id"`
 	Username  string `json:"username"`
 	Nickname  string `json:"nickname"`

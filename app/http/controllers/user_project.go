@@ -8,7 +8,7 @@ import (
 )
 
 func GetUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 	list, total := table.ArrayQuery("user_projects").
 		OrderByDesc("user_projects.id").
 		Select("project_id", "projects.name as project_name", "user_projects.created_at", "user_projects.id", "status").

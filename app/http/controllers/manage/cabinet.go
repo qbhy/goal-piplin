@@ -7,7 +7,7 @@ import (
 )
 
 func GetCabinets(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 	list, total := models.Cabinets().
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Cabinet]) contracts.Query[models.Cabinet] {

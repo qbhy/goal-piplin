@@ -51,7 +51,6 @@ func main() {
 		database.NewService(),
 		queue.NewService(false),
 		email.NewService(),
-		providers.NewMicro(true),
 	)
 
 	app.Call(func(config contracts.Config, dispatcher contracts.EventDispatcher) {

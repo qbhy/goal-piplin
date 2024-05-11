@@ -20,7 +20,7 @@ func CreateUserProject(projectId, userId int) (*models.UserProject, error) {
 	})
 }
 
-func UpdateUserProject(project models.UserProject, status string) error {
+func UpdateUserProject(project *models.UserProject, status string) error {
 	_, err := models.UserProjects().Where("id", project.Id).UpdateE(contracts.Fields{
 		"status": status,
 	})

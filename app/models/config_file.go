@@ -12,6 +12,8 @@ func ConfigFiles() *table.Table[ConfigFile] {
 }
 
 type ConfigFile struct {
+	table.Model[ConfigFile] `json:"-"`
+
 	Id           string `json:"id"`
 	ProjectId    int    `json:"project_id"`   // 项目ID
 	Name         string `json:"name"`         // 名称

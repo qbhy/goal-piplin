@@ -12,7 +12,7 @@ func Admin(request contracts.HttpRequest, next contracts.Pipe, guard contracts.G
 		panic(auth.Exception{Err: errors.New("guard authentication failed")})
 	}
 
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 
 	if user.Role == models.UserRoleAdmin {
 		return next(request)

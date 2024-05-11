@@ -11,7 +11,7 @@ import (
 )
 
 func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 
 	list, total := models.Projects().
 		OrderByDesc("id").
@@ -70,9 +70,8 @@ func DeleteProject(request contracts.HttpRequest) any {
 func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	validation.VerifyForm(request)
 	fields := request.Fields()
-	fields["creator_id"] = guard.GetId()
 
-	project, err := usecase.CreateProject(fields)
+	project, err := usecase.CreateProject(guard.GetId(), fields)
 
 	if err != nil {
 		return contracts.Fields{"msg": "创建项目失败：" + err.Error()}

@@ -58,7 +58,6 @@ func main() {
 		session.NewService(),
 		sse.NewService(),
 		websocket.NewService(),
-		providers.NewMicro(false),
 		//&signal.ServiceProvider{},
 	)
 

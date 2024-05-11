@@ -20,7 +20,7 @@ func CreateUserGroup(groupId, userId int) (*models.UserGroup, error) {
 	})
 }
 
-func UpdateUserGroup(project models.UserGroup, status string) error {
+func UpdateUserGroup(project *models.UserGroup, status string) error {
 	_, err := models.UserGroups().Where("id", project.Id).UpdateE(contracts.Fields{
 		"status": status,
 	})

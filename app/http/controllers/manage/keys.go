@@ -8,7 +8,7 @@ import (
 )
 
 func GetKeys(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 	list, total := models.Keys().
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {

@@ -8,19 +8,17 @@ import (
 	utils2 "github.com/qbhy/goal-piplin/app/utils"
 )
 
-func CreateKey(creatorId int, name string) (models.Key, error) {
-	var key models.Key
+func CreateKey(creatorId string, name string) (*models.Key, error) {
 	privateKey, publicKey, err := utils2.GenerateRSAKeys()
 	if err != nil {
-		return key, err
+		return nil, err
 	}
-	key = models.Keys().Create(contracts.Fields{
+	return models.Keys().CreateE(contracts.Fields{
 		"creator_id":  creatorId,
 		"name":        name,
 		"public_key":  publicKey,
 		"private_key": privateKey,
 	})
-	return key, nil
 }
 
 func DeleteKeys(id any) error {

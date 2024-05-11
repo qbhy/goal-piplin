@@ -12,6 +12,8 @@ func Keys() *table.Table[Key] {
 }
 
 type Key struct {
+	table.Model[Key] `json:"-"`
+
 	Id         int    `json:"id"`
 	Name       string `json:"name"`        // 名称
 	PublicKey  string `json:"public_key"`  // 公钥

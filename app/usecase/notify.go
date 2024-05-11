@@ -20,7 +20,7 @@ func getSse() contracts.SseFactory {
 	return sse
 }
 
-func DeploymentNotify(deployment models.Deployment) {
+func DeploymentNotify(deployment *models.Deployment) {
 	err := getSse().Sse("/api/notify").Broadcast(deployment)
 	if err != nil {
 		fmt.Println(err.Error())

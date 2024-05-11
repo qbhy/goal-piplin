@@ -28,6 +28,8 @@ type EnvironmentSettings struct {
 }
 
 type ProjectEnvironment struct {
+	table.Model[ProjectEnvironment] `json:"-"`
+
 	Id        int                 `json:"id"`
 	ProjectId int                 `json:"project_id"`
 	Name      string              `json:"name"`

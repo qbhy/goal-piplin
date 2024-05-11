@@ -38,27 +38,27 @@ func deploymentChan(projectId int) chan DeploymentParam {
 }
 
 type DeploymentParam struct {
-	Deployment models.Deployment
-	Commands   contracts.Collection[models.Command]
+	Deployment *models.Deployment
+	Commands   contracts.Collection[*models.Command]
 }
 
 type DeploymentDetail struct {
-	Key         models.Key `json:"key"`
-	ProjectId   int        `json:"project_id"`
-	Version     string     `json:"version"`
-	RepoAddress string     `json:"repo_address"`
-	ProjectPath string     `json:"project_path"`
-	TimeVersion string     `json:"time_version"`
+	Key         *models.Key `json:"key"`
+	ProjectId   int         `json:"project_id"`
+	Version     string      `json:"version"`
+	RepoAddress string      `json:"repo_address"`
+	ProjectPath string      `json:"project_path"`
+	TimeVersion string      `json:"time_version"`
 }
 
-func CreateDeployment(project models.Project, version, comment string, params map[string]bool, environmentsParam []int) (models.Deployment, error) {
+func CreateDeployment(project *models.Project, version, comment string, params map[string]bool, environmentsParam []int) (*models.Deployment, error) {
 	results := make([]models.CommandResult, 0)
 	commands := models.Commands().Where("project_id", project.Id).OrderByDesc("sort").Get()
 	servers := make([]models.Server, 0)
 	models.ProjectEnvironments().
 		Where("project_id", project.Id).
 		WhereIn("id", environmentsParam).
-		Get().Foreach(func(i int, environment models.ProjectEnvironment) {
+		Get().Foreach(func(i int, environment *models.ProjectEnvironment) {
 		for _, server := range environment.Settings.Servers {
 			if !server.Disabled {
 				server.Environment = environment.Id
@@ -67,7 +67,7 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 		}
 
 		models.Cabinets().WhereIn("id", environment.Settings.Cabinets).
-			Get().Foreach(func(i int, cabinet models.Cabinet) {
+			Get().Foreach(func(i int, cabinet *models.Cabinet) {
 			for _, server := range cabinet.Settings {
 				if !server.Disabled {
 					server.Environment = environment.Id
@@ -106,11 +106,11 @@ func CreateDeployment(project models.Project, version, comment string, params ma
 	return deployment, nil
 }
 
-func GoDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
+func GoDeployment(deployment *models.Deployment, commands contracts.Collection[*models.Command]) {
 	deploymentChan(deployment.ProjectId) <- DeploymentParam{Deployment: deployment, Commands: commands}
 }
 
-func StartDeployment(deployment models.Deployment, commands contracts.Collection[models.Command]) {
+func StartDeployment(deployment *models.Deployment, commands contracts.Collection[*models.Command]) {
 	project := models.Projects().FindOrFail(deployment.ProjectId)
 
 	detail := DeploymentDetail{
@@ -128,14 +128,13 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 		models.Prepare: prepare,
 		models.Release: release,
 	}
-	commands.Foreach(func(i int, command models.Command) {
+	commands.Foreach(func(i int, command *models.Command) {
 		commandsList[fmt.Sprintf("%d", command.Id)] = scriptFunc(command.Script)
 	})
 
-	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+	_ = deployment.Update(contracts.Fields{
 		"status": models.StatusRunning,
 	})
-	deployment.Status = models.StatusRunning
 	DeploymentNotify(deployment)
 	for i, result := range deployment.Results {
 		command := commandsList[result.Step]
@@ -148,7 +147,7 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			result.Servers[s] = server
 			now := time.Now()
 			deployment.Results[i] = result
-			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+			_ = deployment.Update(contracts.Fields{
 				"results": deployment.Results,
 			})
 			DeploymentNotify(deployment)
@@ -164,30 +163,28 @@ func StartDeployment(deployment models.Deployment, commands contracts.Collection
 			result.Servers[s] = server
 			result.TimeConsuming = int(time.Now().Sub(now).Milliseconds())
 			deployment.Results[i] = result
-			models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+			_ = deployment.Update(contracts.Fields{
 				"results": deployment.Results,
 			})
 			DeploymentNotify(deployment)
 
 			if err != nil {
-				models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+				_ = deployment.Update(contracts.Fields{
 					"status": models.StatusFailed,
 				})
-				deployment.Status = models.StatusFailed
 				DeploymentNotify(deployment)
 				return
 			}
 		}
 	}
 
-	models.Deployments().Where("id", deployment.Id).Update(contracts.Fields{
+	_ = deployment.Update(contracts.Fields{
 		"status": models.StatusFinished,
 	})
-	deployment.Status = models.StatusFinished
 	DeploymentNotify(deployment)
 }
 
-func makeCommandOutputsWithParams(commands []models.Command, params map[string]bool, servers []models.Server) []models.CommandResult {
+func makeCommandOutputsWithParams(commands []*models.Command, params map[string]bool, servers []models.Server) []models.CommandResult {
 	results := make([]models.CommandResult, 0)
 	for _, command := range commands {
 		selected, existsParam := params[fmt.Sprintf("%d", command.Id)]

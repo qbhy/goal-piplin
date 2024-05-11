@@ -12,6 +12,8 @@ func UserGroups() *table.Table[UserGroup] {
 }
 
 type UserGroup struct {
+	table.Model[UserGroup] `json:"-"`
+
 	Id        string `json:"id"`
 	GroupId   int    `json:"group_id"` // 项目ID
 	UserId    int    `json:"user_id"`  // 用户ID

@@ -12,6 +12,8 @@ func Commands() *table.Table[Command] {
 }
 
 type Command struct {
+	table.Model[Command] `json:"-"`
+
 	Id              int    `json:"id"`
 	Name            string `json:"name"`             // 名称
 	ProjectId       int    `json:"project_id"`       // 项目ID

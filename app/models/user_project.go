@@ -18,6 +18,8 @@ func UserProjects() *table.Table[UserProject] {
 }
 
 type UserProject struct {
+	table.Model[UserProject] `json:"-"`
+
 	Id        string `json:"id"`
 	ProjectId int    `json:"project_id"` // 项目ID
 	UserId    int    `json:"user_id"`    // 用户ID

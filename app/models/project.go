@@ -32,6 +32,8 @@ type ProjectSettings struct {
 }
 
 type Project struct {
+	table.Model[Project] `json:"-"`
+
 	Id            int             `json:"id"`
 	Uuid          string          `json:"uuid"`
 	Settings      ProjectSettings `json:"settings"`

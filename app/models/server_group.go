@@ -12,6 +12,8 @@ func Cabinets() *table.Table[Cabinet] {
 }
 
 type Cabinet struct {
+	table.Model[Cabinet] `json:"-"`
+
 	Id        string   `json:"id"`
 	CreatorId int      `json:"creator_id"`
 	Name      string   `json:"name"`     // 名称

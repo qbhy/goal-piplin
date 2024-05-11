@@ -6,6 +6,7 @@ import (
 	"github.com/qbhy/goal-piplin/app/http/controllers"
 	"github.com/qbhy/goal-piplin/app/http/controllers/manage"
 	"github.com/qbhy/goal-piplin/app/http/middlewares"
+	"github.com/qbhy/goal-piplin/app/models"
 )
 
 func Api(router contracts.HttpRouter) {
@@ -16,10 +17,9 @@ func Api(router contracts.HttpRouter) {
 
 	api.Post("/queue", controllers.DemoJob)
 
-	api.Get("/micro", controllers.RpcService)
 	//router.Get("/", controllers.HelloWorld, ratelimiter.Middleware(100))
 
-	authRouter := api.Group("", auth.Guard("jwt"))
+	authRouter := api.Group("", auth.Guard[models.User](models.Users(), "jwt"))
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
 	authRouter.Get("/project/list", controllers.GetProjects)

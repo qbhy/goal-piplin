@@ -29,7 +29,7 @@ func UpdateGroup(id any, fields contracts.Fields) error {
 }
 
 // HasGroupPermission 判断用户是否存在指定分组的权限
-func HasGroupPermission(group models.Group, userId int) bool {
+func HasGroupPermission(group *models.Group, userId int) bool {
 	if group.CreatorId == userId {
 		return true
 	}

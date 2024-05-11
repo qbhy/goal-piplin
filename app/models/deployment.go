@@ -31,6 +31,8 @@ func Deployments() *table.Table[Deployment] {
 }
 
 type Deployment struct {
+	table.Model[Deployment] `json:"-"`
+
 	Id           string          `json:"id"`
 	ProjectId    int             `json:"project_id"` // 项目ID
 	Version      string          `json:"version"`    // 部署版本

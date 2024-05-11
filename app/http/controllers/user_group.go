@@ -8,7 +8,7 @@ import (
 )
 
 func GetUserGroups(request contracts.HttpRequest, guard contracts.Guard) any {
-	user := guard.User().(models.User)
+	user := guard.User().(*models.User)
 	list, total := table.ArrayQuery("user_groups").
 		OrderByDesc("user_groups.id").
 		Select("group_id", "`groups`.name as group_name", "user_groups.created_at", "user_groups.id", "status").
