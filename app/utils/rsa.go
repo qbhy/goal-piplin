@@ -11,7 +11,7 @@ import (
 // GenerateRSAKeys 生成2048位的RSA密钥对，并以OpenSSH格式返回公钥和PEM格式返回私钥
 func GenerateRSAKeys() (privateKeyPEM string, publicKeySSH string, err error) {
 	// 生成密钥对
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		return "", "", err
 	}
