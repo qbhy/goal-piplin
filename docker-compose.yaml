@@ -38,6 +38,8 @@ services:
       - "6379:6379"
   mysql:
     image: mysql/mysql-server
+    volumes:
+      - storage/mysql:/var/lib/mysql
     networks:
       - piplin
     environment:
@@ -53,8 +55,8 @@ services:
     image: qbhy/piplin:latest
     volumes:
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
-    ports:
-      - "8008:8008"
+#    ports:
+#      - "8008:8008"
     depends_on:
       - mysql
       - redis
