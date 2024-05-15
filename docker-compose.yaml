@@ -39,7 +39,7 @@ services:
   mysql:
     image: mysql/mysql-server
     volumes:
-      - storage/mysql:/var/lib/mysql
+      - ./storage/mysql:/var/lib/mysql
     networks:
       - piplin
     environment:
@@ -48,23 +48,20 @@ services:
       MYSQL_USER: piplin
       MYSQL_PASSWORD: password
       MYSQL_ROOT_HOST: '%'
-    ports:
-      - "3306:3306"
+#    ports:
+#      - "3306:3306"
   server:
     restart: always
     image: qbhy/piplin:latest
     volumes:
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
-#    ports:
-#      - "8008:8008"
+    ports:
+      - "8008:8008"
     depends_on:
       - mysql
       - redis
     networks:
       - piplin
-    command:
-      - /var/www/piplin migrate
-      - /var/www/piplin init
   views:
     image: qbhy/piplin-views:latest
     networks:

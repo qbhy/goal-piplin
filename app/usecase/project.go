@@ -22,7 +22,10 @@ func CreateProject(creatorId string, fields contracts.Fields) (*models.Project, 
 	}
 
 	var existsKey = utils.ToInt(fields["key_id"], 0) > 0
-	if !existsKey {
+	if existsKey {
+		key = models.Keys().FindOrFail(fields["key_id"])
+
+	} else {
 		key, err = CreateKey(creatorId, utils.ToString(fields["name"], ""))
 		if err != nil {
 			return nil, err
@@ -36,7 +39,7 @@ func CreateProject(creatorId string, fields contracts.Fields) (*models.Project, 
 	project := models.Projects().Create(fields)
 
 	if existsKey {
-		err = UpdateProjectBranches(project, key)
+		_ = UpdateProjectBranches(project, key)
 	}
 
 	return project, err
