@@ -23,14 +23,12 @@ import (
 	"github.com/goal-web/redis"
 	"github.com/goal-web/serialization"
 	"github.com/goal-web/session"
-	"github.com/goal-web/supports/signal"
 	"github.com/golang-module/carbon/v2"
 	"github.com/qbhy/goal-piplin/app/console"
 	"github.com/qbhy/goal-piplin/app/exceptions"
 	"github.com/qbhy/goal-piplin/app/providers"
 	config2 "github.com/qbhy/goal-piplin/config"
 	"github.com/qbhy/goal-piplin/routes"
-	"syscall"
 )
 
 var envPath = flag.String("env", "env.toml", "指定 env")
@@ -69,7 +67,7 @@ func main() {
 		session.NewService(),
 		sse.NewService(),
 		websocket.NewService(),
-		signal.NewService(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
+		//signal.NewService(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 	)
 
 	app.Call(func(config contracts.Config, dispatcher contracts.EventDispatcher, console3 contracts.Console, input contracts.ConsoleInput) {

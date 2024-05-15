@@ -51,6 +51,8 @@ services:
   server:
     restart: always
     image: qbhy/piplin:latest
+    volumes:
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts
     ports:
       - "8008:8008"
     depends_on:
