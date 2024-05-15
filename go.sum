@@ -116,8 +116,8 @@ github.com/goal-web/hashing v0.3.0 h1:BU2KS/nQUOURGFbYDVwzvdLi7IpHjfDDHRYz6tliPm
 github.com/goal-web/hashing v0.3.0/go.mod h1:HSzWEWU8jf21gMAsisCqZiyjYJxvPdthYM+zSExiX2g=
 github.com/goal-web/http v0.3.0 h1:S5Tpq1VRXu4Lg4hhH/MlLV6yuoM8Wm+B7yYNEx813WU=
 github.com/goal-web/http v0.3.0/go.mod h1:22f+CJnlYGtoClrDftxJqnjA0ay0VgoyXjt8nBMHdd4=
-github.com/goal-web/migration v0.3.2 h1:1EhlpAnbb7VI04mB7GQexdyvxgJaRlrNyGKRNpzd6Nk=
-github.com/goal-web/migration v0.3.2/go.mod h1:/XVM2QMAbKziJK1vxNS3PwTgf0+aJrZvg4vMqg0bQqs=
+github.com/goal-web/migration v0.3.3 h1:7k8HT+7ii7y73dFWFt2D1aIxN7Bob921OiqgteJhzf0=
+github.com/goal-web/migration v0.3.3/go.mod h1:cwDLS+aXWolcgOty8WJkmzG17YMNHB1YbnCJXc2eIJA=
 github.com/goal-web/pipeline v0.3.0 h1:1Y50l94UAzQVsivL+K+LLN3ZdLNoQsIP9iAvxJ5P9iM=
 github.com/goal-web/pipeline v0.3.0/go.mod h1:bXGu+vB+Wvt7OmJAMrJIkREmeL5uw12jc0hBxmcde4I=
 github.com/goal-web/querybuilder v0.3.1 h1:IumfMh0hSWDvC17fMJVDtK7XloJz3k46PsjpO2aLZLQ=
