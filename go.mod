@@ -7,11 +7,11 @@ require (
 	github.com/goal-web/auth v0.3.1
 	github.com/goal-web/bloomfilter v0.3.0
 	github.com/goal-web/cache v0.3.0
-	github.com/goal-web/collection v0.3.1
+	github.com/goal-web/collection v0.3.2
 	github.com/goal-web/config v0.3.0
 	github.com/goal-web/console v0.3.0
 	github.com/goal-web/contracts v0.3.0
-	github.com/goal-web/database v0.3.2
+	github.com/goal-web/database v0.3.3
 	github.com/goal-web/email v0.3.0
 	github.com/goal-web/encryption v0.3.0
 	github.com/goal-web/events v0.3.0
@@ -25,7 +25,7 @@ require (
 	github.com/goal-web/redis v0.3.1
 	github.com/goal-web/serialization v0.3.0
 	github.com/goal-web/session v0.3.0
-	github.com/goal-web/supports v0.3.1
+	github.com/goal-web/supports v0.3.2
 	github.com/goal-web/validation v0.3.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-module/carbon/v2 v2.3.12
@@ -94,7 +94,7 @@ require (
 	github.com/qiniu/go-sdk/v7 v7.11.1 // indirect
 	github.com/segmentio/kafka-go v0.4.27 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
-	github.com/shopspring/decimal v1.3.1 // indirect
+	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/skeema/knownhosts v1.2.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
