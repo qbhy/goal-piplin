@@ -18,7 +18,7 @@ require (
 	github.com/goal-web/filesystem v0.3.0
 	github.com/goal-web/hashing v0.3.0
 	github.com/goal-web/http v0.3.0
-	github.com/goal-web/migration v0.3.3
+	github.com/goal-web/migration v0.3.4
 	github.com/goal-web/querybuilder v0.3.1
 	github.com/goal-web/queue v0.3.0
 	github.com/goal-web/ratelimiter v0.3.0
