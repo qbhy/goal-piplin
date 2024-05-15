@@ -102,8 +102,8 @@ github.com/goal-web/container v0.3.0 h1:l/j4lr/cSEqKFZMP+/Mnht8RfcKUq3WRGtFu9AJw
 github.com/goal-web/container v0.3.0/go.mod h1:Aed32L87POeF6X5AvgyUGMaXL0ktPj9oWyVviDK8u2g=
 github.com/goal-web/contracts v0.3.0 h1:XVdeRGbswyo+e1Tp4SmKD5KJqrMm23eakaARXob7U7A=
 github.com/goal-web/contracts v0.3.0/go.mod h1:33koNCIiQ7GzBmYycynenVtv5E+Jq7lWGZ8vKi5uXJQ=
-github.com/goal-web/database v0.3.1 h1:sb7neerT2CoxyyXngRqExySJayCf47DOC51dtrTpmC4=
-github.com/goal-web/database v0.3.1/go.mod h1:4fSoD4+vQO4b184YnuN197x/1u/xXckieHI+RGRkM+c=
+github.com/goal-web/database v0.3.2 h1:BT4ycY/58gvzFZVnaV10TmF7BJXriTCHsAhIZ553WPo=
+github.com/goal-web/database v0.3.2/go.mod h1:4fSoD4+vQO4b184YnuN197x/1u/xXckieHI+RGRkM+c=
 github.com/goal-web/email v0.3.0 h1:eGVjfFgfXSyMyvQ4BZAritDL3LygfTxpXV85vtJAWPQ=
 github.com/goal-web/email v0.3.0/go.mod h1:INh1ypLjv6OAUjrrjNv468/dSOvFyv1pulcMfSzxZPw=
 github.com/goal-web/encryption v0.3.0 h1:C2y+r2+fXPdlHmKhOI4J/N3hF2UtVUFuA/cN2nrxjRE=

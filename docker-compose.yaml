@@ -49,6 +49,7 @@ services:
     ports:
       - "3306:3306"
   server:
+    restart: always
     image: qbhy/piplin:latest
     ports:
       - "8008:8008"

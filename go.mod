@@ -11,7 +11,7 @@ require (
 	github.com/goal-web/config v0.3.0
 	github.com/goal-web/console v0.3.0
 	github.com/goal-web/contracts v0.3.0
-	github.com/goal-web/database v0.3.1
+	github.com/goal-web/database v0.3.2
 	github.com/goal-web/email v0.3.0
 	github.com/goal-web/encryption v0.3.0
 	github.com/goal-web/events v0.3.0
