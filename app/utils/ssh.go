@@ -49,7 +49,7 @@ func ExecuteSSHCommand(client *ssh.Client, commands ...string) (string, error) {
 	// 运行命令并获取其标准输出
 	output, err := session.CombinedOutput(strings.Join(commands, "\n"))
 	if err != nil {
-		return "", err
+		return string(output), err
 	}
 
 	return string(output), nil

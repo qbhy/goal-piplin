@@ -123,18 +123,16 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 	}
 
 	commandsList := map[string]deploymentCommand{
-		models.Init:    scriptFunc(fmt.Sprintf("mkdir -p %s/releases/%s", detail.ProjectPath, detail.TimeVersion)),
+		models.Init:    scriptFunc(fmt.Sprintf("mkdir -p %s/releases/%s", detail.ProjectPath, detail.TimeVersion), false),
 		models.Clone:   clone,
 		models.Prepare: prepare,
 		models.Release: release,
 	}
 	commands.Foreach(func(i int, command *models.Command) {
-		commandsList[fmt.Sprintf("%d", command.Id)] = scriptFunc(command.Script)
+		commandsList[fmt.Sprintf("%d", command.Id)] = scriptFunc(command.Script, true)
 	})
 
-	_ = deployment.Update(contracts.Fields{
-		"status": models.StatusRunning,
-	})
+	_ = deployment.Update(contracts.Fields{"status": models.StatusRunning})
 	DeploymentNotify(deployment)
 	for i, result := range deployment.Results {
 		command := commandsList[result.Step]
@@ -147,9 +145,7 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 			result.Servers[s] = server
 			now := time.Now()
 			deployment.Results[i] = result
-			_ = deployment.Update(contracts.Fields{
-				"results": deployment.Results,
-			})
+			_ = deployment.Update(contracts.Fields{"results": deployment.Results})
 			DeploymentNotify(deployment)
 
 			output, err := command(detail, server.Server, "")
@@ -163,15 +159,11 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 			result.Servers[s] = server
 			result.TimeConsuming = int(time.Now().Sub(now).Milliseconds())
 			deployment.Results[i] = result
-			_ = deployment.Update(contracts.Fields{
-				"results": deployment.Results,
-			})
+			_ = deployment.Update(contracts.Fields{"results": deployment.Results})
 			DeploymentNotify(deployment)
 
 			if err != nil {
-				_ = deployment.Update(contracts.Fields{
-					"status": models.StatusFailed,
-				})
+				_ = deployment.Update(contracts.Fields{"status": models.StatusFailed})
 				DeploymentNotify(deployment)
 				return
 			}
@@ -331,7 +323,7 @@ func release(deployment DeploymentDetail, server models.Server, script string) (
 	return strings.Join(outputs, "\n"), err
 }
 
-func scriptFunc(script string) deploymentCommand {
+func scriptFunc(script string, cd bool) deploymentCommand {
 	return func(deployment DeploymentDetail, server models.Server, _ string) (string, error) {
 		var outputs []string
 
@@ -344,11 +336,14 @@ func scriptFunc(script string) deploymentCommand {
 			return "", err
 		}
 
+		var inputsScript = []string{script}
+		if cd {
+			inputsScript = []string{fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion), script}
+		}
+
 		// 执行脚本
-		output, err := utils.ExecuteSSHCommand(client,
-			fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion),
-			script)
-		if err == nil && output != "" {
+		output, err := utils.ExecuteSSHCommand(client, inputsScript...)
+		if output != "" {
 			outputs = append(outputs, output)
 		}
 		return strings.Join(outputs, "\n"), err
