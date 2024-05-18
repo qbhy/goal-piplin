@@ -14,7 +14,7 @@ func PostDeployment(request contracts.HttpRequest) any {
 	}
 
 	project := models.Projects().Where("uuid", form.UUID).FirstOrFail()
-	_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+	//_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
 
 	if form.Params == nil {
 		form.Params = make(map[string]bool)
@@ -67,7 +67,7 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 
 	project := models.Projects().FindOrFail(form.ProjectId)
-	_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+	//_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
 
 	if form.Params == nil {
 		form.Params = make(map[string]bool)

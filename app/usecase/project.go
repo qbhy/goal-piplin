@@ -131,7 +131,7 @@ func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 	if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
 		return project, errors.New("项目已存在")
 	}
-	_, err := models.Projects().Where("id", id).UpdateE(utils.OnlyFields(fields,
+	err := project.Update(utils.OnlyFields(fields,
 		"name", "default_branch", "project_path", "repo_address", "group_id", "key_id",
 	))
 
