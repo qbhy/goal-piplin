@@ -3,30 +3,31 @@ module github.com/qbhy/goal-piplin
 go 1.20
 
 require (
-	github.com/goal-web/application v0.3.0
-	github.com/goal-web/auth v0.3.1
-	github.com/goal-web/bloomfilter v0.3.0
-	github.com/goal-web/cache v0.3.0
-	github.com/goal-web/collection v0.3.2
-	github.com/goal-web/config v0.3.0
-	github.com/goal-web/console v0.3.0
-	github.com/goal-web/contracts v0.3.0
-	github.com/goal-web/database v0.3.3
-	github.com/goal-web/email v0.3.0
-	github.com/goal-web/encryption v0.3.0
-	github.com/goal-web/events v0.3.0
-	github.com/goal-web/filesystem v0.3.0
-	github.com/goal-web/hashing v0.3.0
-	github.com/goal-web/http v0.3.0
-	github.com/goal-web/migration v0.3.4
-	github.com/goal-web/querybuilder v0.3.1
-	github.com/goal-web/queue v0.3.0
-	github.com/goal-web/ratelimiter v0.3.0
-	github.com/goal-web/redis v0.3.1
-	github.com/goal-web/serialization v0.3.0
-	github.com/goal-web/session v0.3.0
-	github.com/goal-web/supports v0.3.2
-	github.com/goal-web/validation v0.3.0
+	github.com/goal-web/application v0.4.1
+	github.com/goal-web/auth v0.4.1
+	github.com/goal-web/bloomfilter v0.4.1
+	github.com/goal-web/cache v0.4.1
+	github.com/goal-web/collection v0.4.1
+	github.com/goal-web/config v0.4.1
+	github.com/goal-web/console v0.4.1
+	github.com/goal-web/container v0.4.1
+	github.com/goal-web/contracts v0.4.1
+	github.com/goal-web/database v0.4.1
+	github.com/goal-web/email v0.4.1
+	github.com/goal-web/encryption v0.4.1
+	github.com/goal-web/events v0.4.1
+	github.com/goal-web/filesystem v0.4.1
+	github.com/goal-web/hashing v0.4.1
+	github.com/goal-web/http v0.4.1
+	github.com/goal-web/migration v0.4.1
+	github.com/goal-web/querybuilder v0.4.1
+	github.com/goal-web/queue v0.4.1
+	github.com/goal-web/ratelimiter v0.4.1
+	github.com/goal-web/redis v0.4.1
+	github.com/goal-web/serialization v0.4.1
+	github.com/goal-web/session v0.4.1
+	github.com/goal-web/supports v0.4.1
+	github.com/goal-web/validation v0.4.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-module/carbon/v2 v2.3.12
 )
@@ -65,9 +66,8 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
-	github.com/goal-web/container v0.3.0 // indirect
-	github.com/goal-web/pipeline v0.3.0 // indirect
-	github.com/goal-web/routing v0.3.0 // indirect
+	github.com/goal-web/pipeline v0.4.0 // indirect
+	github.com/goal-web/routing v0.4.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
