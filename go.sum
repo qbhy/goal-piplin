@@ -100,6 +100,7 @@ github.com/goal-web/console v0.4.1 h1:f/uqpI+A+bhvFal8My0ifPTBTWtuASmFRuonxL55Cp
 github.com/goal-web/console v0.4.1/go.mod h1:jBR8t0JxW38JNFRsr2QDDIAywcgqjCOW+fUkASL2Hi4=
 github.com/goal-web/container v0.3.0 h1:l/j4lr/cSEqKFZMP+/Mnht8RfcKUq3WRGtFu9AJwyWc=
 github.com/goal-web/container v0.3.0/go.mod h1:Aed32L87POeF6X5AvgyUGMaXL0ktPj9oWyVviDK8u2g=
+github.com/goal-web/container v0.4.1 h1:AxPLu7pTTLB6BYgJAG7M0v8exR6NM/2AqaIgF0kNApY=
 github.com/goal-web/container v0.4.1/go.mod h1:xmjMKcPeWR4NvLGXzJFKNwXZB7W6c1ysic1cvPiYEgU=
 github.com/goal-web/contracts v0.4.1 h1:lH/1cUC9CEM4cBBskXOXz2+DxLVGfczc1uK18yHegCI=
 github.com/goal-web/contracts v0.4.1/go.mod h1:33koNCIiQ7GzBmYycynenVtv5E+Jq7lWGZ8vKi5uXJQ=

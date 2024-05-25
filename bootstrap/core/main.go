@@ -1,6 +1,7 @@
 package core
 
 import (
+	"flag"
 	"github.com/goal-web/application"
 	"github.com/goal-web/auth"
 	"github.com/goal-web/bloomfilter"
@@ -25,8 +26,12 @@ import (
 	config2 "github.com/qbhy/goal-piplin/config"
 )
 
+var envPath = flag.String("env", "env.toml", "指定 env")
+
 func Application() contracts.Application {
-	env := config.NewToml(config.File("env.toml"))
+	flag.Parse()
+
+	env := config.NewToml(config.File(*envPath))
 	app := application.Singleton(env.GetBool("app.debug"))
 
 	// 设置异常处理器
