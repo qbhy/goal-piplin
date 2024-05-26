@@ -152,7 +152,6 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 			server.Status = models.StatusFinished
 			if err != nil {
 				server.Status = models.StatusFailed
-				output += err.Error()
 			}
 
 			server.Outputs = output
@@ -170,10 +169,12 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 		}
 	}
 
-	_ = deployment.Update(contracts.Fields{
-		"status": models.StatusFinished,
-	})
+	_ = deployment.Update(contracts.Fields{"status": models.StatusFinished})
 	DeploymentNotify(deployment)
+}
+
+func log(content string) string {
+	return carbon.Now().ToDateTimeString() + " " + content
 }
 
 func makeCommandOutputsWithParams(commands []*models.Command, params map[string]bool, servers []models.Server) []models.CommandResult {
@@ -203,51 +204,55 @@ func makeCommandOutputs(servers []models.Server) map[string]models.CommandOutput
 }
 
 func clone(deployment DeploymentDetail, server models.Server, script string) (string, error) {
-	var outputs []string
-
-	client, err := utils.ConnectToSSHServer(
-		fmt.Sprintf("%s:%d", server.Host, server.Port),
-		deployment.Key.PrivateKey,
-		server.User,
-	)
-	if err != nil {
-		return "", err
+	var outputs = []string{
+		log("Clone step started"),
 	}
 
 	repoPath := fmt.Sprintf("%s%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
-	if err = utils.CloneRepoBranchOrCommit(
+	if err := utils.CloneRepoBranchOrCommit(
 		deployment.RepoAddress,
 		deployment.Key.PrivateKey,
 		deployment.Version,
 		repoPath,
 	); err != nil {
-		return "", err
+		outputs = append(outputs, log("Failed to clone code to piplin"))
+		outputs = append(outputs, log(err.Error()))
+		return strings.Join(outputs, "\n"), err
+	} else {
+		outputs = append(outputs, log("Successfully clone code to piplin"))
 	}
 
-	if err = os.RemoveAll(repoPath + "/.git"); err != nil {
-		return "", err
+	if err := os.RemoveAll(repoPath + "/.git"); err != nil {
+		outputs = append(outputs, log("Failed to remove dir .git"))
+		outputs = append(outputs, log(err.Error()))
+		return strings.Join(outputs, "\n"), err
 	}
 
 	sftpClient, err := utils.ConnectSFTP(
 		fmt.Sprintf("%s:%d", server.Host, server.Port), server.User, deployment.Key.PrivateKey,
 	)
 	if err != nil {
+		outputs = append(outputs, log("Failed to connect server via sftp"))
+		outputs = append(outputs, log(err.Error()))
 		return strings.Join(outputs, "\n"), err
+	} else {
+		outputs = append(outputs, log("Successfully connect to server via sftp"))
 	}
 
 	// 同步代码到服务器
 	err = utils.SyncDir(sftpClient, repoPath, fmt.Sprintf("%s/releases/%s", deployment.ProjectPath, deployment.TimeVersion))
 	if err != nil {
 		return strings.Join(outputs, "\n"), err
+	} else {
+		outputs = append(outputs, log("Successfully synchronisation of files to the server"))
 	}
-	outputs = append(outputs, "File synchronization successful.")
 
-	// 执行脚本，如果有的话
-	output, err := utils.ExecuteSSHCommand(client, script)
-	if err == nil && output != "" {
+	if script != "" {
+		output, execErr := _connectAndExec(deployment, server, script)
 		outputs = append(outputs, output)
+		err = execErr
 	}
 
 	_ = os.RemoveAll(repoPath)
@@ -256,7 +261,9 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 }
 
 func prepare(deployment DeploymentDetail, server models.Server, script string) (string, error) {
-	var outputs []string
+	var outputs = []string{
+		log("Prepare step started"),
+	}
 	var inputs = []string{fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion)}
 
 	// 准备所有配置文件 start
@@ -282,20 +289,42 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 
 	inputs = append(inputs, script)
 
+	output, err := _connectAndExec(deployment, server, inputs...)
+	outputs = append(outputs, output)
+	return strings.Join(outputs, "\n"), err
+}
+
+func _connectAndExec(deployment DeploymentDetail, server models.Server, script ...string) (output string, err error) {
+	var outputs []string
+	if len(script) > 0 {
+		return
+	}
+	defer func() {
+		output = strings.Join(outputs, "\n")
+	}()
+
 	client, err := utils.ConnectToSSHServer(
 		fmt.Sprintf("%s:%d", server.Host, server.Port),
 		deployment.Key.PrivateKey,
 		server.User,
 	)
 	if err != nil {
-		return "", err
+		outputs = append(outputs, log("Failed to connect the server"))
+		outputs = append(outputs, log(err.Error()))
+		return strings.Join(outputs, "\n"), err
+	} else {
+		outputs = append(outputs, log("Successfully connect to the server"))
 	}
 
-	output, err := utils.ExecuteSSHCommand(client, inputs...)
-	if err == nil && output != "" {
-		outputs = append(outputs, output)
+	execOutput, err := utils.ExecuteSSHCommand(client, script...)
+	if err == nil && execOutput != "" {
+		outputs = append(outputs, log(execOutput))
 	}
-	return strings.Join(outputs, "\n"), err
+	if err != nil {
+		outputs = append(outputs, log("Failed to exec the script"))
+		outputs = append(outputs, log(err.Error()))
+	}
+	return
 }
 
 func release(deployment DeploymentDetail, server models.Server, script string) (string, error) {
@@ -307,33 +336,15 @@ func release(deployment DeploymentDetail, server models.Server, script string) (
 
 	inputs = append(inputs, script)
 
-	client, err := utils.ConnectToSSHServer(
-		fmt.Sprintf("%s:%d", server.Host, server.Port),
-		deployment.Key.PrivateKey,
-		server.User,
-	)
-	if err != nil {
-		return "", err
-	}
-
-	output, err := utils.ExecuteSSHCommand(client, inputs...)
-	if err == nil && output != "" {
-		outputs = append(outputs, output)
-	}
+	output, err := _connectAndExec(deployment, server, inputs...)
+	outputs = append(outputs, output)
 	return strings.Join(outputs, "\n"), err
 }
 
 func scriptFunc(script string, cd bool) deploymentCommand {
 	return func(deployment DeploymentDetail, server models.Server, _ string) (string, error) {
-		var outputs []string
-
-		client, err := utils.ConnectToSSHServer(
-			fmt.Sprintf("%s:%d", server.Host, server.Port),
-			deployment.Key.PrivateKey,
-			server.User,
-		)
-		if err != nil {
-			return "", err
+		var outputs = []string{
+			log("script started"),
 		}
 
 		var inputsScript = []string{script}
@@ -341,11 +352,9 @@ func scriptFunc(script string, cd bool) deploymentCommand {
 			inputsScript = []string{fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion), script}
 		}
 
-		// 执行脚本
-		output, err := utils.ExecuteSSHCommand(client, inputsScript...)
-		if output != "" {
-			outputs = append(outputs, output)
-		}
+		output, err := _connectAndExec(deployment, server, inputsScript...)
+		outputs = append(outputs, output)
+
 		return strings.Join(outputs, "\n"), err
 	}
 }
