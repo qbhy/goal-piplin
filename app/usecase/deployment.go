@@ -230,6 +230,18 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 		return strings.Join(outputs, "\n"), err
 	}
 
+	zipFile := repoPath + ".zip"
+
+	zipErr := utils.ZipFolder(repoPath, zipFile)
+	if zipErr != nil {
+		outputs = append(outputs, log("Failed to zip the repo folder"))
+		outputs = append(outputs, log(zipErr.Error()))
+		return strings.Join(outputs, "\n"), zipErr
+	} else {
+		_ = os.RemoveAll(repoPath)
+		outputs = append(outputs, log("Successfully zip the folder"))
+	}
+
 	sftpClient, err := utils.ConnectSFTP(
 		fmt.Sprintf("%s:%d", server.Host, server.Port), server.User, deployment.Key.PrivateKey,
 	)
@@ -242,20 +254,27 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	}
 
 	// 同步代码到服务器
-	err = utils.SyncDir(sftpClient, repoPath, fmt.Sprintf("%s/releases/%s", deployment.ProjectPath, deployment.TimeVersion))
+	err = utils.SyncFile(sftpClient, zipFile, fmt.Sprintf("%s/releases/%s.zip", deployment.ProjectPath, deployment.TimeVersion))
 	if err != nil {
+		outputs = append(outputs, log("Failed to sync zip to server via sftp"))
+		outputs = append(outputs, log(err.Error()))
 		return strings.Join(outputs, "\n"), err
 	} else {
-		outputs = append(outputs, log("Successfully synchronisation of files to the server"))
+		_ = os.RemoveAll(zipFile)
+		outputs = append(outputs, log("Successfully synchronisation of zip file to the server"))
 	}
 
-	if script != "" {
-		output, execErr := _connectAndExec(deployment, server, script)
-		outputs = append(outputs, output)
-		err = execErr
+	var scripts = []string{
+		script,
+		fmt.Sprintf("cd %s/releases", deployment.ProjectPath),
+		fmt.Sprintf("unzip %s.zip -d %s", deployment.TimeVersion, deployment.TimeVersion),
+		fmt.Sprintf("rm %s.zip", deployment.TimeVersion),
+		"echo 'successfully remove the zip file'",
 	}
 
-	_ = os.RemoveAll(repoPath)
+	output, execErr := _connectAndExec(deployment, server, scripts...)
+	outputs = append(outputs, output)
+	err = execErr
 
 	return strings.Join(outputs, "\n"), err
 }
@@ -296,7 +315,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 
 func _connectAndExec(deployment DeploymentDetail, server models.Server, script ...string) (output string, err error) {
 	var outputs []string
-	if len(script) > 0 {
+	if len(script) == 0 {
 		return
 	}
 	defer func() {
@@ -317,8 +336,8 @@ func _connectAndExec(deployment DeploymentDetail, server models.Server, script .
 	}
 
 	execOutput, err := utils.ExecuteSSHCommand(client, script...)
-	if err == nil && execOutput != "" {
-		outputs = append(outputs, log(execOutput))
+	if execOutput != "" {
+		outputs = append(outputs, execOutput)
 	}
 	if err != nil {
 		outputs = append(outputs, log("Failed to exec the script"))
@@ -331,7 +350,9 @@ func release(deployment DeploymentDetail, server models.Server, script string) (
 	var outputs []string
 	var inputs = []string{
 		fmt.Sprintf("rm %s/current", deployment.ProjectPath),
+		"echo 'remove old link'",
 		fmt.Sprintf("ln -s %s/releases/%s %s/current", deployment.ProjectPath, deployment.TimeVersion, deployment.ProjectPath),
+		"echo 'successfully create a new link'",
 	}
 
 	inputs = append(inputs, script)

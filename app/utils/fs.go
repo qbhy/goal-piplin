@@ -1,11 +1,14 @@
 package utils
 
 import (
+	"archive/zip"
+	"fmt"
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // ConnectSFTP 连接到SFTP服务器
@@ -78,6 +81,88 @@ func SyncDir(client *sftp.Client, localDir, remoteDir string) error {
 
 			// 复制文件内容
 			_, err = io.Copy(remoteFile, localFile)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+
+// SyncFile 使用SFTP同步本地文件到远程目录
+func SyncFile(client *sftp.Client, localFilePath, remoteFilePath string) error {
+	// Open the local file
+	localFile, err := os.Open(localFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to open local file: %w", err)
+	}
+	defer localFile.Close()
+
+	// Create the remote file
+	remoteFile, err := client.Create(remoteFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to create remote file: %w", err)
+	}
+	defer remoteFile.Close()
+
+	// Read the content of the local file and write it to the remote file
+	content, err := io.ReadAll(localFile)
+	if err != nil {
+		return fmt.Errorf("failed to read local file: %w", err)
+	}
+
+	if _, err := remoteFile.Write(content); err != nil {
+		return fmt.Errorf("failed to write to remote file: %w", err)
+	}
+
+	return nil
+}
+
+// ZipFolder compresses the specified folder into a zip file, maintaining the folder's structure
+func ZipFolder(source, target string) error {
+	zipFile, err := os.Create(target)
+	if err != nil {
+		return err
+	}
+	defer zipFile.Close()
+
+	archive := zip.NewWriter(zipFile)
+	defer archive.Close()
+
+	return filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Create the zip header based on the relative path to the source folder
+		relPath := strings.TrimPrefix(path, filepath.Clean(source))
+		relPath = strings.TrimPrefix(relPath, string(filepath.Separator)) // remove leading separator if exists
+
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+
+		header.Name = relPath
+		if info.IsDir() {
+			header.Name += "/"
+		} else {
+			header.Method = zip.Deflate
+		}
+
+		writer, err := archive.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			file, err := os.Open(path)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+			_, err = io.Copy(writer, file)
 			if err != nil {
 				return err
 			}

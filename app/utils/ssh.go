@@ -36,7 +36,7 @@ func ConnectToSSHServer(serverAddress, publicKey, username string) (*ssh.Client,
 
 // ExecuteSSHCommand 在SSH会话中执行命令并返回输出结果
 func ExecuteSSHCommand(client *ssh.Client, commands ...string) (string, error) {
-	if len(commands) == 0 || commands[0] == "" {
+	if len(commands) == 0 {
 		return "", nil
 	}
 	// 创建一个新的SSH会话
@@ -48,9 +48,5 @@ func ExecuteSSHCommand(client *ssh.Client, commands ...string) (string, error) {
 
 	// 运行命令并获取其标准输出
 	output, err := session.CombinedOutput(strings.Join(commands, "\n"))
-	if err != nil {
-		return string(output), err
-	}
-
 	return string(output), nil
 }
