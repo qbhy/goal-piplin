@@ -39,6 +39,7 @@ func (cmd Initial) Handle() any {
 		if err != nil {
 			panic(err)
 		}
+		logs.Default().Info(fmt.Sprintf("已创建用户 %s 密码为 %s", username, password))
 	}
 
 	if models.Keys().Count() == 0 {
@@ -57,8 +58,6 @@ func (cmd Initial) Handle() any {
 	} else {
 		logs.Default().Info(fmt.Sprintf("已存在默认密钥"))
 	}
-
-	logs.Default().Info(fmt.Sprintf("已创建用户 %s 密码为 %s", username, password))
 
 	return nil
 }
