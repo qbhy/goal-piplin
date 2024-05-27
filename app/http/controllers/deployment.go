@@ -12,6 +12,12 @@ func PostDeployment(request contracts.HttpRequest) any {
 	if err := request.Parse(&form); err != nil {
 		return contracts.Fields{"msg": err.Error()}
 	}
+	if len(form.Environments) == 0 {
+		return contracts.Fields{"msg": "请选择环境"}
+	}
+	if form.Version == "" {
+		return contracts.Fields{"msg": "请选择部署版本"}
+	}
 
 	project := models.Projects().Where("uuid", form.UUID).FirstOrFail()
 	//_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
@@ -64,6 +70,12 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	var form requests.DeploymentRequest
 	if err := request.Parse(&form); err != nil {
 		return contracts.Fields{"msg": err.Error()}
+	}
+	if len(form.Environments) == 0 {
+		return contracts.Fields{"msg": "请选择环境"}
+	}
+	if form.Version == "" {
+		return contracts.Fields{"msg": "请选择部署版本"}
 	}
 
 	project := models.Projects().FindOrFail(form.ProjectId)
