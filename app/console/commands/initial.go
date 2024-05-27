@@ -28,10 +28,6 @@ func (cmd Initial) Handle() any {
 	var err error
 	if user != nil {
 		logs.Default().Info("piplin 用户已存在")
-		models.Users().Where("id", user.Id).Update(contracts.Fields{
-			"password": cmd.hash.Make(password, nil),
-		})
-		logs.Default().Info(fmt.Sprintf("已将密码重置为 %s", password))
 	} else {
 		user, err = models.Users().CreateE(contracts.Fields{
 			"username": username,
