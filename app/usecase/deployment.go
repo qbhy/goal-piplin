@@ -174,7 +174,7 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 }
 
 func log(content string) string {
-	return carbon.Now().ToDateTimeString() + " " + content
+	return carbon.Now().ToDateTimeString() + "\t" + content
 }
 
 func makeCommandOutputsWithParams(commands []*models.Command, params map[string]bool, servers []models.Server) []models.CommandResult {
@@ -289,7 +289,10 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	configFiles := models.ConfigFiles().Where("project_id", deployment.ProjectId).Get().ToArray()
 	for _, file := range configFiles {
 		if utils2.IsInT(server.Environment, file.Environments) {
-			inputs = append(inputs, fmt.Sprintf("echo '%s' > %s", file.Content, file.Path))
+			inputs = append(inputs,
+				fmt.Sprintf("echo '%s' > %s", file.Content, file.Path),
+				"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t config file ["+file.Name+"] are prepared in "+file.Path+"\"",
+			)
 		}
 	}
 	// 准备所有配置文件 end
@@ -302,6 +305,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 			fmt.Sprintf("cp -ruv %s/releases/%s/%s/* %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
 			fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path),
 			fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, share.Path, deployment.ProjectPath, deployment.TimeVersion, share.Path),
+			"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t shared file ["+share.Name+"] are prepared in "+share.Path+"\"",
 		)
 	}
 	// 准备所有共享目录 end
@@ -310,6 +314,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 
 	output, err := _connectAndExec(deployment, server, inputs...)
 	outputs = append(outputs, output)
+	outputs = append(outputs, log("Preparatory steps completed"))
 	return strings.Join(outputs, "\n"), err
 }
 
@@ -335,6 +340,7 @@ func _connectAndExec(deployment DeploymentDetail, server models.Server, script .
 		outputs = append(outputs, log("Successfully connect to the server"))
 	}
 
+	outputs = append(outputs, log("Script started"))
 	execOutput, err := utils.ExecuteSSHCommand(client, script...)
 	if execOutput != "" {
 		outputs = append(outputs, execOutput)
@@ -342,6 +348,8 @@ func _connectAndExec(deployment DeploymentDetail, server models.Server, script .
 	if err != nil {
 		outputs = append(outputs, log("Failed to exec the script"))
 		outputs = append(outputs, log(err.Error()))
+	} else {
+		outputs = append(outputs, log("Script execution complete"))
 	}
 	return
 }
