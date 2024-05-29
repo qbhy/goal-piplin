@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/database/table"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
@@ -30,6 +31,11 @@ func GetUserGroups(request contracts.HttpRequest, guard contracts.Guard) any {
 func CreateUserGroup(request contracts.HttpRequest, guard contracts.Guard) any {
 	userId := request.GetInt("user_id")
 	group := models.Groups().FindOrFail(request.GetInt("group_id"))
+
+	if !usecase.HasGroupPermission(group, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该分组的权限"}
+	}
+
 	data, err := usecase.CreateUserGroup(group.Id, userId)
 
 	if request.GetString("user_id") == guard.GetId() {

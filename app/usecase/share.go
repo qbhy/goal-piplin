@@ -21,9 +21,9 @@ func CreateShare(projectId int, fields contracts.Fields) (*models.ShareFile, err
 }
 
 func UpdateShare(id any, fields contracts.Fields) error {
-	env := models.ShareFiles().Find(id)
+	share := models.ShareFiles().Find(id)
 	if models.ShareFiles().
-		Where("project_id", env.ProjectId).
+		Where("project_id", share.ProjectId).
 		Where("id", "!=", id).
 		Where("name", fields["name"]).
 		Count() > 0 {

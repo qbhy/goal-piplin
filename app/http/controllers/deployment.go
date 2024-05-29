@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/http/requests"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
@@ -33,7 +34,13 @@ func PostDeployment(request contracts.HttpRequest) any {
 	}
 }
 
-func GetDeployments(request contracts.HttpRequest) any {
+func GetDeployments(request contracts.HttpRequest, guard contracts.Guard) any {
+
+	project := models.Projects().FindOrFail(request.Get("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
 	list, total := models.Deployments().
 		Where("project_id", request.Get("project_id")).
 		When(request.GetString("comment") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
@@ -53,9 +60,13 @@ func GetDeployments(request contracts.HttpRequest) any {
 	}
 }
 
-func GetDeploymentDetail(request contracts.HttpRequest) any {
+func GetDeploymentDetail(request contracts.HttpRequest, guard contracts.Guard) any {
 	deployment := models.Deployments().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(deployment.ProjectId)
+
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 
 	return contracts.Fields{
 		"data": contracts.Fields{
@@ -66,7 +77,7 @@ func GetDeploymentDetail(request contracts.HttpRequest) any {
 	}
 }
 
-func CreateDeployment(request contracts.HttpRequest) any {
+func CreateDeployment(request contracts.HttpRequest, guard contracts.Guard) any {
 	var form requests.DeploymentRequest
 	if err := request.Parse(&form); err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -79,7 +90,10 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 
 	project := models.Projects().FindOrFail(form.ProjectId)
-	//_ = usecase.UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
+
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 
 	if form.Params == nil {
 		form.Params = make(map[string]bool)
@@ -92,8 +106,12 @@ func CreateDeployment(request contracts.HttpRequest) any {
 	}
 }
 
-func RunDeployment(request contracts.HttpRequest) any {
+func RunDeployment(request contracts.HttpRequest, guard contracts.Guard) any {
 	deployment := models.Deployments().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(deployment.ProjectId)
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 
 	go usecase.GoDeployment(deployment, models.Commands().Where("project_id", deployment.ProjectId).Get())
 

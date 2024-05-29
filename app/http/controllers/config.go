@@ -2,13 +2,20 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetConfigs(request contracts.HttpRequest) any {
+func GetConfigs(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.QueryParam("project_id"))
+
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
 	list, total := models.ConfigFiles().
-		Where("project_id", request.QueryParam("project_id")).
+		Where("project_id", project.Id).
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.ConfigFile]) contracts.Query[models.ConfigFile] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
@@ -36,8 +43,13 @@ func CreateConfig(request contracts.HttpRequest) any {
 	}
 }
 
-func UpdateConfig(request contracts.HttpRequest) any {
-	err := usecase.UpdateConfig(request.Get("id"), request.Fields())
+func UpdateConfig(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.Get("id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
+	err := usecase.UpdateConfig(project.Id, request.Fields())
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -46,7 +58,12 @@ func UpdateConfig(request contracts.HttpRequest) any {
 	return contracts.Fields{"data": nil}
 }
 
-func DeleteConfig(request contracts.HttpRequest) any {
+func DeleteConfig(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.Get("id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
 	err := usecase.DeleteConfig(request.Get("id"))
 
 	if err != nil {

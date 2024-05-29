@@ -2,13 +2,18 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetEnvironments(request contracts.HttpRequest) any {
+func GetEnvironments(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.QueryParam("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	list, total := models.ProjectEnvironments().
-		Where("project_id", request.QueryParam("project_id")).
+		Where("project_id", project.Id).
 		OrderByDesc("id").
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.ProjectEnvironment]) contracts.Query[models.ProjectEnvironment] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
@@ -20,9 +25,12 @@ func GetEnvironments(request contracts.HttpRequest) any {
 	}
 }
 
-func CreateEnvironment(request contracts.HttpRequest) any {
-
-	environment, err := usecase.CreateEnvironment(request.GetString("name"), request.GetInt("project_id"))
+func CreateEnvironment(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.Get("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+	environment, err := usecase.CreateEnvironment(request.GetString("name"), project.Id)
 
 	if err != nil {
 		return contracts.Fields{"msg": "创建环境失败"}
@@ -33,8 +41,13 @@ func CreateEnvironment(request contracts.HttpRequest) any {
 	}
 }
 
-func UpdateEnvironment(request contracts.HttpRequest) any {
-	err := usecase.UpdateEnvironment(request.Get("id"), request.GetString("name"), request.Get("settings"))
+func UpdateEnvironment(request contracts.HttpRequest, guard contracts.Guard) any {
+	env := models.ProjectEnvironments().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(env.ProjectId)
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+	err := usecase.UpdateEnvironment(env.Id, request.GetString("name"), request.Get("settings"))
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -43,7 +56,12 @@ func UpdateEnvironment(request contracts.HttpRequest) any {
 	return contracts.Fields{"data": nil}
 }
 
-func DeleteEnvironment(request contracts.HttpRequest) any {
+func DeleteEnvironment(request contracts.HttpRequest, guard contracts.Guard) any {
+	env := models.ProjectEnvironments().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(env.ProjectId)
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	err := usecase.DeleteEnvironment(request.Get("id"))
 
 	if err != nil {

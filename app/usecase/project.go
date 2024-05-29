@@ -142,8 +142,7 @@ func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 	return models.Projects().FindOrFail(id), err
 }
 
-func GetProjectDetail(id any) models.ProjectDetail {
-	project := models.Projects().Find(id)
+func GetProjectDetail(project *models.Project) models.ProjectDetail {
 	return models.ProjectDetail{
 		Project: project,
 		Key:     models.Keys().Find(project.KeyId),

@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/database/table"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
@@ -30,6 +31,9 @@ func GetUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 func CreateUserProject(request contracts.HttpRequest, guard contracts.Guard) any {
 	userId := request.GetInt("user_id")
 	project := models.Projects().FindOrFail(request.GetInt("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	data, err := usecase.CreateUserProject(project.Id, userId)
 	if request.GetString("user_id") == guard.GetId() {
 		return contracts.Fields{"msg": "不可以邀请自己"}
@@ -44,7 +48,11 @@ func CreateUserProject(request contracts.HttpRequest, guard contracts.Guard) any
 	return contracts.Fields{"data": data}
 }
 
-func DeleteUserProjects(request contracts.HttpRequest) any {
+func DeleteUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(models.UserProjects().FindOrFail(request.Get("id")))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	err := usecase.DeleteUserProject(request.Get("id"))
 
 	if err != nil {
@@ -55,6 +63,10 @@ func DeleteUserProjects(request contracts.HttpRequest) any {
 }
 
 func UpdateUserProject(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.Get("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	userProject := models.UserProjects().
 		Where("project_id", request.Get("project_id")).
 		Where("user_id", guard.GetId()).FirstOrFail()

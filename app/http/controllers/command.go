@@ -2,11 +2,17 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
-func GetCommands(request contracts.HttpRequest) any {
+func GetCommands(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.QueryParam("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
 	list, total := models.Commands().
 		Where("project_id", request.QueryParam("project_id")).
 		OrderByDesc("id").
@@ -26,9 +32,13 @@ func GetCommands(request contracts.HttpRequest) any {
 	}
 }
 
-func CreateCommand(request contracts.HttpRequest) any {
+func CreateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.Get("project_id"))
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 
-	Command, err := usecase.CreateCommand(request.GetInt("project_id"), request.Fields())
+	Command, err := usecase.CreateCommand(project.Id, request.Fields())
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -39,8 +49,14 @@ func CreateCommand(request contracts.HttpRequest) any {
 	}
 }
 
-func UpdateCommand(request contracts.HttpRequest) any {
-	err := usecase.UpdateCommand(request.Get("id"), request.Fields())
+func UpdateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
+	command := models.Commands().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(command.ProjectId)
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
+	err := usecase.UpdateCommand(command.Id, request.Fields())
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -49,7 +65,13 @@ func UpdateCommand(request contracts.HttpRequest) any {
 	return contracts.Fields{"data": nil}
 }
 
-func DeleteCommand(request contracts.HttpRequest) any {
+func DeleteCommand(request contracts.HttpRequest, guard contracts.Guard) any {
+	command := models.Commands().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(command.ProjectId)
+	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
 	err := usecase.DeleteCommand(request.Get("id"))
 
 	if err != nil {
