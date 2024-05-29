@@ -18,3 +18,13 @@ func (req ProjectRequest) Rules() contracts.Fields {
 		"default_branch": "required",
 	}
 }
+func (req ProjectRequest) Fields() contracts.Fields {
+	return contracts.Fields{
+		"group_id":       req.GetInt("group_id"),
+		"key_id":         req.GetInt("key_id"),
+		"name":           req.GetString("name"),
+		"repo_address":   req.GetString("repo_address"),
+		"project_path":   req.GetString("project_path"),
+		"default_branch": req.GetString("default_branch"),
+	}
+}
