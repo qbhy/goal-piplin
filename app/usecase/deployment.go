@@ -300,13 +300,24 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	// 准备所有共享目录 start
 	shares := models.ShareFiles().Where("project_id", deployment.ProjectId).Get().ToArray()
 	for _, share := range shares {
-		inputs = append(inputs,
-			fmt.Sprintf("mkdir -p %s/shared/%s", deployment.ProjectPath, share.Path),
-			fmt.Sprintf("cp -ruv %s/releases/%s/%s %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
-			fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path),
-			fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, share.Path, deployment.ProjectPath, deployment.TimeVersion, share.Path),
-			"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t shared file ["+share.Name+"] are prepared in "+share.Path+"\"",
-		)
+		if strings.HasSuffix(share.Path, "/") {
+			path := strings.TrimSuffix(share.Path, "/")
+			inputs = append(inputs,
+				fmt.Sprintf("mkdir -p %s/shared/%s", deployment.ProjectPath, path),
+				fmt.Sprintf("cp -ruv %s/releases/%s/%s/* %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, path, deployment.ProjectPath, path),
+				fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, path),
+				fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, path, deployment.ProjectPath, deployment.TimeVersion, path),
+				"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t shared directory ["+share.Name+"] are prepared in "+path+"\"",
+			)
+		} else {
+			inputs = append(inputs,
+				fmt.Sprintf("cp -ruv %s/releases/%s/%s %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
+				fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path),
+				fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, share.Path, deployment.ProjectPath, deployment.TimeVersion, share.Path),
+				"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t shared file ["+share.Name+"] are prepared in "+share.Path+"\"",
+			)
+		}
+
 	}
 	// 准备所有共享目录 end
 
