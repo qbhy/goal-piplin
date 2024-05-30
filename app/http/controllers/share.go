@@ -2,14 +2,13 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
 func GetShares(request contracts.HttpRequest, guard contracts.Guard) any {
 	targetProject := models.Projects().FindOrFail(request.QueryParam("project_id"))
-	if !usecase.HasProjectPermission(targetProject, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(targetProject, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	list, total := models.ShareFiles().
@@ -27,7 +26,7 @@ func GetShares(request contracts.HttpRequest, guard contracts.Guard) any {
 
 func CreateShare(request contracts.HttpRequest, guard contracts.Guard) any {
 	targetProject := models.Projects().FindOrFail(request.GetInt("project_id"))
-	if !usecase.HasProjectPermission(targetProject, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(targetProject, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	Share, err := usecase.CreateShare(targetProject.Id, request.Fields())
@@ -44,7 +43,7 @@ func CreateShare(request contracts.HttpRequest, guard contracts.Guard) any {
 func UpdateShare(request contracts.HttpRequest, guard contracts.Guard) any {
 	share := models.ShareFiles().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(share.ProjectId)
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	err := usecase.UpdateShare(share.Id, request.Fields())
@@ -59,7 +58,7 @@ func UpdateShare(request contracts.HttpRequest, guard contracts.Guard) any {
 func DeleteShare(request contracts.HttpRequest, guard contracts.Guard) any {
 	share := models.ShareFiles().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(share.ProjectId)
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	err := usecase.DeleteShare(request.Get("id"))

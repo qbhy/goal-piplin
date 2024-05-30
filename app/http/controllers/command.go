@@ -2,14 +2,13 @@ package controllers
 
 import (
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
 	"github.com/qbhy/goal-piplin/app/usecase"
 )
 
 func GetCommands(request contracts.HttpRequest, guard contracts.Guard) any {
 	project := models.Projects().FindOrFail(request.QueryParam("project_id"))
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
@@ -34,7 +33,7 @@ func GetCommands(request contracts.HttpRequest, guard contracts.Guard) any {
 
 func CreateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
 	project := models.Projects().FindOrFail(request.Get("project_id"))
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
@@ -52,7 +51,7 @@ func CreateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
 func UpdateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
 	command := models.Commands().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(command.ProjectId)
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
@@ -68,7 +67,7 @@ func UpdateCommand(request contracts.HttpRequest, guard contracts.Guard) any {
 func DeleteCommand(request contracts.HttpRequest, guard contracts.Guard) any {
 	command := models.Commands().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(command.ProjectId)
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 

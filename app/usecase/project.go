@@ -213,18 +213,18 @@ func DeleteProject(project *models.Project) error {
 }
 
 // HasProjectPermission 判断用户是否存在指定项目的权限
-func HasProjectPermission(project *models.Project, userId int) bool {
-	if project.CreatorId == userId {
+func HasProjectPermission(project *models.Project, user *models.User) bool {
+	if user.Role == models.UserRoleAdmin || project.CreatorId == utils.ToInt(user.Id, 0) {
 		return true
 	}
 
-	if project.GroupId > 0 && HasGroupPermission(models.Groups().FindOrFail(project.GroupId), userId) {
+	if project.GroupId > 0 && HasGroupPermission(models.Groups().FindOrFail(project.GroupId), user) {
 		return true
 	}
 
 	return models.UserProjects().
 		Where("project_id", project.Id).
-		Where("user_id", userId).
+		Where("user_id", user.Id).
 		Where("status", models.InviteStatusJoined).
 		Count() > 0
 }

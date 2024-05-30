@@ -4,13 +4,13 @@ go 1.20
 
 require (
 	github.com/goal-web/application v0.4.1
-	github.com/goal-web/auth v0.4.1
+	github.com/goal-web/auth v0.4.2
 	github.com/goal-web/bloomfilter v0.4.1
 	github.com/goal-web/cache v0.4.1
 	github.com/goal-web/collection v0.4.1
 	github.com/goal-web/config v0.4.1
 	github.com/goal-web/console v0.4.1
-	github.com/goal-web/container v0.4.1
+	github.com/goal-web/container v0.4.1 // indirect
 	github.com/goal-web/contracts v0.4.1
 	github.com/goal-web/database v0.4.1
 	github.com/goal-web/email v0.4.1

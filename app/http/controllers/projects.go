@@ -54,7 +54,7 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 
 func GetProject(request contracts.HttpRequest, guard contracts.Guard) any {
 	project := models.Projects().FindOrFail(request.GetString("id"))
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	return contracts.Fields{
@@ -65,7 +65,7 @@ func GetProject(request contracts.HttpRequest, guard contracts.Guard) any {
 func DeleteProject(request contracts.HttpRequest, guard contracts.Guard) any {
 	project := models.Projects().FindOrFail(request.Get("id"))
 
-	if !usecase.HasProjectPermission(project, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
@@ -80,7 +80,7 @@ func CreateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	validation.VerifyForm(request)
 	fields := request.Fields()
 
-	if groupId := utils.ToInt(fields["group_id"], 0); groupId > 0 && !usecase.HasGroupPermission(models.Groups().FindOrFail(groupId), utils.ToInt(guard.GetId(), 0)) {
+	if groupId := utils.ToInt(fields["group_id"], 0); groupId > 0 && !usecase.HasGroupPermission(models.Groups().FindOrFail(groupId), guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该分组的权限"}
 	}
 
@@ -104,11 +104,11 @@ func CopyProject(request contracts.HttpRequest, guard contracts.Guard) any {
 
 	targetProject := models.Projects().FindOrFail(form.TargetProject)
 
-	if !usecase.HasProjectPermission(targetProject, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(targetProject, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
-	if form.GroupId > 0 && !usecase.HasGroupPermission(models.Groups().FindOrFail(form.GroupId), utils.ToInt(guard.GetId(), 0)) {
+	if form.GroupId > 0 && !usecase.HasGroupPermission(models.Groups().FindOrFail(form.GroupId), guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该分组的权限"}
 	}
 
@@ -134,7 +134,7 @@ func UpdateProject(request requests.ProjectRequest, guard contracts.Guard) any {
 	validation.VerifyForm(request)
 	fields := request.Fields()
 	targetProject := models.Projects().FindOrFail(request.GetString("id"))
-	if !usecase.HasProjectPermission(targetProject, utils.ToInt(guard.GetId(), 0)) {
+	if !usecase.HasProjectPermission(targetProject, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 	project, err := usecase.UpdateProject(request.GetInt("id"), fields)

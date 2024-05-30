@@ -19,7 +19,7 @@ func Api(router contracts.HttpRouter) {
 
 	//router.Get("/", controllers.HelloWorld, ratelimiter.Middleware(100))
 
-	authRouter := api.Group("", auth.Guard[models.User](models.Users(), "jwt"))
+	authRouter := api.Group("", auth.Guard(models.Users(), "jwt"))
 	authRouter.Get("/myself", controllers.GetCurrentUser)
 
 	authRouter.Get("/project/list", controllers.GetProjects)

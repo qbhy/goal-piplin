@@ -86,8 +86,8 @@ github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LB
 github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0/go.mod h1:fyg7847qk6SyHyPtNmDHnmrv/HOrqktSC+C9fM+CJOE=
 github.com/goal-web/application v0.4.1 h1:SAArzejJmjwEY7T1Fp+1IqbCMmM+yklEJr+/BRN/flg=
 github.com/goal-web/application v0.4.1/go.mod h1:3xwvnK/vpXfpmXXtaVkjoAMyNWSATrY23ZA2Xli3VOM=
-github.com/goal-web/auth v0.4.1 h1:l20BFtlOvjDQq9AaTAwsDIodSBbsZ6mS7GhKzwqbDX0=
-github.com/goal-web/auth v0.4.1/go.mod h1:VEoNDPsZqRe6RDQakmCpgaXtkqDao16shk/rwc/DztE=
+github.com/goal-web/auth v0.4.2 h1:rmCj4dG28ZqPLMyI5tt4ISbtcaO8ENIha8EvNYUZoLU=
+github.com/goal-web/auth v0.4.2/go.mod h1:VEoNDPsZqRe6RDQakmCpgaXtkqDao16shk/rwc/DztE=
 github.com/goal-web/bloomfilter v0.4.1 h1:t7qm2/ufnsd5rHOD9Ii2UDyZHnkwKrMOV1oTPnkHPao=
 github.com/goal-web/bloomfilter v0.4.1/go.mod h1:r5JFUuBXmsfb4yTccp4vUeNJg4jwXYb+4jG/sqyultM=
 github.com/goal-web/cache v0.4.1 h1:X/meQPGkfZ0+KV9doFm+aSA5EbOm1fpTu0i21tCB+fY=
@@ -98,8 +98,6 @@ github.com/goal-web/config v0.4.1 h1:MrPO6xTGvhSjKI8B5ll+n0D2/21HUoqqtvvjWUiFjHM
 github.com/goal-web/config v0.4.1/go.mod h1:OE36Qc9rJ2XrgmBAzq4JwcRrSiaBF0a42P2WxZvQOuw=
 github.com/goal-web/console v0.4.1 h1:f/uqpI+A+bhvFal8My0ifPTBTWtuASmFRuonxL55CpI=
 github.com/goal-web/console v0.4.1/go.mod h1:jBR8t0JxW38JNFRsr2QDDIAywcgqjCOW+fUkASL2Hi4=
-github.com/goal-web/container v0.3.0 h1:l/j4lr/cSEqKFZMP+/Mnht8RfcKUq3WRGtFu9AJwyWc=
-github.com/goal-web/container v0.3.0/go.mod h1:Aed32L87POeF6X5AvgyUGMaXL0ktPj9oWyVviDK8u2g=
 github.com/goal-web/container v0.4.1 h1:AxPLu7pTTLB6BYgJAG7M0v8exR6NM/2AqaIgF0kNApY=
 github.com/goal-web/container v0.4.1/go.mod h1:xmjMKcPeWR4NvLGXzJFKNwXZB7W6c1ysic1cvPiYEgU=
 github.com/goal-web/contracts v0.4.1 h1:lH/1cUC9CEM4cBBskXOXz2+DxLVGfczc1uK18yHegCI=
