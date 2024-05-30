@@ -20,7 +20,7 @@ WORKDIR /var/www
 COPY --from=builder /app/piplin /var/www/piplin
 COPY env.toml .
 COPY entrypoint.sh .
-COPY database/migrations ./migrations
+COPY database .
 
 # run
 ENTRYPOINT ["./entrypoint.sh"]
