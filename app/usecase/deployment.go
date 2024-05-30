@@ -302,7 +302,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	for _, share := range shares {
 		inputs = append(inputs,
 			fmt.Sprintf("mkdir -p %s/shared/%s", deployment.ProjectPath, share.Path),
-			fmt.Sprintf("cp -ruv %s/releases/%s/%s/* %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
+			fmt.Sprintf("cp -ruv %s/releases/%s/%s %s/shared/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path, deployment.ProjectPath, share.Path),
 			fmt.Sprintf("rm -rf %s/releases/%s/%s", deployment.ProjectPath, deployment.TimeVersion, share.Path),
 			fmt.Sprintf("ln -s %s/shared/%s %s/releases/%s/%s", deployment.ProjectPath, share.Path, deployment.ProjectPath, deployment.TimeVersion, share.Path),
 			"echo \"$(date '+%Y-%m-%d %H:%M:%S')\\t shared file ["+share.Name+"] are prepared in "+share.Path+"\"",
