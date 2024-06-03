@@ -29,8 +29,11 @@ func GetConfigs(request contracts.HttpRequest, guard contracts.Guard) any {
 	}
 }
 
-func CreateConfig(request contracts.HttpRequest) any {
-
+func CreateConfig(request contracts.HttpRequest, guard contracts.Guard) any {
+	project := models.Projects().FindOrFail(request.GetInt("project_id"))
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
 	Config, err := usecase.CreateConfig(request.GetInt("project_id"), request.Fields())
 
 	if err != nil {
@@ -43,12 +46,13 @@ func CreateConfig(request contracts.HttpRequest) any {
 }
 
 func UpdateConfig(request contracts.HttpRequest, guard contracts.Guard) any {
-	project := models.Projects().FindOrFail(request.Get("id"))
+	config := models.ConfigFiles().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(config.ProjectId)
 	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
 
-	err := usecase.UpdateConfig(project.Id, request.Fields())
+	err := usecase.UpdateConfig(config.Id, request.Fields())
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}
@@ -58,7 +62,8 @@ func UpdateConfig(request contracts.HttpRequest, guard contracts.Guard) any {
 }
 
 func DeleteConfig(request contracts.HttpRequest, guard contracts.Guard) any {
-	project := models.Projects().FindOrFail(request.Get("id"))
+	config := models.ConfigFiles().FindOrFail(request.Get("id"))
+	project := models.Projects().FindOrFail(config.ProjectId)
 	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
