@@ -86,8 +86,7 @@ github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LB
 github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0/go.mod h1:fyg7847qk6SyHyPtNmDHnmrv/HOrqktSC+C9fM+CJOE=
 github.com/goal-web/application v0.4.1 h1:SAArzejJmjwEY7T1Fp+1IqbCMmM+yklEJr+/BRN/flg=
 github.com/goal-web/application v0.4.1/go.mod h1:3xwvnK/vpXfpmXXtaVkjoAMyNWSATrY23ZA2Xli3VOM=
-github.com/goal-web/auth v0.4.2 h1:rmCj4dG28ZqPLMyI5tt4ISbtcaO8ENIha8EvNYUZoLU=
-github.com/goal-web/auth v0.4.2/go.mod h1:VEoNDPsZqRe6RDQakmCpgaXtkqDao16shk/rwc/DztE=
+github.com/goal-web/auth v0.4.4/go.mod h1:VEoNDPsZqRe6RDQakmCpgaXtkqDao16shk/rwc/DztE=
 github.com/goal-web/bloomfilter v0.4.1 h1:t7qm2/ufnsd5rHOD9Ii2UDyZHnkwKrMOV1oTPnkHPao=
 github.com/goal-web/bloomfilter v0.4.1/go.mod h1:r5JFUuBXmsfb4yTccp4vUeNJg4jwXYb+4jG/sqyultM=
 github.com/goal-web/cache v0.4.1 h1:X/meQPGkfZ0+KV9doFm+aSA5EbOm1fpTu0i21tCB+fY=
@@ -96,8 +95,8 @@ github.com/goal-web/collection v0.4.1 h1:jScI7Ou7tXKViT/aSSBLlLBdnaV7H+ZErXP0hrh
 github.com/goal-web/collection v0.4.1/go.mod h1:DLqdt0noPLQW4275iLAFVY899owOdRR9AEL4MFjQDXU=
 github.com/goal-web/config v0.4.1 h1:MrPO6xTGvhSjKI8B5ll+n0D2/21HUoqqtvvjWUiFjHM=
 github.com/goal-web/config v0.4.1/go.mod h1:OE36Qc9rJ2XrgmBAzq4JwcRrSiaBF0a42P2WxZvQOuw=
-github.com/goal-web/console v0.4.1 h1:f/uqpI+A+bhvFal8My0ifPTBTWtuASmFRuonxL55CpI=
-github.com/goal-web/console v0.4.1/go.mod h1:jBR8t0JxW38JNFRsr2QDDIAywcgqjCOW+fUkASL2Hi4=
+github.com/goal-web/console v0.4.2 h1:L6vLMOvrd6blXRzyHwvPnX9ulQ2Wb0bxDxfnAn1CwbA=
+github.com/goal-web/console v0.4.2/go.mod h1:jBR8t0JxW38JNFRsr2QDDIAywcgqjCOW+fUkASL2Hi4=
 github.com/goal-web/container v0.4.1 h1:AxPLu7pTTLB6BYgJAG7M0v8exR6NM/2AqaIgF0kNApY=
 github.com/goal-web/container v0.4.1/go.mod h1:xmjMKcPeWR4NvLGXzJFKNwXZB7W6c1ysic1cvPiYEgU=
 github.com/goal-web/contracts v0.4.1 h1:lH/1cUC9CEM4cBBskXOXz2+DxLVGfczc1uK18yHegCI=
@@ -134,10 +133,11 @@ github.com/goal-web/serialization v0.4.1 h1:KvRqyJCKtQI0DvziF7ZpZF61ybQ7HEQW/5vM
 github.com/goal-web/serialization v0.4.1/go.mod h1:J7bbkKHK9ePgB2ARIRr95/Vnm1ADIJ3dqHTAnBMHuXM=
 github.com/goal-web/session v0.4.1 h1:eHzkyRViFa+qg0vBd6S2ka07bMstLMj4iDRx1y8x/aQ=
 github.com/goal-web/session v0.4.1/go.mod h1:JWg0aCClGmOZiHNQmSSFRqDzkmuVbY7aiJqZLnvF6TM=
-github.com/goal-web/supports v0.4.1 h1:r392bBGo/CTc1RuTvQxgtfrPgf2nVhjOYgWoDB8e1bM=
-github.com/goal-web/supports v0.4.1/go.mod h1:63PJ0eubM0tOzYdjb+/ZGj/Gc+h2LAdrzTWYvP5mZQs=
+github.com/goal-web/supports v0.4.2 h1:CISdIpfQhNl4jU1ZPrItms00pQPHQXSKzd7M55yxZ/E=
+github.com/goal-web/supports v0.4.2/go.mod h1:63PJ0eubM0tOzYdjb+/ZGj/Gc+h2LAdrzTWYvP5mZQs=
 github.com/goal-web/validation v0.4.1 h1:4LtK9ELKXnPiyd6WP97QJeOiO4rE3OaPmLYUJqsBSM0=
 github.com/goal-web/validation v0.4.1/go.mod h1:AZDfkwJUG9yWpe+n8zbjArgpKRDw9Q2VvH9XIEOajNA=
+github.com/goal-web/validation v0.4.2/go.mod h1:AZDfkwJUG9yWpe+n8zbjArgpKRDw9Q2VvH9XIEOajNA=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
 github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
 github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=

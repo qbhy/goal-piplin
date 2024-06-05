@@ -22,11 +22,10 @@ func NewHandler() contracts.ExceptionHandler {
 
 func (handler *ExceptionHandler) Handle(exception contracts.Exception) any {
 	logs.WithException(exception).Warn("报错了")
-	debug.PrintStack()
 	switch e := exception.(type) {
 	case http.Exception: // http 支持在异常处理器返回响应
 		return handler.handleHttpException(e)
-	case *auth.Exception: // http 支持在异常处理器返回响应
+	case auth.Exception: // http 支持在异常处理器返回响应
 		return http.NewJsonResponse(contracts.Fields{
 			"msg":  "未登录",
 			"code": 401,
