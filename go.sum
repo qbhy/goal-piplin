@@ -114,8 +114,8 @@ github.com/goal-web/filesystem v0.4.1 h1:lqXcBhuTp1KinO3T0xv+Pwlals6HwAEewCB0AN5
 github.com/goal-web/filesystem v0.4.1/go.mod h1:WSu93nsnJlR/jDBuxzBWdWN85F9MFbjzyVYq3OimNVM=
 github.com/goal-web/hashing v0.4.1 h1:gIzlBFqFCevPqOfQ1cvTuweiSC3yLfzA6nyUAUvlp9Y=
 github.com/goal-web/hashing v0.4.1/go.mod h1:zPsqp2oklBO9993hOmOCSM7w7xtFzZeoEqM3cNfoeNo=
-github.com/goal-web/http v0.4.1 h1:1p4YYNv5a53HR5S9QOJlG+7quNd45G7XZToeSG5OznI=
-github.com/goal-web/http v0.4.1/go.mod h1:MNNvGa6dv4gHP75AB1om9llJbPpTsboDlw3EFENiBJ0=
+github.com/goal-web/http v0.4.2 h1:2t2/PBQloGvkAjupisiTyW+TSg+ddQ9FfgymmUN0w5U=
+github.com/goal-web/http v0.4.2/go.mod h1:MNNvGa6dv4gHP75AB1om9llJbPpTsboDlw3EFENiBJ0=
 github.com/goal-web/migration v0.4.1 h1:l2hPNWL1uDtRoqpGs1aHXZxyRUMnZtrwb5aFoIXIHOI=
 github.com/goal-web/migration v0.4.1/go.mod h1:dBPuzBK2AYyrs1ePkrZUs8K/DWCcwTrri8au4cP+djc=
 github.com/goal-web/pipeline v0.4.0 h1:4hvnK0EkW2drUn1DVKgRLJNa1iIsj0cnNI6KB50GCxE=

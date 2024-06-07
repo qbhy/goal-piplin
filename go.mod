@@ -18,7 +18,7 @@ require (
 	github.com/goal-web/events v0.4.1
 	github.com/goal-web/filesystem v0.4.1
 	github.com/goal-web/hashing v0.4.1
-	github.com/goal-web/http v0.4.1
+	github.com/goal-web/http v0.4.2
 	github.com/goal-web/migration v0.4.1
 	github.com/goal-web/querybuilder v0.4.1
 	github.com/goal-web/queue v0.4.1
