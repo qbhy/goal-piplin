@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 	"github.com/goal-web/collection"
 	"github.com/goal-web/contracts"
@@ -107,6 +108,48 @@ func CreateDeployment(project *models.Project, version, comment string, params m
 
 func GoDeployment(deployment *models.Deployment, commands contracts.Collection[*models.Command]) {
 	deploymentChan(deployment.ProjectId) <- DeploymentParam{Deployment: deployment, Commands: commands}
+}
+
+func RollbackDeployment(project *models.Project, deployment *models.Deployment, commands contracts.Collection[*models.Command], before, after string) ([]string, error) {
+	detail := DeploymentDetail{
+		Deployment:  deployment,
+		Key:         models.Keys().FindOrFail(project.KeyId),
+		RepoAddress: project.RepoAddress,
+		ProjectPath: project.ProjectPath,
+		TimeVersion: carbon.Parse(deployment.CreatedAt).ToShortDateTimeString(),
+	}
+
+	steps := []deploymentCommand{
+		scriptFunc(before, true),
+		release,
+	}
+	if commands != nil {
+		commands.Foreach(func(i int, command *models.Command) {
+			steps = append(steps, scriptFunc(command.Script, true))
+		})
+	}
+	steps = append(steps, scriptFunc(after, true))
+
+	var outputs []string
+
+	if len(deployment.Results) == 0 {
+		return nil, errors.New("无需撤回")
+	}
+
+	for _, item := range deployment.Results[0].Servers {
+		for _, fn := range steps {
+			output, err := fn(detail, item.Server, "")
+			if err != nil {
+				outputs = append(outputs, log(fmt.Sprintf("Failed to exec the script on server %s: %s", item.Host, err.Error())))
+				return outputs, err
+			}
+			if output != "" {
+				outputs = append(outputs, output)
+			}
+		}
+	}
+
+	return outputs, nil
 }
 
 func StartDeployment(deployment *models.Deployment, commands contracts.Collection[*models.Command]) {

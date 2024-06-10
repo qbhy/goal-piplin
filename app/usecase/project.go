@@ -151,7 +151,7 @@ func GetProjectDetail(project *models.Project) models.ProjectDetail {
 			Select("user_id", "username", "nickname", "avatar", "status", "user_projects.id").
 			Where("project_id", project.Id).
 			LeftJoin("users", "users.id", "=", "user_projects.user_id").
-			Get().ToArrayFields(),
+			Get().ToArray(),
 	}
 }
 

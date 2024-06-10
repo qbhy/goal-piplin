@@ -28,6 +28,6 @@ func UpdateUserProject(project *models.UserProject, status string) error {
 }
 
 func DeleteUserProject(id any) error {
-	_, err := models.UserProjects().WhereIn("id", id).DeleteE()
+	_, err := models.UserProjects().Where("id", id).DeleteE()
 	return err
 }

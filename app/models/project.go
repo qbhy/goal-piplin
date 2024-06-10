@@ -50,7 +50,7 @@ type Project struct {
 
 type ProjectDetail struct {
 	*Project
-	Key     *Key               `json:"key"`
-	Group   *Group             `json:"group"`
-	Members []contracts.Fields `json:"members"`
+	Key     *Key                `json:"key"`
+	Group   *Group              `json:"group"`
+	Members []*contracts.Fields `json:"members"`
 }

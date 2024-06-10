@@ -48,11 +48,12 @@ func CreateUserProject(request contracts.HttpRequest, guard contracts.Guard) any
 }
 
 func DeleteUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
-	project := models.Projects().FindOrFail(models.UserProjects().FindOrFail(request.Get("id")))
+	userId := request.GetInt("id")
+	project := models.Projects().FindOrFail(models.UserProjects().FindOrFail(userId).ProjectId)
 	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
 		return contracts.Fields{"msg": "没有该项目的权限"}
 	}
-	err := usecase.DeleteUserProject(request.Get("id"))
+	err := usecase.DeleteUserProject(userId)
 
 	if err != nil {
 		return contracts.Fields{"msg": err.Error()}

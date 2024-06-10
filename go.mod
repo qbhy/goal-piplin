@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/goal-web/application v0.4.1
-	github.com/goal-web/auth v0.4.4
+	github.com/goal-web/auth v0.4.6
 	github.com/goal-web/bloomfilter v0.4.1
 	github.com/goal-web/cache v0.4.1
 	github.com/goal-web/collection v0.4.1

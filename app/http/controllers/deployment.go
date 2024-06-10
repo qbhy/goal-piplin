@@ -105,6 +105,41 @@ func CreateDeployment(request contracts.HttpRequest, guard contracts.Guard) any 
 	}
 }
 
+func RollbackDeployment(request contracts.HttpRequest, guard contracts.Guard) any {
+	var form requests.RollbackDeploymentRequest
+	if err := request.Parse(&form); err != nil {
+		return contracts.Fields{"msg": err.Error()}
+	}
+
+	deployment := models.Deployments().FindOrFail(form.Id)
+	project := models.Projects().FindOrFail(deployment.ProjectId)
+
+	if !usecase.HasProjectPermission(project, guard.User().(*models.User)) {
+		return contracts.Fields{"msg": "没有该项目的权限"}
+	}
+
+	if deployment.Status != models.StatusFinished {
+		return contracts.Fields{"msg": "不允许撤回该部署记录"}
+	}
+
+	var commands contracts.Collection[*models.Command] = nil
+	if len(form.Commands) > 0 {
+		commands = models.Commands().Where("project_id", project.Id).WhereIn("id", form.Commands).Get()
+	}
+
+	if outputs, err := usecase.RollbackDeployment(
+		project,
+		deployment,
+		commands,
+		form.BeforeRelease,
+		form.AfterRelease,
+	); err != nil {
+		return contracts.Fields{"msg": err.Error(), "data": outputs}
+	} else {
+		return contracts.Fields{"data": outputs}
+	}
+}
+
 func RunDeployment(request contracts.HttpRequest, guard contracts.Guard) any {
 	deployment := models.Deployments().FindOrFail(request.Get("id"))
 	project := models.Projects().FindOrFail(deployment.ProjectId)
