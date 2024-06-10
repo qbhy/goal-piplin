@@ -425,6 +425,7 @@ func _connectAndExec(deployment DeploymentDetail, server models.Server, script .
 func release(deployment DeploymentDetail, server models.Server, script string) (string, error) {
 	var outputs []string
 	var inputs = []string{
+		fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion),
 		fmt.Sprintf("rm %s/current", deployment.ProjectPath),
 		"echo 'remove old link'",
 		fmt.Sprintf("ln -s %s/releases/%s %s/current", deployment.ProjectPath, deployment.TimeVersion, deployment.ProjectPath),
@@ -446,7 +447,10 @@ func scriptFunc(script string, cd bool) deploymentCommand {
 
 		var inputsScript = []string{script}
 		if cd {
-			inputsScript = []string{fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion), script}
+			inputsScript = []string{
+				fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion),
+				script,
+			}
 		}
 
 		output, err := _connectAndExec(deployment, server, inputsScript...)
