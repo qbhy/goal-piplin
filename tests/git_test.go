@@ -1,39 +1,22 @@
 package tests
 
 import (
+	"fmt"
 	"github.com/qbhy/goal-piplin/app/utils"
 	"github.com/tj/assert"
 	"testing"
 )
 
 func TestGitRepoClone(t *testing.T) {
-	private := `-----BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEArcCWX5Ka8qkO+lTBHj4S2ph4S5y+BzjpAGnfRkmngHmntb3k
-om96JOUNeTN3o3ybXfZ2jSX9g91NL1MsGXdvkR0Z4Y6aTmNlgUZYxIju4dS8t+ot
-EqILlE2otemTBdg+UZ7fM6Xa8L4XdaMt9/6JSeXmvIe51rdlD0DfUQ6qvpJ97Ypy
-r4VtMsfCGFOKfPiXbL9JN00cJm9Uf+jz++WBnekMACo5o5VthHVGU0DzT72AVx/E
-0SWOtSs38Ym+OVWz0Fa5aCupe2gayTjYkv/9tqkwW0x4ziQTRqqpx9mQJK4TlkS7
-bHdDZs2eG6EsTu9WRWB9wKRX/YmAxu7NEj/0JwIDAQABAoIBADZQCzFY3IKaAgqS
-T8OqV65pFsFb/7K2QW9VqOuJvohUfu46q6ty+VVrHCkUw4MhQle+4RQCGhsMJEJ0
-10YmpYNQ+3QcZXO3clVUrg7RVwrUuyEqXGiEquXy2Jf0qXacP+63oMG+SJAUe7TU
-C1yH/lZRPS0VqCvMLBT2jFgEI69qCxmRPRv1kkEecrNA4sD3t0FmnylS6XVLzWoQ
-qhY5KF73VifcRqMuE51seIjOq1M4tGFbYkFzwAf9TS4dp3Hg+SiOkXjK/fALIafh
-YeL/s7iGG5II60vXPms4QaXbHKzrSU2Q348Lq68XbaJtp4G1IhPJytHfWySxBpOC
-ncJv2QECgYEA5GFG+75ICqZugL0TbeXeZOBlQlBuf6FSGzYYyfHdOnvno9r3vPHf
-fcmBPTyHA7L1f5+SfPaUOSCQ04JSrCg/gutCuKnrmojK7VlslUzPzBIqOnkgoAoH
-SgoSEq4uXKJN3DIMOZ3Gd6/sCu1hwnG1Zftec9yaC6JEZXbLBHUzqmcCgYEAwsQE
-mX4D2WE6Pdx3vstn+M0b9o6rZEJEmnYmL+bAipyMWiJq6hGmDmCnVWAdYVSaHwhH
-+xc/9u+8F8OhRRuNqwPSklvF9cRjn4QBBnZUTKG/tyAFpCwGduFKE8/0srJWV2vk
-Ku8Q1WCEfj0TxvHjJEmPSiaxiVzxPYvbfSwi0EECgYAbu0w5SXPKB0enzk3LrHwC
-19Sz5rxkNxyXPUxpSTtJ3L3WAcLPaLdwuMU+wFjMtDBnXOMW1YJOJYwwgsSzLvf3
-V8X0Un3PeAjcJV2wC3G4IASMsSSrCky0SuDC7++lQ/gcYt9lJ6lv4ybQdN7IE7Kp
-PYrMmt8BxqRzhadFVU3+xQKBgQC9nlOQEJS0xakLYyKd+bCfFSn9UIdi0/WwoAir
-qC+ag7FNa6bFfis6YjVntGzGPrTSM6DIv6kBxANO66KOArZZYh5XacwAa5RGUCEj
-Zn7KIMvjAOUdIdOlV89kHJlyhJf1AtCgUCIGa7JyqQohLYxj3s4HdkZworEnp4so
-gZjfQQKBgQCAzmGxO7ewOWoTXc77JxD9RZPhk2dTg+FQALlDM55t7XYFL2+jbzlK
-3P5Qn1T6pZemjyFbAWbTq9hXvO/6bKMMmrGXCbPh77SH15hHM7PBYdXYnV/vRbBP
-1SkhWCfoMxzq6AzPL6NbVNoSyny2UZSZYaXVa0YcNuVPxgAjKU4GrA==
------END RSA PRIVATE KEY-----`
+	private := ``
 	dir := "/Users/qbhy/project/go/goal-piplin/storage"
 	assert.NoError(t, utils.CloneRepoBranchOrCommit("git@github.com:qbhy/goal-piplin-example.git", private, "master", dir))
+}
+
+func TestGitRepoCloneWithExec(t *testing.T) {
+	private := ``
+	dir := "/Users/qbhy/project/go/goal-piplin/storage"
+	commit, comment, err := utils.CloneRepo("git@github.com:qbhy/goal-piplin-example.git", private, "master", dir)
+	assert.NoError(t, err, err)
+	fmt.Println(commit, comment)
 }

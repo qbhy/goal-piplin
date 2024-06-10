@@ -37,6 +37,7 @@ type Deployment struct {
 	ProjectId    int             `json:"project_id"` // 项目ID
 	Version      string          `json:"version"`    // 部署版本
 	Comment      string          `json:"comment"`    // 说明
+	Commit       string          `json:"commit"`     // 提交 hash
 	Status       string          `json:"status"`     // 状态
 	Params       map[string]bool `json:"params"`     // {step: bool}
 	Results      []CommandResult `json:"results"`

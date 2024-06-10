@@ -43,12 +43,11 @@ type DeploymentParam struct {
 }
 
 type DeploymentDetail struct {
-	Key         *models.Key `json:"key"`
-	ProjectId   int         `json:"project_id"`
-	Version     string      `json:"version"`
-	RepoAddress string      `json:"repo_address"`
-	ProjectPath string      `json:"project_path"`
-	TimeVersion string      `json:"time_version"`
+	Deployment  *models.Deployment `json:"deployment"`
+	Key         *models.Key        `json:"key"`
+	RepoAddress string             `json:"repo_address"`
+	ProjectPath string             `json:"project_path"`
+	TimeVersion string             `json:"time_version"`
 }
 
 func CreateDeployment(project *models.Project, version, comment string, params map[string]bool, environmentsParam []int) (*models.Deployment, error) {
@@ -114,9 +113,8 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 	project := models.Projects().FindOrFail(deployment.ProjectId)
 
 	detail := DeploymentDetail{
-		ProjectId:   deployment.ProjectId,
+		Deployment:  deployment,
 		Key:         models.Keys().FindOrFail(project.KeyId),
-		Version:     deployment.Version,
 		RepoAddress: project.RepoAddress,
 		ProjectPath: project.ProjectPath,
 		TimeVersion: carbon.Parse(deployment.CreatedAt).ToShortDateTimeString(),
@@ -211,16 +209,28 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	repoPath := fmt.Sprintf("%s%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
-	if err := utils.CloneRepoBranchOrCommit(
+	if commit, comment, err := utils.CloneRepo(
 		deployment.RepoAddress,
 		deployment.Key.PrivateKey,
-		deployment.Version,
+		deployment.Deployment.Version,
 		repoPath,
 	); err != nil {
 		outputs = append(outputs, log("Failed to clone code to piplin"))
 		outputs = append(outputs, log(err.Error()))
 		return strings.Join(outputs, "\n"), err
 	} else {
+		newAttributes := contracts.Fields{
+			"commit": commit,
+		}
+		if deployment.Deployment.Comment == "" {
+			newAttributes["comment"] = comment
+		}
+		err = deployment.Deployment.Update(newAttributes)
+		if err != nil {
+			outputs = append(outputs, log("Failed to update commit"))
+		}
+		outputs = append(outputs, log("The commit hash is "+commit))
+		outputs = append(outputs, log("The comment is "+comment))
 		outputs = append(outputs, log("Successfully clone code to piplin"))
 	}
 
@@ -286,7 +296,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	var inputs = []string{fmt.Sprintf("cd %s/releases/%s", deployment.ProjectPath, deployment.TimeVersion)}
 
 	// 准备所有配置文件 start
-	configFiles := models.ConfigFiles().Where("project_id", deployment.ProjectId).Get().ToArray()
+	configFiles := models.ConfigFiles().Where("project_id", deployment.Deployment.ProjectId).Get().ToArray()
 	for _, file := range configFiles {
 		if utils2.IsInT(server.Environment, file.Environments) {
 			inputs = append(inputs,
@@ -298,7 +308,7 @@ func prepare(deployment DeploymentDetail, server models.Server, script string) (
 	// 准备所有配置文件 end
 
 	// 准备所有共享目录 start
-	shares := models.ShareFiles().Where("project_id", deployment.ProjectId).Get().ToArray()
+	shares := models.ShareFiles().Where("project_id", deployment.Deployment.ProjectId).Get().ToArray()
 	for _, share := range shares {
 		if strings.HasSuffix(share.Path, "/") {
 			path := strings.TrimSuffix(share.Path, "/")
