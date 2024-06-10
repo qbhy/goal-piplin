@@ -119,16 +119,20 @@ func RollbackDeployment(project *models.Project, deployment *models.Deployment, 
 		TimeVersion: carbon.Parse(deployment.CreatedAt).ToShortDateTimeString(),
 	}
 
-	steps := []deploymentCommand{
-		scriptFunc(before, true),
-		release,
+	var steps []deploymentCommand
+	if before != "" {
+		steps = append(steps, scriptFunc(before, true))
 	}
+	steps = append(steps, release)
+
 	if commands != nil {
 		commands.Foreach(func(i int, command *models.Command) {
 			steps = append(steps, scriptFunc(command.Script, true))
 		})
 	}
-	steps = append(steps, scriptFunc(after, true))
+	if after != "" {
+		steps = append(steps, scriptFunc(after, true))
+	}
 
 	var outputs []string
 
