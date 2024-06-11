@@ -253,7 +253,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 		log("Clone step started"),
 	}
 
-	repoPath := fmt.Sprintf("%s%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
+	repoPath := fmt.Sprintf("%s/%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
 	if commit, comment, err := utils.CloneRepo(

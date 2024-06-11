@@ -96,7 +96,11 @@ func GetRepositoryBranchesAndTags(repoURL string, publicKey string) ([]string, [
 
 func CloneRepo(repoAddress, privateKey, version, targetDir string) (string, string, error) {
 	// 创建临时文件保存私钥
-	tempDir := os.TempDir()
+	tempDir, err := os.MkdirTemp("", "pem"+utils.RandStr(10))
+
+	if err != nil {
+		return "", "", err
+	}
 
 	pem := fmt.Sprintf("%s/%s.pem", tempDir, utils.RandStr(10))
 
@@ -118,7 +122,7 @@ func CloneRepo(repoAddress, privateKey, version, targetDir string) (string, stri
 	cmd.Stderr = os.Stderr
 
 	// 运行命令
-	err := cmd.Run()
+	err = cmd.Run()
 
 	// 恢复原来的 GIT_SSH_COMMAND 环境变量
 	os.Setenv("GIT_SSH_COMMAND", originalSSHCommand)
