@@ -110,7 +110,7 @@ func GoDeployment(deployment *models.Deployment, commands contracts.Collection[*
 	deploymentChan(deployment.ProjectId) <- DeploymentParam{Deployment: deployment, Commands: commands}
 }
 
-func RollbackDeployment(project *models.Project, deployment *models.Deployment, commands contracts.Collection[*models.Command], before, after string) ([]string, error) {
+func RollbackDeployment(project *models.Project, deployment *models.Deployment, commands []int, before, after string) ([]string, error) {
 	detail := DeploymentDetail{
 		Deployment:  deployment,
 		Key:         models.Keys().FindOrFail(project.KeyId),
@@ -123,13 +123,30 @@ func RollbackDeployment(project *models.Project, deployment *models.Deployment, 
 	if before != "" {
 		steps = append(steps, scriptFunc(before, true))
 	}
+	if len(commands) > 0 {
+		models.Commands().
+			Where("project_id", project.Id).
+			Where("step", models.BeforeRelease).
+			WhereIn("id", commands).
+			Get().
+			Foreach(func(i int, command *models.Command) {
+				steps = append(steps, scriptFunc(command.Script, true))
+			})
+	}
+
 	steps = append(steps, release)
 
-	if commands != nil {
-		commands.Foreach(func(i int, command *models.Command) {
-			steps = append(steps, scriptFunc(command.Script, true))
-		})
+	if len(commands) > 0 {
+		models.Commands().
+			Where("project_id", project.Id).
+			Where("step", models.AfterRelease).
+			WhereIn("id", commands).
+			Get().
+			Foreach(func(i int, command *models.Command) {
+				steps = append(steps, scriptFunc(command.Script, true))
+			})
 	}
+
 	if after != "" {
 		steps = append(steps, scriptFunc(after, true))
 	}
@@ -256,7 +273,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	repoPath := fmt.Sprintf("%s/%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
-	if commit, comment, err := utils.CloneRepo(
+	if commit, comment, err := utils.CloneRepoBranchOrCommit(
 		deployment.RepoAddress,
 		deployment.Key.PrivateKey,
 		deployment.Deployment.Version,

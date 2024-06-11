@@ -122,15 +122,10 @@ func RollbackDeployment(request contracts.HttpRequest, guard contracts.Guard) an
 		return contracts.Fields{"msg": "不允许撤回该部署记录"}
 	}
 
-	var commands contracts.Collection[*models.Command] = nil
-	if len(form.Commands) > 0 {
-		commands = models.Commands().Where("project_id", project.Id).WhereIn("id", form.Commands).Get()
-	}
-
 	if outputs, err := usecase.RollbackDeployment(
 		project,
 		deployment,
-		commands,
+		form.Commands,
 		form.BeforeRelease,
 		form.AfterRelease,
 	); err != nil {
