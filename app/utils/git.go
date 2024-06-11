@@ -14,10 +14,10 @@ import (
 )
 
 // CloneRepoBranchOrCommit 克隆指定分支或提交
-func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string) error {
+func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string) (string, string, error) {
 	auth, err := ssh.NewPublicKeys("git", []byte(publicKey), "")
 	if err != nil {
-		return fmt.Errorf("error creating ssh auth: %v", err)
+		return "", "", fmt.Errorf("error creating ssh auth: %v", err)
 	}
 
 	_ = os.RemoveAll(destDir)
@@ -30,7 +30,7 @@ func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string)
 
 	// Change to the specified directory
 	if err = os.Chdir(destDir); err != nil {
-		return fmt.Errorf("failed to change directory: %v", err)
+		return "", "", fmt.Errorf("failed to change directory: %v", err)
 	}
 
 	// Run 'git checkout' command
@@ -39,10 +39,16 @@ func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string)
 	cmd.Stderr = os.Stderr
 
 	if err = cmd.Run(); err != nil {
-		return fmt.Errorf("failed to execute 'git checkout': %v", err)
+		return "", "", fmt.Errorf("failed to execute 'git checkout': %v", err)
 	}
 
-	return nil
+	commit, comment, err := getCurrentCommitAndMessage(destDir)
+
+	if err != nil {
+		return "", "", fmt.Errorf("failed to clone repository: %w", err)
+	}
+
+	return commit, comment, nil
 }
 
 // GetRepositoryBranchesAndTags 获取 Git 仓库的分支和 Tags
