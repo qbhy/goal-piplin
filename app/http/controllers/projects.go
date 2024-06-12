@@ -33,6 +33,9 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 					})
 			})
 		}).
+		When(request.GetString("group_id") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+			return q.Where("group_id", request.GetString("group_id"))
+		}).
 		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
 		}).
