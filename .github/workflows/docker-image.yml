@@ -36,5 +36,6 @@ jobs:
 
       - name: Push Docker image to Aliyun Docker Registry
         run: |
+          docker pull qbhy/piplin:latest
           docker tag qbhy/piplin:latest registry.cn-hangzhou.aliyuncs.com/janguly/piplin:latest
           docker push registry.cn-hangzhou.aliyuncs.com/janguly/piplin:latest
