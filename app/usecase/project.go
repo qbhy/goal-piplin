@@ -7,7 +7,6 @@ import (
 	"github.com/goal-web/database/table"
 	"github.com/goal-web/supports/utils"
 	"github.com/qbhy/goal-piplin/app/models"
-	utils2 "github.com/qbhy/goal-piplin/app/utils"
 	"github.com/savsgio/gotils/uuid"
 )
 
@@ -37,10 +36,6 @@ func CreateProject(creatorId string, fields contracts.Fields) (*models.Project, 
 	fields["uuid"] = uuid.V4()
 	fields["settings"] = models.ProjectSettings{}
 	project := models.Projects().Create(fields)
-
-	if existsKey {
-		_ = UpdateProjectBranches(project, key)
-	}
 
 	return project, err
 }
@@ -110,22 +105,6 @@ func CopyProject(targetProject *models.Project, fields contracts.Fields) (*model
 	return project, nil
 }
 
-func UpdateProjectBranches(project *models.Project, key *models.Key) error {
-	branches, tags, err := GetBranchDetail(project, key)
-	if err == nil {
-		project.Settings = models.ProjectSettings{
-			Branches:  branches,
-			Tags:      tags,
-			EnvVars:   project.Settings.EnvVars,
-			Callbacks: project.Settings.Callbacks,
-		}
-		models.Projects().Where("id", project.Id).Update(contracts.Fields{
-			"settings": project.Settings,
-		})
-	}
-	return err
-}
-
 func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 	project := models.Projects().FindOrFail(id)
 	if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
@@ -135,11 +114,7 @@ func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 		"name", "default_branch", "project_path", "repo_address", "group_id", "key_id",
 	))
 
-	if err == nil {
-		return project, UpdateProjectBranches(project, models.Keys().FindOrFail(project.KeyId))
-	}
-
-	return models.Projects().FindOrFail(id), err
+	return project, err
 }
 
 func GetProjectDetail(project *models.Project) models.ProjectDetail {
@@ -153,10 +128,6 @@ func GetProjectDetail(project *models.Project) models.ProjectDetail {
 			LeftJoin("users", "users.id", "=", "user_projects.user_id").
 			Get().ToArray(),
 	}
-}
-
-func GetBranchDetail(project *models.Project, key *models.Key) ([]string, []string, error) {
-	return utils2.GetRepositoryBranchesAndTags(project.RepoAddress, key.PrivateKey)
 }
 
 func DeleteProject(project *models.Project) error {

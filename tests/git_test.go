@@ -10,9 +10,9 @@ import (
 func TestGitRepoClone(t *testing.T) {
 	private := ``
 	dir := "/Users/qbhy/project/go/goal-piplin/storage"
-	commit, comment, err := utils.CloneRepoBranchOrCommit("git@github.com:qbhy/goal-piplin-example.git", private, "master", dir)
+	info, err := utils.CloneRepoBranchOrCommit("git@github.com:qbhy/goal-piplin-example.git", private, "master", dir)
 	assert.NoError(t, err, err)
-	fmt.Println(commit, comment)
+	fmt.Println(info)
 }
 
 func TestGitRepoCloneWithExec(t *testing.T) {

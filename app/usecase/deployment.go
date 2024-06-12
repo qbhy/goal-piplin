@@ -46,6 +46,7 @@ type DeploymentParam struct {
 type DeploymentDetail struct {
 	Deployment  *models.Deployment `json:"deployment"`
 	Key         *models.Key        `json:"key"`
+	Project     *models.Project    `json:"project"`
 	RepoAddress string             `json:"repo_address"`
 	ProjectPath string             `json:"project_path"`
 	TimeVersion string             `json:"time_version"`
@@ -113,6 +114,7 @@ func GoDeployment(deployment *models.Deployment, commands contracts.Collection[*
 func RollbackDeployment(project *models.Project, deployment *models.Deployment, commands []int, before, after string) ([]string, error) {
 	detail := DeploymentDetail{
 		Deployment:  deployment,
+		Project:     project,
 		Key:         models.Keys().FindOrFail(project.KeyId),
 		RepoAddress: project.RepoAddress,
 		ProjectPath: project.ProjectPath,
@@ -178,6 +180,7 @@ func StartDeployment(deployment *models.Deployment, commands contracts.Collectio
 
 	detail := DeploymentDetail{
 		Deployment:  deployment,
+		Project:     project,
 		Key:         models.Keys().FindOrFail(project.KeyId),
 		RepoAddress: project.RepoAddress,
 		ProjectPath: project.ProjectPath,
@@ -273,7 +276,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 	repoPath := fmt.Sprintf("%s/%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
-	if commit, comment, err := utils.CloneRepoBranchOrCommit(
+	if info, err := utils.CloneRepoBranchOrCommit(
 		deployment.RepoAddress,
 		deployment.Key.PrivateKey,
 		deployment.Deployment.Version,
@@ -283,18 +286,24 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 		outputs = append(outputs, log(err.Error()))
 		return strings.Join(outputs, "\n"), err
 	} else {
-		newAttributes := contracts.Fields{
-			"commit": commit,
+		deployment.Project.Settings.Tags = info.Tags
+		deployment.Project.Settings.Branches = info.Branches
+		err = deployment.Project.Update(contracts.Fields{
+			"settings": deployment.Project.Settings,
+		})
+		if err != nil {
+			outputs = append(outputs, log("Failed to update project branches and tags"))
 		}
+		newAttributes := contracts.Fields{"commit": info.Commit}
 		if deployment.Deployment.Comment == "" {
-			newAttributes["comment"] = comment
+			newAttributes["comment"] = info.Comment
 		}
 		err = deployment.Deployment.Update(newAttributes)
 		if err != nil {
 			outputs = append(outputs, log("Failed to update commit"))
 		}
-		outputs = append(outputs, log("The commit hash is "+commit))
-		outputs = append(outputs, log("The comment is "+comment))
+		outputs = append(outputs, log("The commit hash is "+info.Commit))
+		outputs = append(outputs, log("The comment is "+info.Comment))
 		outputs = append(outputs, log("Successfully clone code to piplin"))
 	}
 
