@@ -282,6 +282,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 		outputs = append(outputs, log(err.Error()))
 		return strings.Join(outputs, "\n"), err
 	} else {
+		defer os.RemoveAll(repoPath)
 		deployment.Project.Settings.Tags = info.Tags
 		deployment.Project.Settings.Branches = info.Branches
 		err = deployment.Project.Update(contracts.Fields{

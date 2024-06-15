@@ -55,8 +55,8 @@ services:
     image: qbhy/piplin:latest
     volumes:
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
-      - env.toml:/var/www/env.toml
-      - storage:/var/www/storage
+      - ./env.toml:/var/www/env.toml
+      - ./storage:/var/www/storage
     ports:
       - "8008:8008"
     depends_on:
