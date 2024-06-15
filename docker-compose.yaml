@@ -53,6 +53,7 @@ services:
   server:
     restart: always
     image: qbhy/piplin:latest
+#    image: registry.cn-hangzhou.aliyuncs.com/janguly/piplin:latest
     volumes:
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
       - ./env.toml:/var/www/env.toml
@@ -66,6 +67,7 @@ services:
       - piplin
   views:
     image: qbhy/piplin-views:latest
+    #    image: registry.cn-hangzhou.aliyuncs.com/janguly/piplin-views:latest
     networks:
       - piplin
     ports:
