@@ -160,7 +160,7 @@ func getCurrentCommitAndMessage(repoDir string) (string, string, error) {
 	cmd.Stdout, cmd.Stderr = &out, &out
 	err := cmd.Run()
 	if err != nil {
-		return "", "", fmt.Errorf("failed to get current commit hash: %w", err)
+		return "", "", fmt.Errorf("failed to get current commit hash: %w, output: %s", err, out.String())
 	}
 	commitHash := strings.TrimSpace(out.String())
 
@@ -168,9 +168,10 @@ func getCurrentCommitAndMessage(repoDir string) (string, string, error) {
 	cmd = exec.Command("git", "-C", repoDir, "log", "-1", "--pretty=%B")
 	out.Reset()
 	cmd.Stdout = &out
+	cmd.Stderr = &out
 	err = cmd.Run()
 	if err != nil {
-		return "", "", fmt.Errorf("failed to get current commit message: %w", err)
+		return "", "", fmt.Errorf("failed to get current commit message: %w, output: %s", err, out.String())
 	}
 	commitMessage := strings.TrimSpace(out.String())
 
