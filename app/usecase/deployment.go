@@ -3,6 +3,7 @@ package usecase
 import (
 	"errors"
 	"fmt"
+	"github.com/goal-web/application"
 	"github.com/goal-web/collection"
 	"github.com/goal-web/contracts"
 	utils2 "github.com/goal-web/supports/utils"
@@ -17,12 +18,7 @@ import (
 
 type deploymentCommand func(deployment DeploymentDetail, server models.Server, script string) (string, error)
 
-var tempRepoPath string
 var deploymentsChan = make(map[int]chan DeploymentParam)
-
-func init() {
-	tempRepoPath = os.TempDir()
-}
 
 func deploymentChan(projectId int) chan DeploymentParam {
 	if ch := deploymentsChan[projectId]; ch != nil {
@@ -273,7 +269,7 @@ func clone(deployment DeploymentDetail, server models.Server, script string) (st
 		log("Clone step started"),
 	}
 
-	repoPath := fmt.Sprintf("%s/%s", tempRepoPath, deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
+	repoPath := fmt.Sprintf("%s/%s", application.Get("env").(contracts.Env).GetString("repo.tmp_dir"), deployment.TimeVersion+filepath.Base(deployment.ProjectPath))
 
 	// 克隆代码到本地
 	if info, err := utils.CloneRepoBranchOrCommit(

@@ -1,7 +1,6 @@
 .idea
 database/*.sqlite
 *.pid
-storage/*
 
 dev.env.toml
 

@@ -33,6 +33,10 @@ func CloneRepoBranchOrCommit(repoURL, publicKey, branchOrCommit, destDir string)
 		Auth: auth,
 	})
 
+	if err != nil {
+		return info, fmt.Errorf("failed to clone code: %w", err)
+	}
+
 	// Change to the specified directory
 	if err = os.Chdir(destDir); err != nil {
 		return info, fmt.Errorf("failed to change directory: %v", err)
