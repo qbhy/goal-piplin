@@ -48,13 +48,15 @@ services:
       MYSQL_USER: piplin
       MYSQL_PASSWORD: password
       MYSQL_ROOT_HOST: '%'
-#    ports:
-#      - "3306:3306"
+  #    ports:
+  #      - "3306:3306"
   server:
     restart: always
     image: qbhy/piplin:latest
     volumes:
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
+      - env.toml:/var/www/env.toml
+      - storage:/var/www/storage
     ports:
       - "8008:8008"
     depends_on:
