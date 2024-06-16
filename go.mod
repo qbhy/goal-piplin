@@ -11,8 +11,8 @@ require (
 	github.com/goal-web/config v0.4.1
 	github.com/goal-web/console v0.4.2
 	github.com/goal-web/container v0.4.1 // indirect
-	github.com/goal-web/contracts v0.4.1
-	github.com/goal-web/database v0.4.1
+	github.com/goal-web/contracts v0.4.2
+	github.com/goal-web/database v0.4.2
 	github.com/goal-web/email v0.4.1
 	github.com/goal-web/encryption v0.4.1
 	github.com/goal-web/events v0.4.1
