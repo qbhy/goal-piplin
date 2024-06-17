@@ -12,7 +12,7 @@ import (
 func GetUsers(request contracts.HttpRequest) any {
 	list, total := models.Users().
 		OrderByDesc("id").
-		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.User]) contracts.Query[models.User] {
+		When(request.GetString("name") != "", func(q contracts.Query[models.User]) contracts.Query[models.User] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
 		}).
 		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))

@@ -13,10 +13,10 @@ func GetUserProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 		OrderByDesc("user_projects.id").
 		Select("project_id", "projects.name as project_name", "user_projects.created_at", "user_projects.id", "status").
 		LeftJoin("projects", "projects.id", "=", "user_projects.project_id").
-		When(request.GetString("project_name") != "", func(q contracts.QueryBuilder[contracts.Fields]) contracts.Query[contracts.Fields] {
+		When(request.GetString("project_name") != "", func(q contracts.Query[contracts.Fields]) contracts.Query[contracts.Fields] {
 			return q.Where("projects.name", "like", "%"+request.GetString("project_name")+"%")
 		}).
-		When(request.GetString("status") != "", func(q contracts.QueryBuilder[contracts.Fields]) contracts.Query[contracts.Fields] {
+		When(request.GetString("status") != "", func(q contracts.Query[contracts.Fields]) contracts.Query[contracts.Fields] {
 			return q.Where("status", request.GetString("status"))
 		}).
 		Where("user_id", user.Id).

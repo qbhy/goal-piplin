@@ -13,10 +13,10 @@ func GetUserGroups(request contracts.HttpRequest, guard contracts.Guard) any {
 		OrderByDesc("user_groups.id").
 		Select("group_id", "`groups`.name as group_name", "user_groups.created_at", "user_groups.id", "status").
 		LeftJoin("`groups`", "`groups`.id", "=", "user_groups.group_id").
-		When(request.GetString("group_name") != "", func(q contracts.QueryBuilder[contracts.Fields]) contracts.Query[contracts.Fields] {
+		When(request.GetString("group_name") != "", func(q contracts.Query[contracts.Fields]) contracts.Query[contracts.Fields] {
 			return q.Where("groups.name", "like", "%"+request.GetString("group_name")+"%")
 		}).
-		When(request.GetString("status") != "", func(q contracts.QueryBuilder[contracts.Fields]) contracts.Query[contracts.Fields] {
+		When(request.GetString("status") != "", func(q contracts.Query[contracts.Fields]) contracts.Query[contracts.Fields] {
 			return q.Where("status", request.GetString("status"))
 		}).
 		Where("user_id", user.Id).

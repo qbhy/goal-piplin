@@ -11,10 +11,10 @@ func GetKeys(request contracts.HttpRequest, guard contracts.Guard) any {
 	user := guard.User().(*models.User)
 	list, total := models.Keys().
 		OrderByDesc("id").
-		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {
+		When(request.GetString("name") != "", func(q contracts.Query[models.Key]) contracts.Query[models.Key] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
 		}).
-		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Key]) contracts.Query[models.Key] {
+		When(user.Role != "admin", func(q contracts.Query[models.Key]) contracts.Query[models.Key] {
 			return q.Where("creator_id", user.Id)
 		}).
 		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))

@@ -12,8 +12,8 @@ func GetGroups(request contracts.HttpRequest, guard contracts.Guard) any {
 	user := guard.User().(*models.User)
 	return contracts.Fields{
 		"data": models.Groups().
-			When(user.Role != "admin", func(q contracts.QueryBuilder[models.Group]) contracts.Query[models.Group] {
-				return q.WhereFunc(func(q contracts.QueryBuilder[models.Group]) {
+			When(user.Role != "admin", func(q contracts.Query[models.Group]) contracts.Query[models.Group] {
+				return q.WhereFunc(func(q contracts.Query[models.Group]) {
 					q.Where("creator_id", user.Id).OrWhereExists(func() contracts.Query[models.Group] {
 						return querybuilder.New[models.Group]("user_groups").
 							Where("user_id", user.Id).
@@ -22,7 +22,7 @@ func GetGroups(request contracts.HttpRequest, guard contracts.Guard) any {
 					})
 				})
 			}).
-			When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Group]) contracts.Query[models.Group] {
+			When(request.GetString("name") != "", func(q contracts.Query[models.Group]) contracts.Query[models.Group] {
 				return q.Where("name", "like", "%"+request.GetString("name")+"%")
 			}).
 			Get().ToArray(),

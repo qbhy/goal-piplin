@@ -15,9 +15,9 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 
 	list, total := models.Projects().
 		OrderByDesc("id").
-		When(user.Role != "admin", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(user.Role != "admin", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 
-			return q.WhereFunc(func(q contracts.QueryBuilder[models.Project]) {
+			return q.WhereFunc(func(q contracts.Query[models.Project]) {
 				q.Where("creator_id", user.Id).
 					OrWhereExists(func() contracts.Query[models.Project] {
 						return querybuilder.New[models.Project]("user_projects").
@@ -33,19 +33,19 @@ func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 					})
 			})
 		}).
-		When(request.GetString("group_id") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(request.GetString("group_id") != "", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 			return q.Where("group_id", request.GetString("group_id"))
 		}).
-		When(request.GetString("name") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(request.GetString("name") != "", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 			return q.Where("name", "like", "%"+request.GetString("name")+"%")
 		}).
-		When(request.GetString("repo_address") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(request.GetString("repo_address") != "", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 			return q.Where("repo_address", "like", "%"+request.GetString("repo_address")+"%")
 		}).
-		When(request.GetString("project_path") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(request.GetString("project_path") != "", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 			return q.Where("project_path", "like", "%"+request.GetString("project_path")+"%")
 		}).
-		When(request.GetString("default_branch") != "", func(q contracts.QueryBuilder[models.Project]) contracts.Query[models.Project] {
+		When(request.GetString("default_branch") != "", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 			return q.Where("default_branch", "like", "%"+request.GetString("default_branch")+"%")
 		}).
 		Paginate(request.Int64Optional("pageSize", 10), request.Int64Optional("current", 1))

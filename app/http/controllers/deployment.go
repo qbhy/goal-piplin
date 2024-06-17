@@ -42,13 +42,13 @@ func GetDeployments(request contracts.HttpRequest, guard contracts.Guard) any {
 
 	list, total := models.Deployments().
 		Where("project_id", request.Get("project_id")).
-		When(request.GetString("comment") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+		When(request.GetString("comment") != "", func(q contracts.Query[models.Deployment]) contracts.Query[models.Deployment] {
 			return q.Where("comment", "like", "%"+request.GetString("comment")+"%")
 		}).
-		When(request.GetString("version") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+		When(request.GetString("version") != "", func(q contracts.Query[models.Deployment]) contracts.Query[models.Deployment] {
 			return q.Where("version", "like", "%"+request.GetString("version")+"%")
 		}).
-		When(request.GetString("status") != "", func(q contracts.QueryBuilder[models.Deployment]) contracts.Query[models.Deployment] {
+		When(request.GetString("status") != "", func(q contracts.Query[models.Deployment]) contracts.Query[models.Deployment] {
 			return q.Where("status", request.GetString("status"))
 		}).
 		OrderByDesc("id").
