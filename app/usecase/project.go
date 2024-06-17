@@ -107,9 +107,9 @@ func CopyProject(targetProject *models.Project, fields contracts.Fields) (*model
 
 func UpdateProject(id int, fields contracts.Fields) (*models.Project, error) {
 	project := models.Projects().FindOrFail(id)
-	if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
-		return project, errors.New("项目已存在")
-	}
+	//if models.Projects().Where("id", "!=", id).Where("name", fields["name"]).Count() > 0 {
+	//	return project, errors.New("项目已存在")
+	//}
 	err := project.Update(utils.OnlyFields(fields,
 		"name", "default_branch", "project_path", "repo_address", "group_id", "key_id",
 	))
