@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/querybuilder"
 	"github.com/goal-web/supports/utils"
@@ -12,9 +13,20 @@ import (
 
 func GetProjects(request contracts.HttpRequest, guard contracts.Guard) any {
 	user := guard.User().(*models.User)
+	var sorter map[string]string
 
-	list, total := models.Projects().
-		OrderByDesc("id").
+	_ = json.Unmarshal([]byte(request.GetString("sort")), &sorter)
+	query := models.Projects()
+
+	for key, value := range sorter {
+		sortBy := contracts.Asc
+		if value == "descend" {
+			sortBy = contracts.Desc
+		}
+		query.OrderBy(key, sortBy)
+	}
+
+	list, total := query.
 		When(user.Role != "admin", func(q contracts.Query[models.Project]) contracts.Query[models.Project] {
 
 			return q.WhereFunc(func(q contracts.Query[models.Project]) {
