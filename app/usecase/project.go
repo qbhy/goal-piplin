@@ -41,7 +41,7 @@ func CreateProject(creatorId string, fields contracts.Fields) (*models.Project, 
 }
 
 func CopyProject(targetProject *models.Project, fields contracts.Fields) (*models.Project, error) {
-	targetKey := models.Keys().FindOrFail(targetProject.KeyId)
+	targetKey := models.Keys().FindOrFail(fields["key_id"])
 	key := models.Keys().Create(contracts.Fields{
 		"creator_id":  fields["creator_id"],
 		"name":        fields["name"],
